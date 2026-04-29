@@ -32,7 +32,7 @@ KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
 # (label, offset_giorni_dal_sabato, notti)
 TIPI_QUERY = [
     ("Sab→Sab",  0, 7),
-    ("Lun→Sab", -5, 5),
+    ("Lun→Sab", +2, 5),
     ("Sab→Lun",  0, 2),
 ]
 
@@ -422,8 +422,10 @@ def main():
             for sab in sabati:
                 for nome in nomi:
                     for tipo, offset, notti in TIPI_QUERY:
-                        n += 1
                         checkin = sab + timedelta(days=offset)
+                        if checkin < data_inizio:
+                            continue
+                        n += 1
                         print(f"[{n}/{totale}] {nome} — {tipo} — {checkin} ...",
                               end=" ", flush=True)
                         res = scrapa_notte(page, nome, urls[nome], checkin,
