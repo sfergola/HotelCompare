@@ -26,12 +26,14 @@ EURO_RE = re.compile(r"€\s*(\d+(?:[.,]\d+)?)")
 
 KEYWORDS_MATRIMONIALE = ["matrimoniale", "doppia", "double", "twin"]
 KEYWORDS_ECONOMY      = ["economy", "budget", "basic"]
+KEYWORDS_SINGOLA      = ["singola", "single"]
 KEYWORDS_COLAZIONE    = ["colazione inclusa", "prima colazione", "breakfast inclus",
                          "pernottamento e prima", "b&b", "eccezionale colazione"]
 KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
 
 # parole con cui può iniziare il nome di una camera
-ROOM_START = ["camera", "suite", "appartamento", "economy", "double", "twin",
+ROOM_START = ["camera", "suite", "appartamento", "stanza", "bungalow", "studio",
+              "monolocale", "economy", "double", "twin", "single", "singola",
               "standard", "superior", "deluxe", "classic", "comfort", "junior"]
 
 # (label, offset_giorni_dal_sabato, notti)
@@ -150,8 +152,10 @@ def _parse_valore(testo: str) -> float | None:
     return None
 
 def _is_economy(nome: str) -> bool:
-    nl = nome.lower()
-    return any(k in nl for k in KEYWORDS_ECONOMY)
+    return any(k in nome.lower() for k in KEYWORDS_ECONOMY)
+
+def _is_singola(nome: str) -> bool:
+    return any(k in nome.lower() for k in KEYWORDS_SINGOLA)
 
 def estrai_prezzo(page) -> str | None:
     """
@@ -160,7 +164,9 @@ def estrai_prezzo(page) -> str | None:
       "€ NNN*"  = B&B, matrimoniale/doppia standard
       "€ NNN#"  = solo camera, economy/budget double
       "€ NNN#*" = B&B, economy/budget double
-      None      = non trovato / tipo camera non rilevato
+      "€ NNNS"  = solo camera, singola (nessuna doppia trovata)
+      "€ NNNS*" = B&B, singola
+      None      = non trovato
     """
     testo_pagina = page.inner_text("body")
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
@@ -240,13 +246,18 @@ def estrai_prezzo(page) -> str | None:
 
     matrimoniali = [(n, p, b) for n, p, b in risultati
                     if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
-    if not matrimoniali:
+    matrimoniali = [(n, p, b) for n, p, b in risultati
+                    if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
+    singole      = [(n, p, b) for n, p, b in risultati
+                    if _is_singola(n) and not any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
+
+    if not matrimoniali and not singole:
         return None
 
     standard = [(n, p, b) for n, p, b in matrimoniali if not _is_economy(n)]
     economy  = [(n, p, b) for n, p, b in matrimoniali if _is_economy(n)]
 
-    for gruppo, marker in [(standard, ""), (economy, "#")]:
+    for gruppo, marker in [(standard, ""), (economy, "#"), (singole, "S")]:
         solo_p = [p for n, p, b in gruppo if b == "solo"]
         bb_p   = [p for n, p, b in gruppo if b == "bb"]
         if solo_p:
@@ -372,9 +383,11 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
         "",
         "Legenda:",
         "  € 140   = solo camera, matrimoniale/doppia standard",
-        "  € 140*  = B&B (colazione inclusa), matrimoniale/doppia standard",
+        "  € 140*  = B&B, matrimoniale/doppia standard",
         "  € 120#  = solo camera, economy/budget double",
-        "  € 120#* = B&B, economy/budget double",
+        "  € 120#* = B&B, economy double",
+        "  € 80S   = solo camera, singola (nessuna doppia trovata)",
+        "  € 80S*  = B&B, singola",
         "  —       = non disponibile / tipo camera non rilevato",
         "",
         "Tipi soggiorno:",
