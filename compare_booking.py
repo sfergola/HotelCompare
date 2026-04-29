@@ -246,8 +246,6 @@ def estrai_prezzo(page) -> str | None:
 
     matrimoniali = [(n, p, b) for n, p, b in risultati
                     if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
-    matrimoniali = [(n, p, b) for n, p, b in risultati
-                    if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
     singole      = [(n, p, b) for n, p, b in risultati
                     if _is_singola(n) and not any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
 
@@ -284,7 +282,8 @@ def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
         if prezzo and notti > 1:
             v = _parse_valore(prezzo)
             if v:
-                suffix    = "*" if prezzo.endswith("*") else ""
+                m_sfx     = re.match(r'€\s*\d+(.*)', prezzo)
+                suffix    = m_sfx.group(1) if m_sfx else ""
                 per_notte = int(v / notti)
                 prezzo    = f"€ {per_notte}{suffix}" if per_notte >= 25 else None
         stato = "ok" if prezzo else "non_trovato"

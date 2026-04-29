@@ -5,7 +5,7 @@ from datetime import date
 from playwright.sync_api import sync_playwright
 
 sys.path.insert(0, str(Path(__file__).parent))
-from compare import carica_config, risolvi_urls, scrapa_notte, genera_report_testo
+from compare_booking import carica_config, risolvi_urls, scrapa_notte, genera_report_testo
 
 cfg    = carica_config()
 adulti = cfg.get("adulti", 2)
@@ -26,7 +26,7 @@ with sync_playwright() as pw:
     print(f"\n=== Test prezzi matrimoniale B&B per {notte} (query 7 notti, prezzo/notte) ===")
     risultati = []
     for nome, url in urls.items():
-        res = scrapa_notte(page, nome, url, notte, adulti, notti=7)
+        res = scrapa_notte(page, nome, url, notte, adulti, notti=7, sab=notte, tipo="Sab→Sab")
         risultati.append(res)
         stato = res["prezzo"] or f"NON TROVATO ({res['stato']})"
         print(f"  {nome:<30} {stato}")
