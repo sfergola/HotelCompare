@@ -49,6 +49,16 @@
       "booking_url": "https://www.booking.com/hotel/it/lugomare.it.html"
     },
     {
+      "nome": "Hotel Perla del Mare",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/perla-del-mare.it.html"
+    },
+    {
+      "nome": "Hotel Milani",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/milani-lido-di-camaiore.it.html"
+    },
+    {
       "nome": "Hotel Sylvia",
       "citta": "Lido di Camaiore",
       "booking_url": "https://www.booking.com/hotel/it/sylvia.it.html"
