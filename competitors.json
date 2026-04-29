@@ -34,6 +34,18 @@
       "booking_url": "https://www.booking.com/hotel/it/la-vela-lido-di-camaiore.it.html"
     },
     {
+      "nome": "Hotel Florentia",
+      "citta": "Lido di Camaiore"
+    },
+    {
+      "nome": "Hotel Luca",
+      "citta": "Lido di Camaiore"
+    },
+    {
+      "nome": "Hotel Lungomare",
+      "citta": "Lido di Camaiore"
+    },
+    {
       "nome": "Hotel Verbena",
       "citta": "Lido di Camaiore",
       "nota": "non su Booking.com — verifica manuale su hotelverbena.it"
