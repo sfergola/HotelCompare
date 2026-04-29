@@ -2,8 +2,8 @@
 HotelCompare — scraper prezzi competitor su Booking.com
 Uso: python compare.py
 
-Cerca il prezzo di camera matrimoniale/doppia con colazione inclusa.
-Output: CSV + report testo con hotel per riga, date per colonna, riga media.
+Cerca prezzi camera matrimoniale/doppia: solo camera e camera+colazione.
+Output: CSV + report testo — ogni hotel su due righe (solo / B&B), date per colonna.
 """
 
 import json, re, random, time
@@ -23,8 +23,7 @@ EURO_RE = re.compile(r"€\s*(\d+(?:[.,]\d+)?)")
 KEYWORDS_MATRIMONIALE = ["matrimoniale", "doppia", "double", "twin"]
 KEYWORDS_COLAZIONE    = ["colazione inclusa", "prima colazione", "breakfast inclus",
                          "pernottamento e prima", "b&b", "eccezionale colazione"]
-KEYWORDS_NO_DISP      = ["non abbiamo disponibilità", "controlla date disponibili",
-                         "non è disponibile per"]
+KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
 
 
 # ── config ─────────────────────────────────────────────────────────────────
@@ -45,13 +44,6 @@ def date_range(start: date, end: date):
     while d < end:
         yield d
         d += timedelta(days=1)
-
-def sabati_range(start: date, end: date):
-    days_ahead = (5 - start.weekday()) % 7
-    d = start + timedelta(days=days_ahead)
-    while d < end:
-        yield d
-        d += timedelta(weeks=1)
 
 def build_url(booking_url: str, checkin: date, checkout: date, adulti: int) -> str:
     base = booking_url.split("?")[0]
@@ -139,13 +131,15 @@ def _parse_valore(testo: str) -> float | None:
             pass
     return None
 
-def estrai_prezzo(page) -> str | None:
+def estrai_prezzo(page) -> dict:
+    """
+    Ritorna {"solo": str|None, "bb": str|None}.
+    Considera solo camere matrimoniali/doppie con tipo pernottamento confermato.
+    """
     testo_pagina = page.inner_text("body")
-    testo_lower  = testo_pagina.lower()
-    ha_strutture_simili = "strutture simili" in testo_lower
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
 
-    risultati: list[tuple[str, float, bool]] = []  # (nome_camera, prezzo, ha_colazione)
+    risultati: list[tuple[str, float, str | None]] = []  # (nome_camera, prezzo, board)
 
     # === Parser 1: layout tabella con header "Tipologia camera" ===
     start = None
@@ -163,7 +157,7 @@ def estrai_prezzo(page) -> str | None:
                     and len(r) < 90 and not EURO_RE.search(r)
                     and "recension" not in rl):
                 if camera_corrente and prezzo_corrente:
-                    risultati.append((camera_corrente, prezzo_corrente, False))
+                    risultati.append((camera_corrente, prezzo_corrente, None))
                 camera_corrente = r
                 prezzo_corrente = None
                 continue
@@ -172,13 +166,16 @@ def estrai_prezzo(page) -> str | None:
                 prezzo_corrente = v
                 continue
             if prezzo_corrente is not None and camera_corrente:
-                ha_colazione = any(k in rl for k in KEYWORDS_COLAZIONE)
-                no_col = any(k in rl for k in ["solo pernottamento", "room only", "senza colazione"])
-                if ha_colazione or no_col:
-                    risultati.append((camera_corrente, prezzo_corrente, ha_colazione))
+                if any(k in rl for k in KEYWORDS_COLAZIONE):
+                    risultati.append((camera_corrente, prezzo_corrente, "bb"))
+                    camera_corrente = None
+                    prezzo_corrente = None
+                elif any(k in rl for k in KEYWORDS_SOLO):
+                    risultati.append((camera_corrente, prezzo_corrente, "solo"))
+                    camera_corrente = None
                     prezzo_corrente = None
         if camera_corrente and prezzo_corrente:
-            risultati.append((camera_corrente, prezzo_corrente, False))
+            risultati.append((camera_corrente, prezzo_corrente, None))
 
     # === Parser 2: layout card con "N° max persone" ===
     if not risultati:
@@ -192,56 +189,48 @@ def estrai_prezzo(page) -> str | None:
                 v = _parse_valore(rj)
                 if not (v and v > 20):
                     continue
-                ha_col = False
+                board: str | None = None
                 for k in range(j + 1, min(j + 8, len(righe))):
                     rl = righe[k].lower()
                     if any(kw in rl for kw in KEYWORDS_COLAZIONE):
-                        ha_col = True
+                        board = "bb"
                         break
-                    if any(kw in rl for kw in ["solo pernottamento", "room only", "senza colazione"]):
+                    if any(kw in rl for kw in KEYWORDS_SOLO):
+                        board = "solo"
                         break
                 camera = "camera"
-                for m in range(i - 1, max(i - 45, -1), -1):
-                    rm = righe[m]
+                for m_idx in range(i - 1, max(i - 45, -1), -1):
+                    rm  = righe[m_idx]
                     rml = rm.lower()
                     if (any(rml.startswith(k) for k in ["camera", "suite", "appartamento"])
                             and 10 < len(rm) < 90 and not EURO_RE.search(rm)):
                         camera = rm
                         break
-                risultati.append((camera, v, ha_col))
+                risultati.append((camera, v, board))
                 break
 
-    # === Fallback: primo prezzo € nella sezione principale ===
     if not risultati:
-        testo_principale = testo_pagina
-        if ha_strutture_simili:
-            idx = testo_pagina.lower().find("strutture simili")
-            testo_principale = testo_pagina[:idx]
-        m = EURO_RE.search(testo_principale)
-        if m:
-            v = float(m.group(1).replace(".", "").replace(",", "."))
-            if v > 20:
-                return f"~€ {int(v)}"
-        return None
+        return {"solo": None, "bb": None}
 
-    # Priorità 1: matrimoniale/doppia + colazione
-    bb_mat = [(p, n) for n, p, c in risultati
-              if c and any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
-    if bb_mat:
-        return f"€ {int(min(bb_mat)[0])}"
+    matrimoniali = [(n, p, b) for n, p, b in risultati
+                    if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
 
-    # Priorità 2: qualsiasi camera + colazione
-    bb_any = [(p, n) for n, p, c in risultati if c]
-    if bb_any:
-        return f"€ {int(min(bb_any)[0])}*"
+    if not matrimoniali:
+        return {"solo": None, "bb": None}
 
-    return None
+    solo_prezzi = [p for n, p, b in matrimoniali if b == "solo"]
+    bb_prezzi   = [p for n, p, b in matrimoniali if b == "bb"]
+
+    return {
+        "solo": f"€ {int(min(solo_prezzi))}" if solo_prezzi else None,
+        "bb":   f"€ {int(min(bb_prezzi))}"   if bb_prezzi   else None,
+    }
 
 
 # ── scraping notte ───────────────────────────────────────────────────────────
 
 def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
-                 notti: int = 7) -> dict:
+                 notti: int = 1) -> dict:
     checkout = checkin + timedelta(days=notti)
     url = build_url(booking_url, checkin, checkout, adulti)
     try:
@@ -250,53 +239,63 @@ def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
         chiudi_popup(page)
         page.evaluate("window.scrollTo(0, 1200)")
         time.sleep(1.5)
-        prezzo = estrai_prezzo(page)
-        if prezzo and notti > 1:
-            v = _parse_valore(prezzo)
-            if v:
-                prefix = "~" if "~" in prezzo else ""
-                suffix = "*" if prezzo.endswith("*") else ""
-                per_notte = int(v / notti)
-                prezzo = f"{prefix}€ {per_notte}{suffix}" if per_notte >= 25 else None
-        stato  = "ok" if prezzo else "non_trovato"
+        prezzi = estrai_prezzo(page)
+        if notti > 1:
+            for key in ("solo", "bb"):
+                val = prezzi[key]
+                if val:
+                    v = _parse_valore(val)
+                    if v:
+                        per_notte = int(v / notti)
+                        prezzi[key] = f"€ {per_notte}" if per_notte >= 25 else None
+        solo  = prezzi["solo"]
+        bb    = prezzi["bb"]
+        stato = "ok" if (solo or bb) else "non_trovato"
     except Exception as e:
-        prezzo = None
-        stato  = f"errore: {str(e)[:60]}"
-    return {"competitor": nome, "checkin": str(checkin), "prezzo": prezzo, "stato": stato}
+        solo  = None
+        bb    = None
+        stato = f"errore: {str(e)[:60]}"
+    return {"competitor": nome, "checkin": str(checkin), "solo": solo, "bb": bb, "stato": stato}
 
 
 # ── report ───────────────────────────────────────────────────────────────────
 
 def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
                date_uniche: list[str]) -> str:
-    """Hotels per riga, date per colonna."""
-    righe = ["Hotel," + ",".join(d[5:] for d in date_uniche)]  # es. 28-Apr
+    """Hotels per riga (2 righe ciascuno: solo + B&B), date per colonna."""
+    righe = ["Hotel," + ",".join(d[5:] for d in date_uniche)]
 
     for nome in nomi:
         if nome in manuali:
-            prezzi_riga = ["verifica manuale"] * len(date_uniche)
-        else:
-            prezzi_riga = []
-            for d in date_uniche:
-                res = next((r for r in risultati
-                            if r["checkin"] == d and r["competitor"] == nome), None)
-                prezzi_riga.append((res["prezzo"] if res else "") or "")
-        righe.append(nome + "," + ",".join(prezzi_riga))
+            righe.append(nome + ",verifica manuale")
+            continue
+        solo_riga, bb_riga = [], []
+        for d in date_uniche:
+            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
+            solo_riga.append((res["solo"] if res else "") or "")
+            bb_riga.append((res["bb"]     if res else "") or "")
+        righe.append(nome + " (solo)," + ",".join(solo_riga))
+        righe.append(nome + " (B&B),"  + ",".join(bb_riga))
 
-    medie = []
+    solo_medie, bb_medie = [], []
     for d in date_uniche:
-        valori = []
+        sv, bv = [], []
         for nome in nomi:
             if nome in manuali:
                 continue
-            res = next((r for r in risultati
-                        if r["checkin"] == d and r["competitor"] == nome), None)
-            if res and res["prezzo"]:
-                v = _parse_valore(res["prezzo"])
+            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
+            if res:
+                v = _parse_valore(res["solo"] or "")
                 if v:
-                    valori.append(v)
-        medie.append(f"€ {int(sum(valori)/len(valori))}" if valori else "")
-    righe.append("MEDIA," + ",".join(medie))
+                    sv.append(v)
+                v = _parse_valore(res["bb"] or "")
+                if v:
+                    bv.append(v)
+        solo_medie.append(f"€ {int(sum(sv)/len(sv))}" if sv else "")
+        bb_medie.append(f"€ {int(sum(bv)/len(bv))}"   if bv else "")
+
+    righe.append("MEDIA (solo)," + ",".join(solo_medie))
+    righe.append("MEDIA (B&B),"  + ",".join(bb_medie))
 
     if manuali:
         righe.append("")
@@ -308,50 +307,54 @@ def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
 
 def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
                         date_uniche: list[str]) -> str:
-    """Report leggibile: hotel per riga, mostra solo prime 30 date + totale."""
+    """Report leggibile: hotel per riga (solo+B&B), prime 30 date."""
     date_mostra = date_uniche[:30]
-    col_hotel = 24
-    col_data  = 8
+    col_hotel   = 28
+    col_data    = 8
 
     header = f"{'Hotel':<{col_hotel}}" + "".join(f"{d[5:]:<{col_data}}" for d in date_mostra)
     if len(date_uniche) > 30:
         header += f"  ... (+{len(date_uniche)-30} date nel CSV)"
-    righe = [header, "-" * len(header)]
+    righe = [header, "-" * (col_hotel + col_data * len(date_mostra))]
 
     for nome in nomi:
         if nome in manuali:
-            riga = f"{nome:<{col_hotel}}" + "verifica manuale"
-        else:
-            riga = f"{nome:<{col_hotel}}"
-            for d in date_mostra:
-                res = next((r for r in risultati
-                            if r["checkin"] == d and r["competitor"] == nome), None)
-                p = (res["prezzo"] if res else "") or "—"
-                riga += f"{p:<{col_data}}"
-        righe.append(riga)
+            righe.append(f"{nome:<{col_hotel}}" + "verifica manuale")
+            continue
+        riga_solo = f"{nome + ' (solo)':<{col_hotel}}"
+        riga_bb   = f"{nome + ' (B&B)':<{col_hotel}}"
+        for d in date_mostra:
+            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
+            riga_solo += f"{(res['solo'] if res else '') or '—':<{col_data}}"
+            riga_bb   += f"{(res['bb']   if res else '') or '—':<{col_data}}"
+        righe.append(riga_solo)
+        righe.append(riga_bb)
 
-    riga_media = f"{'MEDIA':<{col_hotel}}"
+    riga_solo_m = f"{'MEDIA (solo)':<{col_hotel}}"
+    riga_bb_m   = f"{'MEDIA (B&B)':<{col_hotel}}"
     for d in date_mostra:
-        valori = []
+        sv, bv = [], []
         for nome in nomi:
             if nome in manuali:
                 continue
-            res = next((r for r in risultati
-                        if r["checkin"] == d and r["competitor"] == nome), None)
-            if res and res["prezzo"]:
-                v = _parse_valore(res["prezzo"])
+            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
+            if res:
+                v = _parse_valore(res["solo"] or "")
                 if v:
-                    valori.append(v)
-        media = f"€{int(sum(valori)/len(valori))}" if valori else "—"
-        riga_media += f"{media:<{col_data}}"
-    righe.append(riga_media)
+                    sv.append(v)
+                v = _parse_valore(res["bb"] or "")
+                if v:
+                    bv.append(v)
+        riga_solo_m += f"{f'€{int(sum(sv)/len(sv))}' if sv else '—':<{col_data}}"
+        riga_bb_m   += f"{f'€{int(sum(bv)/len(bv))}' if bv else '—':<{col_data}}"
+    righe.append(riga_solo_m)
+    righe.append(riga_bb_m)
 
     righe.append("")
     righe.append("Legenda:")
-    righe.append("  € 175  = matrimoniale B&B confermato")
-    righe.append("  € 175* = B&B confermato, tipo camera non verificato")
-    righe.append("  ~€ 175 = prezzo indicativo (soggiorno minimo, tipo camera non verificato)")
-    righe.append("  —      = non disponibile / non trovato")
+    righe.append("  € 115 (solo) = matrimoniale/doppia, solo pernottamento")
+    righe.append("  € 130 (B&B)  = matrimoniale/doppia, colazione inclusa")
+    righe.append("  —            = non disponibile / tipo camera non rilevato")
     if manuali:
         righe.append("")
         for nome, nota in manuali.items():
@@ -363,20 +366,21 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
 # ── main ─────────────────────────────────────────────────────────────────────
 
 def main():
-    cfg       = carica_config()
+    cfg         = carica_config()
     data_fine   = date.fromisoformat(cfg["data_fine"])
     adulti      = cfg.get("adulti", 2)
     oggi        = date.today()
     data_inizio = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
-    giorni      = list(sabati_range(data_inizio, data_fine))
+    giorni      = list(date_range(data_inizio, data_fine))
 
-    print(f"HotelCompare — {len(cfg['competitor'])} competitor, {len(giorni)} sabati ({data_inizio} → {data_fine})\n")
+    print(f"HotelCompare — {len(cfg['competitor'])} competitor, "
+          f"{len(giorni)} giorni ({data_inizio} → {data_fine})\n")
 
-    risultati   = []
-    oggi_str    = str(oggi).replace("-", "")
-    json_path   = OUTPUT_DIR / f"prezzi_{oggi_str}.json"
-    csv_path    = OUTPUT_DIR / f"report_{oggi_str}.csv"
-    txt_path    = OUTPUT_DIR / f"report_{oggi_str}.txt"
+    risultati = []
+    oggi_str  = str(oggi).replace("-", "")
+    json_path = OUTPUT_DIR / f"prezzi_{oggi_str}.json"
+    csv_path  = OUTPUT_DIR / f"report_{oggi_str}.csv"
+    txt_path  = OUTPUT_DIR / f"report_{oggi_str}.txt"
 
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
@@ -390,7 +394,7 @@ def main():
 
         try:
             print("=== Fase 1: risoluzione URL ===")
-            urls = risolvi_urls(page, cfg)
+            urls    = risolvi_urls(page, cfg)
             manuali = {c["nome"]: c["nota"] for c in cfg["competitor"] if "nota" in c}
 
             if not urls:
@@ -399,7 +403,7 @@ def main():
 
             nomi   = list(urls.keys())
             totale = len(giorni) * len(nomi)
-            print(f"=== Fase 2: scraping ({totale} richieste, ~{totale*6//60} min) ===\n")
+            print(f"=== Fase 2: scraping ({totale} richieste, ~{totale*7//60} min) ===\n")
 
             for i, checkin in enumerate(giorni):
                 for j, nome in enumerate(nomi):
@@ -407,7 +411,13 @@ def main():
                     print(f"[{n}/{totale}] {nome} — {checkin} ...", end=" ", flush=True)
                     res = scrapa_notte(page, nome, urls[nome], checkin, adulti)
                     risultati.append(res)
-                    print(res["prezzo"] or f"({res['stato']})")
+                    if res["solo"] or res["bb"]:
+                        parti = []
+                        if res["solo"]: parti.append(f"solo:{res['solo']}")
+                        if res["bb"]:   parti.append(f"B&B:{res['bb']}")
+                        print("  ".join(parti))
+                    else:
+                        print(f"({res['stato']})")
 
                     with open(json_path, "w", encoding="utf-8") as f:
                         json.dump(risultati, f, ensure_ascii=False, indent=2)
