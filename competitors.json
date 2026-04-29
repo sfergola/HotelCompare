@@ -1,0 +1,47 @@
+{
+  "data_fine": "2026-09-30",
+  "adulti": 2,
+  "competitor": [
+    {
+      "nome": "Hotel Lido Inn",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/le-cirque-club.it.html"
+    },
+    {
+      "nome": "Hotel Sirio",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/sirio-lido-di-camaiore.it.html"
+    },
+    {
+      "nome": "Hotel Capri",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/capri-lido-di-camaiore.it.html"
+    },
+    {
+      "nome": "Hotel Dei Tigli",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/dei-tigli-lido-di-camaiore.it.html"
+    },
+    {
+      "nome": "Hotel Mariotti",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/mariotti.it.html"
+    },
+    {
+      "nome": "Hotel La Vela",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/la-vela-lido-di-camaiore.it.html"
+    },
+    {
+      "nome": "Hotel Verbena",
+      "citta": "Lido di Camaiore",
+      "nota": "non su Booking.com — verifica manuale su hotelverbena.it"
+    },
+    {
+      "nome": "Hotel Alba sul Mare",
+      "citta": "Lido di Camaiore",
+      "nota": "non su Booking.com — verifica manuale su hotelalbasulmare.it"
+    }
+  ],
+  "data_inizio": "2026-05-02"
+}
