@@ -25,9 +25,14 @@ OUTPUT_DIR.mkdir(exist_ok=True)
 EURO_RE = re.compile(r"€\s*(\d+(?:[.,]\d+)?)")
 
 KEYWORDS_MATRIMONIALE = ["matrimoniale", "doppia", "double", "twin"]
+KEYWORDS_ECONOMY      = ["economy", "budget", "basic"]
 KEYWORDS_COLAZIONE    = ["colazione inclusa", "prima colazione", "breakfast inclus",
                          "pernottamento e prima", "b&b", "eccezionale colazione"]
 KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
+
+# parole con cui può iniziare il nome di una camera
+ROOM_START = ["camera", "suite", "appartamento", "economy", "double", "twin",
+              "standard", "superior", "deluxe", "classic", "comfort", "junior"]
 
 # (label, offset_giorni_dal_sabato, notti)
 TIPI_QUERY = [
@@ -144,10 +149,18 @@ def _parse_valore(testo: str) -> float | None:
             pass
     return None
 
+def _is_economy(nome: str) -> bool:
+    nl = nome.lower()
+    return any(k in nl for k in KEYWORDS_ECONOMY)
+
 def estrai_prezzo(page) -> str | None:
     """
-    Ritorna "€ NNN" per solo camera, "€ NNN*" per B&B, None se non trovato.
-    Considera solo camere matrimoniali/doppie con tipo pensione confermato.
+    Ritorna:
+      "€ NNN"   = solo camera, matrimoniale/doppia standard
+      "€ NNN*"  = B&B, matrimoniale/doppia standard
+      "€ NNN#"  = solo camera, economy/budget double
+      "€ NNN#*" = B&B, economy/budget double
+      None      = non trovato / tipo camera non rilevato
     """
     testo_pagina = page.inner_text("body")
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
@@ -166,7 +179,7 @@ def estrai_prezzo(page) -> str | None:
         prezzo_corrente: float | None = None
         for r in righe[start: start + 250]:
             rl = r.lower()
-            if (any(rl.startswith(k) for k in ["camera", "suite", "appartamento"])
+            if (any(rl.startswith(k) for k in ROOM_START)
                     and len(r) < 90 and not EURO_RE.search(r)
                     and "recension" not in rl):
                 if camera_corrente and prezzo_corrente:
@@ -215,7 +228,7 @@ def estrai_prezzo(page) -> str | None:
                 for m_idx in range(i - 1, max(i - 45, -1), -1):
                     rm  = righe[m_idx]
                     rml = rm.lower()
-                    if (any(rml.startswith(k) for k in ["camera", "suite", "appartamento"])
+                    if (any(rml.startswith(k) for k in ROOM_START)
                             and 10 < len(rm) < 90 and not EURO_RE.search(rm)):
                         camera = rm
                         break
@@ -227,17 +240,20 @@ def estrai_prezzo(page) -> str | None:
 
     matrimoniali = [(n, p, b) for n, p, b in risultati
                     if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
-
     if not matrimoniali:
         return None
 
-    solo_prezzi = [p for n, p, b in matrimoniali if b == "solo"]
-    bb_prezzi   = [p for n, p, b in matrimoniali if b == "bb"]
+    standard = [(n, p, b) for n, p, b in matrimoniali if not _is_economy(n)]
+    economy  = [(n, p, b) for n, p, b in matrimoniali if _is_economy(n)]
 
-    if solo_prezzi:
-        return f"€ {int(min(solo_prezzi))}"
-    if bb_prezzi:
-        return f"€ {int(min(bb_prezzi))}*"
+    for gruppo, marker in [(standard, ""), (economy, "#")]:
+        solo_p = [p for n, p, b in gruppo if b == "solo"]
+        bb_p   = [p for n, p, b in gruppo if b == "bb"]
+        if solo_p:
+            return f"€ {int(min(solo_p))}{marker}"
+        if bb_p:
+            return f"€ {int(min(bb_p))}{marker}*"
+
     return None
 
 
@@ -355,9 +371,11 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
     righe += [
         "",
         "Legenda:",
-        "  € 140  = solo camera (matrimoniale/doppia confermata)",
-        "  € 140* = colazione inclusa (B&B) — solo camera non trovato su Booking",
-        "  —      = non disponibile / tipo camera non rilevato",
+        "  € 140   = solo camera, matrimoniale/doppia standard",
+        "  € 140*  = B&B (colazione inclusa), matrimoniale/doppia standard",
+        "  € 120#  = solo camera, economy/budget double",
+        "  € 120#* = B&B, economy/budget double",
+        "  —       = non disponibile / tipo camera non rilevato",
         "",
         "Tipi soggiorno:",
         "  Sab→Sab (7n) = settimana intera",

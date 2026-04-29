@@ -49,6 +49,11 @@
       "booking_url": "https://www.booking.com/hotel/it/lugomare.it.html"
     },
     {
+      "nome": "Hotel Sylvia",
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/sylvia.it.html"
+    },
+    {
       "nome": "Hotel Verbena",
       "citta": "Lido di Camaiore",
       "nota": "non su Booking.com — verifica manuale su hotelverbena.it"
