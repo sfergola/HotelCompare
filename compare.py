@@ -2,8 +2,12 @@
 HotelCompare — scraper prezzi competitor su Booking.com
 Uso: python compare.py
 
-Cerca prezzi camera matrimoniale/doppia: solo camera e camera+colazione.
-Output: CSV + report testo — ogni hotel su due righe (solo / B&B), date per colonna.
+Per ogni sabato nel range esegue 3 query:
+  Sab→Sab (7n)  — settimana intera
+  Lun→Sab (5n)  — prima parte settimana (checkin lunedì)
+  Sab→Lun (2n)  — weekend (checkin sabato, checkout lunedì)
+
+Prezzo mostrato: solo camera se trovato, B&B* se solo camera non disponibile.
 """
 
 import json, re, random, time
@@ -25,6 +29,13 @@ KEYWORDS_COLAZIONE    = ["colazione inclusa", "prima colazione", "breakfast incl
                          "pernottamento e prima", "b&b", "eccezionale colazione"]
 KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
 
+# (label, offset_giorni_dal_sabato, notti)
+TIPI_QUERY = [
+    ("Sab→Sab",  0, 7),
+    ("Lun→Sab", -5, 5),
+    ("Sab→Lun",  0, 2),
+]
+
 
 # ── config ─────────────────────────────────────────────────────────────────
 
@@ -39,11 +50,13 @@ def salva_config(cfg: dict):
 
 # ── helpers ─────────────────────────────────────────────────────────────────
 
-def date_range(start: date, end: date):
-    d = start
+def sab_range(start: date, end: date):
+    """Yield ogni sabato in [start, end)."""
+    days_ahead = (5 - start.weekday()) % 7
+    d = start + timedelta(days=days_ahead)
     while d < end:
         yield d
-        d += timedelta(days=1)
+        d += timedelta(weeks=1)
 
 def build_url(booking_url: str, checkin: date, checkout: date, adulti: int) -> str:
     base = booking_url.split("?")[0]
@@ -131,10 +144,10 @@ def _parse_valore(testo: str) -> float | None:
             pass
     return None
 
-def estrai_prezzo(page) -> dict:
+def estrai_prezzo(page) -> str | None:
     """
-    Ritorna {"solo": str|None, "bb": str|None}.
-    Considera solo camere matrimoniali/doppie con tipo pernottamento confermato.
+    Ritorna "€ NNN" per solo camera, "€ NNN*" per B&B, None se non trovato.
+    Considera solo camere matrimoniali/doppie con tipo pensione confermato.
     """
     testo_pagina = page.inner_text("body")
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
@@ -210,27 +223,28 @@ def estrai_prezzo(page) -> dict:
                 break
 
     if not risultati:
-        return {"solo": None, "bb": None}
+        return None
 
     matrimoniali = [(n, p, b) for n, p, b in risultati
                     if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
 
     if not matrimoniali:
-        return {"solo": None, "bb": None}
+        return None
 
     solo_prezzi = [p for n, p, b in matrimoniali if b == "solo"]
     bb_prezzi   = [p for n, p, b in matrimoniali if b == "bb"]
 
-    return {
-        "solo": f"€ {int(min(solo_prezzi))}" if solo_prezzi else None,
-        "bb":   f"€ {int(min(bb_prezzi))}"   if bb_prezzi   else None,
-    }
+    if solo_prezzi:
+        return f"€ {int(min(solo_prezzi))}"
+    if bb_prezzi:
+        return f"€ {int(min(bb_prezzi))}*"
+    return None
 
 
 # ── scraping notte ───────────────────────────────────────────────────────────
 
 def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
-                 notti: int = 1) -> dict:
+                 notti: int, sab: date, tipo: str) -> dict:
     checkout = checkin + timedelta(days=notti)
     url = build_url(booking_url, checkin, checkout, adulti)
     try:
@@ -239,122 +253,117 @@ def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
         chiudi_popup(page)
         page.evaluate("window.scrollTo(0, 1200)")
         time.sleep(1.5)
-        prezzi = estrai_prezzo(page)
-        if notti > 1:
-            for key in ("solo", "bb"):
-                val = prezzi[key]
-                if val:
-                    v = _parse_valore(val)
-                    if v:
-                        per_notte = int(v / notti)
-                        prezzi[key] = f"€ {per_notte}" if per_notte >= 25 else None
-        solo  = prezzi["solo"]
-        bb    = prezzi["bb"]
-        stato = "ok" if (solo or bb) else "non_trovato"
+        prezzo = estrai_prezzo(page)
+        if prezzo and notti > 1:
+            v = _parse_valore(prezzo)
+            if v:
+                suffix    = "*" if prezzo.endswith("*") else ""
+                per_notte = int(v / notti)
+                prezzo    = f"€ {per_notte}{suffix}" if per_notte >= 25 else None
+        stato = "ok" if prezzo else "non_trovato"
     except Exception as e:
-        solo  = None
-        bb    = None
-        stato = f"errore: {str(e)[:60]}"
-    return {"competitor": nome, "checkin": str(checkin), "solo": solo, "bb": bb, "stato": stato}
+        prezzo = None
+        stato  = f"errore: {str(e)[:60]}"
+    return {
+        "competitor": nome,
+        "settimana":  str(sab),
+        "tipo":       tipo,
+        "checkin":    str(checkin),
+        "prezzo":     prezzo,
+        "stato":      stato,
+    }
 
 
 # ── report ───────────────────────────────────────────────────────────────────
 
+def _lookup(risultati, sab, nome, tipo):
+    res = next((r for r in risultati
+                if r["settimana"] == sab and r["competitor"] == nome and r["tipo"] == tipo), None)
+    return (res["prezzo"] if res else None) or "—"
+
 def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
-               date_uniche: list[str]) -> str:
-    """Hotels per riga (2 righe ciascuno: solo + B&B), date per colonna."""
-    righe = ["Hotel," + ",".join(d[5:] for d in date_uniche)]
+               sab_uniche: list[str]) -> str:
+    date_header = ",".join(s[5:] for s in sab_uniche)
+    righe = [f"Hotel,Tipo,{date_header}"]
 
     for nome in nomi:
         if nome in manuali:
-            righe.append(nome + ",verifica manuale")
+            righe.append(f"{nome},—,verifica manuale")
             continue
-        solo_riga, bb_riga = [], []
-        for d in date_uniche:
-            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
-            solo_riga.append((res["solo"] if res else "") or "")
-            bb_riga.append((res["bb"]     if res else "") or "")
-        righe.append(nome + " (solo)," + ",".join(solo_riga))
-        righe.append(nome + " (B&B),"  + ",".join(bb_riga))
+        for tipo, _, _ in TIPI_QUERY:
+            prezzi = ",".join(_lookup(risultati, s, nome, tipo) for s in sab_uniche)
+            righe.append(f"{nome},{tipo},{prezzi}")
 
-    solo_medie, bb_medie = [], []
-    for d in date_uniche:
-        sv, bv = [], []
-        for nome in nomi:
-            if nome in manuali:
-                continue
-            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
-            if res:
-                v = _parse_valore(res["solo"] or "")
-                if v:
-                    sv.append(v)
-                v = _parse_valore(res["bb"] or "")
-                if v:
-                    bv.append(v)
-        solo_medie.append(f"€ {int(sum(sv)/len(sv))}" if sv else "")
-        bb_medie.append(f"€ {int(sum(bv)/len(bv))}"   if bv else "")
-
-    righe.append("MEDIA (solo)," + ",".join(solo_medie))
-    righe.append("MEDIA (B&B),"  + ",".join(bb_medie))
+    for tipo, _, _ in TIPI_QUERY:
+        medie = []
+        for s in sab_uniche:
+            valori = [_parse_valore(_lookup(risultati, s, n, tipo))
+                      for n in nomi if n not in manuali]
+            valori = [v for v in valori if v]
+            medie.append(f"€ {int(sum(valori)/len(valori))}" if valori else "")
+        righe.append(f"MEDIA,{tipo}," + ",".join(medie))
 
     if manuali:
         righe.append("")
         for nome, nota in manuali.items():
-            righe.append(f"{nome},{nota}")
+            righe.append(f"{nome},,{nota}")
 
     return "\n".join(righe)
 
 
 def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
-                        date_uniche: list[str]) -> str:
-    """Report leggibile: hotel per riga (solo+B&B), prime 30 date."""
-    date_mostra = date_uniche[:30]
-    col_hotel   = 28
-    col_data    = 8
+                        sab_uniche: list[str]) -> str:
+    sab_mostra = sab_uniche[:18]
+    col_nome   = 20
+    col_tipo   = 9
+    col_data   = 8
+    larghezza  = col_nome + col_tipo + col_data * len(sab_mostra)
 
-    header = f"{'Hotel':<{col_hotel}}" + "".join(f"{d[5:]:<{col_data}}" for d in date_mostra)
-    if len(date_uniche) > 30:
-        header += f"  ... (+{len(date_uniche)-30} date nel CSV)"
-    righe = [header, "-" * (col_hotel + col_data * len(date_mostra))]
+    header = (" " * (col_nome + col_tipo)
+              + "".join(f"{s[5:]:<{col_data}}" for s in sab_mostra))
+    sep    = "─" * larghezza
+    righe  = [header, sep]
 
     for nome in nomi:
         if nome in manuali:
-            righe.append(f"{nome:<{col_hotel}}" + "verifica manuale")
+            righe.append(f"{nome:<{col_nome + col_tipo}}verifica manuale")
+            righe.append(sep)
             continue
-        riga_solo = f"{nome + ' (solo)':<{col_hotel}}"
-        riga_bb   = f"{nome + ' (B&B)':<{col_hotel}}"
-        for d in date_mostra:
-            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
-            riga_solo += f"{(res['solo'] if res else '') or '—':<{col_data}}"
-            riga_bb   += f"{(res['bb']   if res else '') or '—':<{col_data}}"
-        righe.append(riga_solo)
-        righe.append(riga_bb)
+        for k, (tipo, _, _) in enumerate(TIPI_QUERY):
+            nome_col = f"{nome:<{col_nome}}" if k == 0 else " " * col_nome
+            riga = nome_col + f"{tipo:<{col_tipo}}"
+            for s in sab_mostra:
+                p = _lookup(risultati, s, nome, tipo)
+                riga += f"{p:<{col_data}}"
+            righe.append(riga)
+        righe.append(sep)
 
-    riga_solo_m = f"{'MEDIA (solo)':<{col_hotel}}"
-    riga_bb_m   = f"{'MEDIA (B&B)':<{col_hotel}}"
-    for d in date_mostra:
-        sv, bv = [], []
-        for nome in nomi:
-            if nome in manuali:
-                continue
-            res = next((r for r in risultati if r["checkin"] == d and r["competitor"] == nome), None)
-            if res:
-                v = _parse_valore(res["solo"] or "")
-                if v:
-                    sv.append(v)
-                v = _parse_valore(res["bb"] or "")
-                if v:
-                    bv.append(v)
-        riga_solo_m += f"{f'€{int(sum(sv)/len(sv))}' if sv else '—':<{col_data}}"
-        riga_bb_m   += f"{f'€{int(sum(bv)/len(bv))}' if bv else '—':<{col_data}}"
-    righe.append(riga_solo_m)
-    righe.append(riga_bb_m)
+    for k, (tipo, _, _) in enumerate(TIPI_QUERY):
+        nome_col = f"{'MEDIA':<{col_nome}}" if k == 0 else " " * col_nome
+        riga = nome_col + f"{tipo:<{col_tipo}}"
+        for s in sab_mostra:
+            valori = [_parse_valore(_lookup(risultati, s, n, tipo))
+                      for n in nomi if n not in manuali]
+            valori = [v for v in valori if v]
+            m = f"€{int(sum(valori)/len(valori))}" if valori else "—"
+            riga += f"{m:<{col_data}}"
+        righe.append(riga)
 
-    righe.append("")
-    righe.append("Legenda:")
-    righe.append("  € 115 (solo) = matrimoniale/doppia, solo pernottamento")
-    righe.append("  € 130 (B&B)  = matrimoniale/doppia, colazione inclusa")
-    righe.append("  —            = non disponibile / tipo camera non rilevato")
+    if len(sab_uniche) > 18:
+        righe.append(f"\n  ... (+{len(sab_uniche)-18} settimane nel CSV)")
+
+    righe += [
+        "",
+        "Legenda:",
+        "  € 140  = solo camera (matrimoniale/doppia confermata)",
+        "  € 140* = colazione inclusa (B&B) — solo camera non trovato su Booking",
+        "  —      = non disponibile / tipo camera non rilevato",
+        "",
+        "Tipi soggiorno:",
+        "  Sab→Sab (7n) = settimana intera",
+        "  Lun→Sab (5n) = da lunedì al sabato (prima parte settimana)",
+        "  Sab→Lun (2n) = da sabato a lunedì (weekend)",
+    ]
     if manuali:
         righe.append("")
         for nome, nota in manuali.items():
@@ -371,19 +380,20 @@ def main():
     adulti      = cfg.get("adulti", 2)
     oggi        = date.today()
     data_inizio = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
-    giorni      = list(date_range(data_inizio, data_fine))
+    sabati      = list(sab_range(data_inizio, data_fine))
 
     print(f"HotelCompare — {len(cfg['competitor'])} competitor, "
-          f"{len(giorni)} giorni ({data_inizio} → {data_fine})\n")
+          f"{len(sabati)} sabati × {len(TIPI_QUERY)} tipi "
+          f"({data_inizio} → {data_fine})\n")
 
-    risultati   = []
-    from_str    = str(data_inizio).replace("-", "")
-    to_str      = str(data_fine).replace("-", "")
-    oggi_str    = str(oggi).replace("-", "")
-    stem        = f"competitors_from{from_str}_to{to_str}_computed{oggi_str}"
-    json_path   = OUTPUT_DIR / f"{stem}.json"
-    csv_path    = OUTPUT_DIR / f"{stem}.csv"
-    txt_path    = OUTPUT_DIR / f"{stem}.txt"
+    risultati = []
+    from_str  = str(data_inizio).replace("-", "")
+    to_str    = str(data_fine).replace("-", "")
+    oggi_str  = str(oggi).replace("-", "")
+    stem      = f"competitors_from{from_str}_to{to_str}_computed{oggi_str}"
+    json_path = OUTPUT_DIR / f"{stem}.json"
+    csv_path  = OUTPUT_DIR / f"{stem}.csv"
+    txt_path  = OUTPUT_DIR / f"{stem}.txt"
 
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
@@ -405,41 +415,40 @@ def main():
                 return
 
             nomi   = list(urls.keys())
-            totale = len(giorni) * len(nomi)
+            totale = len(sabati) * len(nomi) * len(TIPI_QUERY)
             print(f"=== Fase 2: scraping ({totale} richieste, ~{totale*7//60} min) ===\n")
 
-            for i, checkin in enumerate(giorni):
-                for j, nome in enumerate(nomi):
-                    n = i * len(nomi) + j + 1
-                    print(f"[{n}/{totale}] {nome} — {checkin} ...", end=" ", flush=True)
-                    res = scrapa_notte(page, nome, urls[nome], checkin, adulti)
-                    risultati.append(res)
-                    if res["solo"] or res["bb"]:
-                        parti = []
-                        if res["solo"]: parti.append(f"solo:{res['solo']}")
-                        if res["bb"]:   parti.append(f"B&B:{res['bb']}")
-                        print("  ".join(parti))
-                    else:
-                        print(f"({res['stato']})")
+            n = 0
+            for sab in sabati:
+                for nome in nomi:
+                    for tipo, offset, notti in TIPI_QUERY:
+                        n += 1
+                        checkin = sab + timedelta(days=offset)
+                        print(f"[{n}/{totale}] {nome} — {tipo} — {checkin} ...",
+                              end=" ", flush=True)
+                        res = scrapa_notte(page, nome, urls[nome], checkin,
+                                           adulti, notti=notti, sab=sab, tipo=tipo)
+                        risultati.append(res)
+                        print(res["prezzo"] or f"({res['stato']})")
 
-                    with open(json_path, "w", encoding="utf-8") as f:
-                        json.dump(risultati, f, ensure_ascii=False, indent=2)
+                        with open(json_path, "w", encoding="utf-8") as f:
+                            json.dump(risultati, f, ensure_ascii=False, indent=2)
 
-                    time.sleep(random.uniform(4.0, 8.0))
+                        time.sleep(random.uniform(4.0, 8.0))
 
         finally:
             browser.close()
 
-    tutti_nomi  = list(urls.keys()) + list(manuali.keys())
-    date_uniche = sorted(set(r["checkin"] for r in risultati))
+    tutti_nomi = list(urls.keys()) + list(manuali.keys())
+    sab_uniche = sorted(set(r["settimana"] for r in risultati))
 
     csv_path.write_text(
-        genera_csv(risultati, tutti_nomi, manuali, date_uniche), encoding="utf-8")
+        genera_csv(risultati, tutti_nomi, manuali, sab_uniche), encoding="utf-8")
     txt_path.write_text(
-        genera_report_testo(risultati, tutti_nomi, manuali, date_uniche), encoding="utf-8")
+        genera_report_testo(risultati, tutti_nomi, manuali, sab_uniche), encoding="utf-8")
 
     print(f"\nDone.\n  CSV  : {csv_path}\n  Testo: {txt_path}\n")
-    print(genera_report_testo(risultati, tutti_nomi, manuali, date_uniche))
+    print(genera_report_testo(risultati, tutti_nomi, manuali, sab_uniche))
 
 
 if __name__ == "__main__":
