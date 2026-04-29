@@ -270,7 +270,6 @@ def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
 def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
                date_uniche: list[str]) -> str:
     """Hotels per riga, date per colonna."""
-    # Header
     righe = ["Hotel," + ",".join(d[5:] for d in date_uniche)]  # es. 28-Apr
 
     for nome in nomi:
@@ -284,7 +283,6 @@ def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
                 prezzi_riga.append((res["prezzo"] if res else "") or "")
         righe.append(nome + "," + ",".join(prezzi_riga))
 
-    # Riga media
     medie = []
     for d in date_uniche:
         valori = []
@@ -332,7 +330,6 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
                 riga += f"{p:<{col_data}}"
         righe.append(riga)
 
-    # Riga media
     riga_media = f"{'MEDIA':<{col_hotel}}"
     for d in date_mostra:
         valori = []
