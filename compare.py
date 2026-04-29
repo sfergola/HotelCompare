@@ -376,11 +376,14 @@ def main():
     print(f"HotelCompare — {len(cfg['competitor'])} competitor, "
           f"{len(giorni)} giorni ({data_inizio} → {data_fine})\n")
 
-    risultati = []
-    oggi_str  = str(oggi).replace("-", "")
-    json_path = OUTPUT_DIR / f"prezzi_{oggi_str}.json"
-    csv_path  = OUTPUT_DIR / f"report_{oggi_str}.csv"
-    txt_path  = OUTPUT_DIR / f"report_{oggi_str}.txt"
+    risultati   = []
+    from_str    = str(data_inizio).replace("-", "")
+    to_str      = str(data_fine).replace("-", "")
+    oggi_str    = str(oggi).replace("-", "")
+    stem        = f"competitors_from{from_str}_to{to_str}_computed{oggi_str}"
+    json_path   = OUTPUT_DIR / f"{stem}.json"
+    csv_path    = OUTPUT_DIR / f"{stem}.csv"
+    txt_path    = OUTPUT_DIR / f"{stem}.txt"
 
     with sync_playwright() as pw:
         browser = pw.chromium.launch(headless=True)
