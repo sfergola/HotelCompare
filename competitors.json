@@ -35,15 +35,18 @@
     },
     {
       "nome": "Hotel Florentia",
-      "citta": "Lido di Camaiore"
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/florentia.it.html"
     },
     {
       "nome": "Hotel Luca",
-      "citta": "Lido di Camaiore"
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/luca-amp-c-snc.it.html"
     },
     {
       "nome": "Hotel Lungomare",
-      "citta": "Lido di Camaiore"
+      "citta": "Lido di Camaiore",
+      "booking_url": "https://www.booking.com/hotel/it/lugomare.it.html"
     },
     {
       "nome": "Hotel Verbena",
