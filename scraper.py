@@ -31,8 +31,10 @@ KEYWORDS_QUADRUPLA    = ["quadrupla", "quadruple", "4 letti", "quattro letti"]
 KEYWORDS_COLAZIONE    = ["colazione inclusa", "prima colazione", "breakfast inclus",
                          "pernottamento e prima", "b&b", "eccezionale colazione"]
 KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
-KEYWORDS_ESAURITO     = ["non ci sono camere disponibili", "no rooms available",
-                         "strutture simili", "sold out", "nessuna disponibilità"]
+KEYWORDS_ESAURITO     = ["non ci sono camere disponibili per le date selezionate",
+                         "no rooms available for your dates",
+                         "sold out",
+                         "nessuna disponibilità per le date selezionate"]
 
 ROOM_START = ["camera", "suite", "appartamento", "stanza", "bungalow", "studio",
               "monolocale", "economy", "double", "twin", "single", "singola",
