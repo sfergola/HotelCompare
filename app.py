@@ -48,8 +48,13 @@ def colore_cella(cella: str, notti: int) -> str:
     return COLORI_NOTTI.get(notti, COLORE_NON_TROVATO)
 
 
+GIORNI_IT = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
+
 def fmt_giorno(d: str) -> str:
-    return d[8:10] + "-" + d[5:7]
+    from datetime import date
+    giorno = date.fromisoformat(d)
+    sigla  = GIORNI_IT[giorno.weekday()]
+    return f"{sigla} {d[8:10]}-{d[5:7]}"
 
 
 def mese_label(m: str) -> str:
@@ -156,10 +161,17 @@ dati      = carica_file(OUTPUT_DIR / scelta)
 meta       = dati.get("meta", {})
 calendario = dati.get("calendario", {})
 
+computed = scelta.split("_computed")[-1].replace(".json", "")
+if len(computed) == 8:
+    data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]}"
+else:
+    data_agg = "—"
+
 st.sidebar.markdown(f"""
 **Periodo:** {meta.get('data_inizio')} → {meta.get('data_fine')}
 **Adulti:** {meta.get('adulti', 2)}
 **Hotel:** {len(calendario)}
+**Aggiornato il:** {data_agg}
 """)
 
 # Legenda colori
