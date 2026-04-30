@@ -347,7 +347,7 @@ def _lookup(risultati, sab, nome, tipo):
 
 def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
                sab_uniche: list[str]) -> str:
-    date_header = ",".join(s[5:] for s in sab_uniche)
+    date_header = ",".join(s[8:10] + "-" + s[5:7] for s in sab_uniche)
     righe = [f"Hotel,Tipo,{date_header}"]
 
     for nome in nomi:
@@ -384,7 +384,7 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
     larghezza  = col_nome + col_tipo + col_data * len(sab_mostra)
 
     header = (" " * (col_nome + col_tipo)
-              + "".join(f"{s[5:]:<{col_data}}" for s in sab_mostra))
+              + "".join(f"{s[8:10]+'-'+s[5:7]:<{col_data}}" for s in sab_mostra))
     sep    = "─" * larghezza
     righe  = [header, sep]
 
