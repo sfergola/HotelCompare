@@ -27,6 +27,8 @@ EURO_RE = re.compile(r"€\s*(\d+(?:[.,]\d+)?)")
 KEYWORDS_MATRIMONIALE = ["matrimoniale", "doppia", "double", "twin"]
 KEYWORDS_ECONOMY      = ["economy", "budget", "basic"]
 KEYWORDS_SINGOLA      = ["singola", "single"]
+KEYWORDS_TRIPLA       = ["tripla", "triple", "3 letti", "tre letti"]
+KEYWORDS_QUADRUPLA    = ["quadrupla", "quadruple", "4 letti", "quattro letti"]
 KEYWORDS_COLAZIONE    = ["colazione inclusa", "prima colazione", "breakfast inclus",
                          "pernottamento e prima", "b&b", "eccezionale colazione"]
 KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
@@ -157,6 +159,15 @@ def _is_economy(nome: str) -> bool:
 def _is_singola(nome: str) -> bool:
     return any(k in nome.lower() for k in KEYWORDS_SINGOLA)
 
+def _is_tripla(nome: str) -> bool:
+    return any(k in nome.lower() for k in KEYWORDS_TRIPLA)
+
+def _is_quadrupla(nome: str) -> bool:
+    return any(k in nome.lower() for k in KEYWORDS_QUADRUPLA)
+
+def _is_extra_letti(prezzo: str) -> bool:
+    return bool(re.search(r'\d[TQ]\*?$', prezzo))
+
 def estrai_prezzo(page) -> str | None:
     """
     Ritorna:
@@ -166,6 +177,13 @@ def estrai_prezzo(page) -> str | None:
       "€ NNN#*" = B&B, economy/budget double
       "€ NNNS"  = solo camera, singola (nessuna doppia trovata)
       "€ NNNS*" = B&B, singola
+      "~€ NNN"  = matrimoniale trovata, tipo pensione non identificato
+      "~€ NNN#" = economy double, pensione non identificata
+      "~€ NNNS" = singola, pensione non identificata
+      "€ NNNT"  = tripla (fallback, solo visuale — esclusa dalle medie)
+      "€ NNNT*" = B&B, tripla
+      "€ NNNQ"  = quadrupla (fallback estremo, solo visuale — esclusa dalle medie)
+      "€ NNNQ*" = B&B, quadrupla
       None      = non trovato
     """
     testo_pagina = page.inner_text("body")
@@ -249,9 +267,6 @@ def estrai_prezzo(page) -> str | None:
     singole      = [(n, p, b) for n, p, b in risultati
                     if _is_singola(n) and not any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
 
-    if not matrimoniali and not singole:
-        return None
-
     standard = [(n, p, b) for n, p, b in matrimoniali if not _is_economy(n)]
     economy  = [(n, p, b) for n, p, b in matrimoniali if _is_economy(n)]
 
@@ -262,6 +277,28 @@ def estrai_prezzo(page) -> str | None:
             return f"€ {int(min(solo_p))}{marker}"
         if bb_p:
             return f"€ {int(min(bb_p))}{marker}*"
+
+    # board non identificata ma camera giusta trovata: mostra con ~ (pensione ignota)
+    for gruppo, marker in [(standard, ""), (economy, "#"), (singole, "S")]:
+        none_p = [p for n, p, b in gruppo if b is None]
+        if none_p:
+            return f"~€ {int(min(none_p))}{marker}"
+
+    triple    = [(n, p, b) for n, p, b in risultati if _is_tripla(n)]
+    quadruple = [(n, p, b) for n, p, b in risultati if _is_quadrupla(n)]
+
+    for gruppo, marker in [(triple, "T"), (quadruple, "Q")]:
+        if not gruppo:
+            continue
+        solo_p = [p for n, p, b in gruppo if b == "solo"]
+        bb_p   = [p for n, p, b in gruppo if b == "bb"]
+        any_p  = [p for n, p, b in gruppo]
+        if solo_p:
+            return f"€ {int(min(solo_p))}{marker}"
+        if bb_p:
+            return f"€ {int(min(bb_p))}{marker}*"
+        if any_p:
+            return f"€ {int(min(any_p))}{marker}"
 
     return None
 
@@ -282,10 +319,11 @@ def scrapa_notte(page, nome: str, booking_url: str, checkin: date, adulti: int,
         if prezzo and notti > 1:
             v = _parse_valore(prezzo)
             if v:
-                m_sfx     = re.match(r'€\s*\d+(.*)', prezzo)
+                prefix    = "~" if prezzo.startswith("~") else ""
+                m_sfx     = re.match(r'~?€\s*\d+(.*)', prezzo)
                 suffix    = m_sfx.group(1) if m_sfx else ""
                 per_notte = int(v / notti)
-                prezzo    = f"€ {per_notte}{suffix}" if per_notte >= 25 else None
+                prezzo    = f"{prefix}€ {per_notte}{suffix}" if per_notte >= 25 else None
         stato = "ok" if prezzo else "non_trovato"
     except Exception as e:
         prezzo = None
@@ -323,8 +361,8 @@ def genera_csv(risultati: list[dict], nomi: list[str], manuali: dict,
     for tipo, _, _ in TIPI_QUERY:
         medie = []
         for s in sab_uniche:
-            valori = [_parse_valore(_lookup(risultati, s, n, tipo))
-                      for n in nomi if n not in manuali]
+            prezzi = [_lookup(risultati, s, n, tipo) for n in nomi if n not in manuali]
+            valori = [_parse_valore(p) for p in prezzi if not _is_extra_letti(p)]
             valori = [v for v in valori if v]
             medie.append(f"€ {int(sum(valori)/len(valori))}" if valori else "")
         righe.append(f"MEDIA,{tipo}," + ",".join(medie))
@@ -368,8 +406,8 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
         nome_col = f"{'MEDIA':<{col_nome}}" if k == 0 else " " * col_nome
         riga = nome_col + f"{tipo:<{col_tipo}}"
         for s in sab_mostra:
-            valori = [_parse_valore(_lookup(risultati, s, n, tipo))
-                      for n in nomi if n not in manuali]
+            prezzi = [_lookup(risultati, s, n, tipo) for n in nomi if n not in manuali]
+            valori = [_parse_valore(p) for p in prezzi if not _is_extra_letti(p)]
             valori = [v for v in valori if v]
             m = f"€{int(sum(valori)/len(valori))}" if valori else "—"
             riga += f"{m:<{col_data}}"
@@ -387,6 +425,11 @@ def genera_report_testo(risultati: list[dict], nomi: list[str], manuali: dict,
         "  € 120#* = B&B, economy double",
         "  € 80S   = solo camera, singola (nessuna doppia trovata)",
         "  € 80S*  = B&B, singola",
+        "  ~€ 140  = matrimoniale trovata, tipo pensione non identificato",
+        "  € 80T   = tripla (fallback — solo visuale, esclusa dalle medie)",
+        "  € 80T*  = B&B, tripla",
+        "  € 80Q   = quadrupla (fallback estremo — solo visuale, esclusa dalle medie)",
+        "  € 80Q*  = B&B, quadrupla",
         "  —       = non disponibile / tipo camera non rilevato",
         "",
         "Tipi soggiorno:",
