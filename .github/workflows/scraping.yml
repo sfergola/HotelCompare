@@ -1,0 +1,56 @@
+name: Scraping settimanale prezzi
+
+on:
+  schedule:
+    - cron: '0 7 * * 2'  # ogni martedì alle 07:00 UTC (09:00 ora italiana)
+  workflow_dispatch:      # permette avvio manuale dalla UI GitHub
+
+permissions:
+  contents: write         # necessario per fare git push dei JSON
+
+jobs:
+  scrapa:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installa dipendenze Python
+        run: pip install -r requirements.txt
+
+      - name: Installa Chromium (Playwright)
+        run: playwright install chromium --with-deps
+
+      - name: Aggiorna date nel config
+        run: |
+          python - <<'EOF'
+          import json
+          from datetime import date, timedelta
+          from pathlib import Path
+
+          cfg_path = Path("competitors.json")
+          cfg = json.loads(cfg_path.read_text())
+          cfg["data_inizio"] = str(date.today() + timedelta(days=1))
+          cfg["data_fine"] = "2026-09-21"
+          cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2))
+          print(f"Periodo: {cfg['data_inizio']} → {cfg['data_fine']}")
+          EOF
+
+      - name: Scrapa prezzi
+        run: python run.py
+
+      - name: Committa e pusha JSON
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/calendar_*.json
+          git diff --cached --quiet && echo "Nessun dato nuovo." || (
+            git commit -m "chore: aggiornamento prezzi $(date +%d/%m/%Y)" &&
+            git push
+          )

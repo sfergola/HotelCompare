@@ -7,14 +7,14 @@ Uso:
 Mostra una tabella interattiva per mese con:
   - righe = hotel competitor
   - colonne = giorni
-  - celle colorate per durata soggiorno minimo (notti)
+  - celle colorate per prezzo relativo (verde=più economico, rosso=più caro)
   - suffisso ×N per minimum stay > 1
+  - riga Hotel Nuovo Tirreno (riferimento) separata dalla media
 """
 
 import json
 from pathlib import Path
-from datetime import datetime
-from itertools import groupby
+from datetime import date, datetime
 
 import pandas as pd
 import streamlit as st
@@ -23,35 +23,23 @@ from scraper import parse_valore, is_extra_letti
 
 OUTPUT_DIR = Path(__file__).parent / "output"
 
-# ── colori per minimum stay ──────────────────────────────────────────────────
-# 1n = verde (flessibile), 7n = arancio (solo settimanale)
-COLORI_NOTTI = {
-    1: "#d4edda",
-    2: "#d4edda",
-    3: "#fff3cd",
-    4: "#fff3cd",
-    5: "#fde8c8",
-    6: "#fde8c8",
-    7: "#fcd5a0",
-}
-
 COLORE_ESAURITO    = "#f8d7da"
 COLORE_NON_TROVATO = "#f0f0f0"
 COLORE_MEDIA       = "#e8e8ff"
+COLORE_RIFERIMENTO = "#fef9e7"
 
 
-def colore_cella(cella: str, notti: int) -> str:
-    if cella == "✕":
-        return COLORE_ESAURITO
-    if cella == "—" or not cella:
-        return COLORE_NON_TROVATO
-    return COLORI_NOTTI.get(notti, COLORE_NON_TROVATO)
+def colore_prezzo_relativo(valore: int, min_val: int, max_val: int) -> str:
+    if min_val == max_val:
+        return "hsl(120, 55%, 88%)"
+    ratio = (valore - min_val) / (max_val - min_val)
+    hue = int(120 * (1 - ratio))
+    return f"hsl({hue}, 55%, 88%)"
 
 
 GIORNI_IT = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
 
 def fmt_giorno(d: str) -> str:
-    from datetime import date
     giorno = date.fromisoformat(d)
     sigla  = GIORNI_IT[giorno.weekday()]
     return f"{sigla} {d[8:10]}-{d[5:7]}"
@@ -79,10 +67,11 @@ def lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
     return "—", 0
 
 
-def media_giorno(calendario: dict, nomi: list, manuali: dict, giorno: str) -> str:
+def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
+                 giorno: str) -> str:
     valori = []
     for nome in nomi:
-        if nome in manuali:
+        if nome in manuali or nome == riferimento:
             continue
         cella, _ = lookup(calendario, nome, giorno)
         p = parse_valore(cella)
@@ -93,19 +82,38 @@ def media_giorno(calendario: dict, nomi: list, manuali: dict, giorno: str) -> st
     return f"€ {int(sum(valori) / len(valori))}"
 
 
-def carica_file(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
+                  giorno: str) -> dict[str, int]:
+    """Ritorna {nome: valore_intero} per tutti i competitor con prezzo valido."""
+    result = {}
+    for nome in nomi:
+        if nome in manuali or nome == riferimento:
+            continue
+        cella, _ = lookup(calendario, nome, giorno)
+        p = parse_valore(cella)
+        if p and not is_extra_letti(cella):
+            result[nome] = p
+    return result
 
 
 def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
-                         giorni_mese: list[str]):
+                         riferimento: str, giorni_mese: list[str]):
     header_giorni = [fmt_giorno(g) for g in giorni_mese]
-    tutti_nomi    = nomi
+
+    # pre-calcola min/max per ogni giorno (per colorazione relativa)
+    minmax = {}
+    for g in giorni_mese:
+        prezzi = prezzi_giorno(calendario, nomi, manuali, riferimento, g)
+        if prezzi:
+            minmax[g] = (min(prezzi.values()), max(prezzi.values()))
 
     rows_data   = []
     rows_colori = []
 
-    for nome in tutti_nomi:
+    for nome in nomi:
+        if nome == riferimento:
+            continue
+
         if nome in manuali:
             row        = [nome] + ["verifica manuale"] + [""] * (len(giorni_mese) - 1)
             row_colori = [""] * (len(giorni_mese) + 1)
@@ -116,9 +124,19 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         row        = [nome]
         row_colori = [""]
         for g in giorni_mese:
-            cella, notti = lookup(calendario, nome, g)
+            cella, _ = lookup(calendario, nome, g)
+            p = parse_valore(cella)
+            if cella == "✕":
+                colore = COLORE_ESAURITO
+            elif cella == "—" or not cella:
+                colore = COLORE_NON_TROVATO
+            elif p and not is_extra_letti(cella) and g in minmax:
+                mn, mx = minmax[g]
+                colore = colore_prezzo_relativo(p, mn, mx)
+            else:
+                colore = COLORE_NON_TROVATO
             row.append(cella)
-            row_colori.append(colore_cella(cella, notti))
+            row_colori.append(colore)
         rows_data.append(row)
         rows_colori.append(row_colori)
 
@@ -126,11 +144,32 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     row_media        = ["MEDIA"]
     row_media_colori = [COLORE_MEDIA]
     for g in giorni_mese:
-        m = media_giorno(calendario, tutti_nomi, manuali, g)
+        m = media_giorno(calendario, nomi, manuali, riferimento, g)
         row_media.append(m)
         row_media_colori.append(COLORE_MEDIA)
     rows_data.append(row_media)
     rows_colori.append(row_media_colori)
+
+    # riga Hotel Nuovo Tirreno (riferimento)
+    if riferimento:
+        row_rif        = [f"▶ {riferimento}"]
+        row_rif_colori = [COLORE_RIFERIMENTO]
+        for g in giorni_mese:
+            cella, _ = lookup(calendario, riferimento, g)
+            p = parse_valore(cella)
+            if cella == "✕":
+                colore = COLORE_ESAURITO
+            elif cella == "—" or not cella:
+                colore = COLORE_NON_TROVATO
+            elif p and not is_extra_letti(cella) and g in minmax:
+                mn, mx = minmax[g]
+                colore = colore_prezzo_relativo(p, mn, mx)
+            else:
+                colore = COLORE_RIFERIMENTO
+            row_rif.append(cella)
+            row_rif_colori.append(colore)
+        rows_data.append(row_rif)
+        rows_colori.append(row_rif_colori)
 
     df = pd.DataFrame(rows_data, columns=["Hotel"] + header_giorni)
 
@@ -156,14 +195,22 @@ if not json_files:
 
 nomi_file = [f.name for f in json_files]
 scelta    = st.sidebar.selectbox("File dati", nomi_file)
-dati      = carica_file(OUTPUT_DIR / scelta)
+dati      = json.loads((OUTPUT_DIR / scelta).read_text(encoding="utf-8"))
 
 meta       = dati.get("meta", {})
 calendario = dati.get("calendario", {})
 
 computed = scelta.split("_computed")[-1].replace(".json", "")
 if len(computed) == 8:
-    data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]}"
+    data_agg_date = date(int(computed[:4]), int(computed[4:6]), int(computed[6:8]))
+    giorni_fa     = (date.today() - data_agg_date).days
+    if giorni_fa == 0:
+        giorni_fa_str = "oggi"
+    elif giorni_fa == 1:
+        giorni_fa_str = "ieri"
+    else:
+        giorni_fa_str = f"{giorni_fa} giorni fa"
+    data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]} ({giorni_fa_str})"
 else:
     data_agg = "—"
 
@@ -175,22 +222,23 @@ st.sidebar.markdown(f"""
 """)
 
 # Legenda colori
-st.sidebar.markdown("### Minimum stay")
-for notti, colore in COLORI_NOTTI.items():
-    st.sidebar.markdown(
-        f"<span style='background:{colore};padding:2px 8px;border-radius:3px'>"
-        f"{'1-2' if notti == 1 else '3-4' if notti == 3 else '5-6' if notti == 5 else '7'} notti"
-        f"</span>",
-        unsafe_allow_html=True
-    )
-    if notti in (2, 4, 6, 7):
-        continue
+st.sidebar.markdown("### Colori prezzi")
+st.sidebar.markdown(
+    "<span style='background:hsl(120,55%,88%);padding:2px 8px;border-radius:3px'>più economico</span>"
+    " → "
+    "<span style='background:hsl(0,55%,88%);padding:2px 8px;border-radius:3px'>più caro</span>",
+    unsafe_allow_html=True
+)
 st.sidebar.markdown(
     f"<span style='background:{COLORE_ESAURITO};padding:2px 8px;border-radius:3px'>✕ esaurito</span>",
     unsafe_allow_html=True
 )
 st.sidebar.markdown(
     f"<span style='background:{COLORE_NON_TROVATO};padding:2px 8px;border-radius:3px'>— non trovato</span>",
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    f"<span style='background:{COLORE_RIFERIMENTO};padding:2px 8px;border-radius:3px'>▶ Hotel Nuovo Tirreno</span>",
     unsafe_allow_html=True
 )
 
@@ -203,23 +251,35 @@ if not tutti_giorni:
     st.warning("Nessun dato nel file selezionato.")
     st.stop()
 
-# Nomi hotel
-nomi    = list(calendario.keys())
-cfg_raw = json.loads((Path(__file__).parent / "competitors.json").read_text())
-manuali = {c["nome"]: c["nota"] for c in cfg_raw["competitor"] if "nota" in c}
+# Nomi hotel e riferimento
+cfg_raw    = json.loads((Path(__file__).parent / "competitors.json").read_text())
+manuali    = {c["nome"]: c["nota"] for c in cfg_raw["competitor"] if "nota" in c}
+riferimento = next((c["nome"] for c in cfg_raw["competitor"] if c.get("riferimento")), "")
+nomi       = list(calendario.keys())
 
-# Filtro mese
+# Navigazione mese
 mesi_disponibili = sorted(set(g[:7] for g in tutti_giorni))
-mese_scelto      = st.sidebar.selectbox(
-    "Mese",
-    mesi_disponibili,
-    format_func=mese_label
-)
 
-giorni_mese = [g for g in tutti_giorni if g.startswith(mese_scelto)]
+if "mese_idx" not in st.session_state:
+    st.session_state.mese_idx = 0
 
-st.subheader(mese_label(mese_scelto))
-render_tabella_mese(calendario, nomi, manuali, giorni_mese)
+idx = st.session_state.mese_idx
+idx = max(0, min(idx, len(mesi_disponibili) - 1))
+
+col_prev, col_titolo, col_next = st.columns([1, 6, 1])
+with col_prev:
+    if st.button("←", disabled=(idx == 0)):
+        st.session_state.mese_idx = idx - 1
+        st.rerun()
+with col_titolo:
+    st.subheader(mese_label(mesi_disponibili[idx]))
+with col_next:
+    if st.button("→", disabled=(idx == len(mesi_disponibili) - 1)):
+        st.session_state.mese_idx = idx + 1
+        st.rerun()
+
+giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
+render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese)
 
 # Legenda prezzi
 with st.expander("Legenda prezzi"):
