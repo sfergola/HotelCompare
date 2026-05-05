@@ -14,6 +14,7 @@ Fasi:
 """
 
 import json
+import subprocess
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
@@ -171,6 +172,30 @@ def main():
 
     print(f"\nDone.\n  JSON  : {json_done}\n  CSV   : {csv_path}\n  Testo : {txt_path}\n")
     print(genera_report_testo(calendario, tutti_nomi, manuali, giorni_str[:31], riferimento))
+
+    _git_push()
+
+
+def _git_push():
+    root = Path(__file__).parent
+    subprocess.run(["git", "add", "output/calendar_merged.json"], cwd=root, check=False)
+    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=root)
+    if diff.returncode == 0:
+        print("Git: nessuna modifica da committare.")
+        return
+    oggi_str = date.today().strftime("%d/%m/%Y")
+    commit = subprocess.run(
+        ["git", "commit", "-m", f"chore: aggiornamento prezzi {oggi_str}"],
+        cwd=root, check=False,
+    )
+    if commit.returncode != 0:
+        print("Git: commit fallito.")
+        return
+    push = subprocess.run(["git", "push", "origin", "main"], cwd=root, check=False)
+    if push.returncode != 0:
+        print("Git: push fallito — controlla la connessione.")
+    else:
+        print("Git: push completato → Streamlit aggiornato.")
 
 
 if __name__ == "__main__":
