@@ -96,6 +96,9 @@ def main():
     if json_prog.exists():
         json_prog.replace(json_done)
 
+    from filler import esegui_filler
+    esegui_filler(json_done)
+
     tutti_nomi  = list(urls.keys()) + list(manuali.keys())
     giorni_str  = [str(g) for g in giorno_range(data_inizio, data_fine)]
 

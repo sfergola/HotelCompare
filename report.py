@@ -31,7 +31,8 @@ def _fmt_giorno(d: str) -> str:
 def _lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
     """
     Ritorna (cella_testo, notti) per un dato hotel e giorno.
-    cella_testo include il suffisso ×N se notti > 1.
+    cella_testo include il suffisso ×N e, se assente il prezzo corrente,
+    il prezzo storico in formato: — (€120* · 30/04).
     """
     entry = calendario.get(nome, {}).get(giorno)
     if not entry:
@@ -43,9 +44,22 @@ def _lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
     if prezzo:
         sfx = f"×{notti}" if notti > 1 else ""
         return f"{prezzo}{sfx}", notti
+
+    storico = _fmt_storico(entry)
     if stato == "esaurito":
-        return "✕", 0
-    return "—", 0
+        return f"✕{storico}", 0
+    return f"—{storico}", 0
+
+
+def _fmt_storico(entry: dict) -> str:
+    sp = entry.get("storico_prezzo")
+    if not sp:
+        return ""
+    sn = entry.get("storico_notti", 1)
+    sd = entry.get("storico_data", "")
+    sfx = f"×{sn}" if sn > 1 else ""
+    d_fmt = sd[8:10] + "/" + sd[5:7] if len(sd) == 10 else sd
+    return f" ({sp}{sfx} · {d_fmt})"
 
 
 def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str) -> str:
@@ -53,9 +67,11 @@ def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str) -> str
     for nome in nomi:
         if nome in manuali:
             continue
-        cella, _ = _lookup(calendario, nome, giorno)
-        p = parse_valore(cella)
-        if p and not is_extra_letti(cella):
+        entry = calendario.get(nome, {}).get(giorno)
+        if not entry or not entry.get("prezzo"):
+            continue
+        p = parse_valore(entry["prezzo"])
+        if p and not is_extra_letti(entry["prezzo"]):
             valori.append(p)
     if not valori:
         return ""

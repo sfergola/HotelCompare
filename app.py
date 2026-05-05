@@ -52,6 +52,17 @@ def mese_label(m: str) -> str:
     return f"{mesi[int(mm)]} {anno}"
 
 
+def _fmt_storico(entry: dict) -> str:
+    sp = entry.get("storico_prezzo")
+    if not sp:
+        return ""
+    sn = entry.get("storico_notti", 1)
+    sd = entry.get("storico_data", "")
+    sfx = f"×{sn}" if sn > 1 else ""
+    d_fmt = sd[8:10] + "/" + sd[5:7] if len(sd) == 10 else sd
+    return f" ({sp}{sfx} · {d_fmt})"
+
+
 def lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
     entry = calendario.get(nome, {}).get(giorno)
     if not entry:
@@ -62,9 +73,10 @@ def lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
     if prezzo:
         sfx = f"×{notti}" if notti > 1 else ""
         return f"{prezzo}{sfx}", notti
+    storico = _fmt_storico(entry)
     if stato == "esaurito":
-        return "✕", 0
-    return "—", 0
+        return f"✕{storico}", 0
+    return f"—{storico}", 0
 
 
 def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
@@ -73,9 +85,11 @@ def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
     for nome in nomi:
         if nome in manuali or nome == riferimento:
             continue
-        cella, _ = lookup(calendario, nome, giorno)
-        p = parse_valore(cella)
-        if p and not is_extra_letti(cella):
+        entry = calendario.get(nome, {}).get(giorno)
+        if not entry or not entry.get("prezzo"):
+            continue
+        p = parse_valore(entry["prezzo"])
+        if p and not is_extra_letti(entry["prezzo"]):
             valori.append(p)
     if not valori:
         return "—"
