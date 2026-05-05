@@ -28,9 +28,19 @@ _Avoid_: minimum stay effettivo
 5. Quadrupla (solo visuale, esclusa dalle medie)
 
 **Stato cella**:
-- `€126` — prezzo trovato
-- `—` — nessun prezzo trovato (causa ignota)
-- `✕` — esaurito (Booking mostra esplicitamente "sold out" / "esaurito") — indicativo, non garantito
+- `€126` — prezzo trovato nel run più recente
+- `—` — nessun prezzo trovato nel run più recente (causa ignota — potrebbe riaprire)
+- `✕` — esaurito nel run più recente (Booking mostra esplicitamente "sold out") — indicativo, potrebbe significare camera venduta
+
+**Prezzo storico** (affianca lo stato corrente):
+Il prezzo più recente mai osservato per quella cella, mostrato solo quando lo stato corrente è `—` o `✕`.
+Formato: `— (€120* · 05/05)` o `✕ (€120* · 05/05)`.
+Semantica: "lo stato è questo oggi, ma l'ultima volta che c'era disponibilità il prezzo era X".
+Non mostrato quando c'è un prezzo reale — in quel caso la data di scraping non è rilevante.
+_Avoid_: prezzo precedente, cache
+
+**calendar_merged.json**:
+Calendario unificato prodotto da `filler.py`. Regola: il run più recente vince sempre su ogni cella, indipendentemente da cosa conteneva. Se la cella più recente è `—` o `✕`, affianca il prezzo più recente mai osservato con la data dello scraping. È la fonte dati primaria di `app.py`.
 
 **Tipo pensione**:
 - `solo camera` — pernottamento senza pasti
@@ -48,6 +58,10 @@ _Avoid_: minimum stay effettivo
 
 **Cella calendario**:
 Intersezione giorno × competitor nella visualizzazione calendario. Mostra il prezzo per notte e il soggiorno minimo trovato (es. `€126 ×7`).
+
+**stagione_fine**:
+Data di fine stagione fissa in `competitors.json`. Usata solo dallo scheduler automatico (`run_scheduled.py`). Non viene mai modificata dai run. `data_fine` è la controparte manuale, modificabile liberamente per run parziali.
+_Avoid_: data_fine dello scheduler, end date
 
 ## Decisioni prese (feature/calendar-view)
 

@@ -48,9 +48,12 @@ python run_scheduled.py        # run automatico (con guard settimanale)
 
 ## Configurazione date
 In `competitors.json`:
-- `data_inizio` — primo giorno da scrapare
-- `data_fine` — ultimo giorno (escluso)
-- `run_scheduled.py` sovrascrive `data_inizio` con domani ad ogni run automatico
+- `data_inizio` — primo giorno da scrapare (controllo manuale)
+- `data_fine` — ultimo giorno (controllo manuale — cambialo per run parziali)
+- `stagione_fine` — fine stagione fissa, usata dallo scheduler automatico (non toccare)
+- `run_scheduled.py` imposta `data_inizio=domani` e `data_fine=stagione_fine` ad ogni run automatico
+  → dopo un run automatico, `data_fine` torna a `stagione_fine`
+  → per run parziali manuali: cambia `data_inizio`/`data_fine`, poi ripristina se necessario
 
 ## Logica algoritmo per-giorno
 Per ogni hotel × giorno:

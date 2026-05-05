@@ -76,11 +76,12 @@ def main():
         print("Run già completato questa settimana. Skip.")
         sys.exit(0)
 
-    # aggiorna data_inizio a domani nel config
+    # aggiorna solo data_inizio — data_fine è under controllo manuale
+    # lo scheduler usa stagione_fine come fine stagione fissa
     cfg_path = ROOT / "competitors.json"
     cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
     cfg["data_inizio"] = str(oggi + timedelta(days=1))
-    cfg["data_fine"] = "2026-09-21"
+    cfg["data_fine"]   = cfg.get("stagione_fine", "2026-09-21")
     cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
 
     notifica("Inizio scraping prezzi competitor — non spegnere il PC")

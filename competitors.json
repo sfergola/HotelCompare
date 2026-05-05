@@ -79,5 +79,6 @@
       "nota": "non su Booking.com — verifica manuale su hotelalbasulmare.it"
     }
   ],
-  "max_workers": 3
+  "max_workers": 3,
+  "stagione_fine": "2026-09-21"
 }
