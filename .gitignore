@@ -1,5 +1,7 @@
 output/*.txt
 output/*.csv
+output/*.json
+!output/calendar_merged.json
 output/*_inprogress.json
 output/test_*.json
 venv/
