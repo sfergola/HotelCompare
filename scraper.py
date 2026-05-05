@@ -328,3 +328,38 @@ def risolvi_urls(page, cfg: dict) -> tuple[dict[str, str], bool]:
             print(f"  ⚠ '{nome}' — saltato")
         time.sleep(random.uniform(2.0, 4.0))
     return urls, aggiornato
+
+
+# ── helpers condivisi tra report.py e app.py ─────────────────────────────────
+
+def fmt_storico(entry: dict) -> str:
+    """Formatta il prezzo storico come ' (€120* · 30/04)'."""
+    sp = entry.get("storico_prezzo")
+    if not sp:
+        return ""
+    sn = entry.get("storico_notti", 1)
+    sd = entry.get("storico_data", "")
+    sfx = f"×{sn}" if sn > 1 else ""
+    d_fmt = sd[8:10] + "/" + sd[5:7] if len(sd) == 10 else sd
+    return f" ({sp}{sfx} · {d_fmt})"
+
+
+def lookup_entry(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
+    """
+    Ritorna (cella_testo, notti) per un hotel e giorno.
+    cella_testo include ×N se minimum stay > 1 e, se assente il prezzo corrente,
+    il prezzo storico in formato: — (€120* · 30/04).
+    """
+    entry = calendario.get(nome, {}).get(giorno)
+    if not entry:
+        return "—", 0
+    prezzo = entry.get("prezzo")
+    notti  = entry.get("notti") or 1
+    stato  = entry.get("stato", "non_trovato")
+    if prezzo:
+        sfx = f"×{notti}" if notti > 1 else ""
+        return f"{prezzo}{sfx}", notti
+    storico = fmt_storico(entry)
+    if stato == "esaurito":
+        return f"✕{storico}", 0
+    return f"—{storico}", 0

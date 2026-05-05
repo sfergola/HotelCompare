@@ -1,15 +1,16 @@
-"""Test veloce: scrapa una notte su tutti i competitor e mostra risultati."""
-import json, sys
+"""Test veloce: scrapa un giorno su tutti i competitor e mostra risultati."""
+import json
 from pathlib import Path
 from datetime import date
 from playwright.sync_api import sync_playwright
 
-sys.path.insert(0, str(Path(__file__).parent))
-from compare_booking import carica_config, risolvi_urls, scrapa_notte, genera_report_testo
+from scraper import risolvi_urls
+from algorithm import scrapa_giorno
 
-cfg    = carica_config()
+CONFIG_PATH = Path(__file__).parent / "competitors.json"
+cfg    = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
 adulti = cfg.get("adulti", 2)
-notte  = date(2026, 6, 7)  # sabato
+giorno = date(2026, 7, 5)  # sabato
 
 with sync_playwright() as pw:
     browser = pw.chromium.launch(headless=True)
@@ -20,18 +21,14 @@ with sync_playwright() as pw:
     page = ctx.new_page()
 
     print("=== Risoluzione URL ===")
-    urls = risolvi_urls(page, cfg)
-    manuali = {c["nome"]: c["nota"] for c in cfg["competitor"] if "nota" in c}
+    urls, _ = risolvi_urls(page, cfg)
 
-    print(f"\n=== Test prezzi matrimoniale B&B per {notte} (query 7 notti, prezzo/notte) ===")
-    risultati = []
+    print(f"\n=== Test prezzi per {giorno} ===")
     for nome, url in urls.items():
-        res = scrapa_notte(page, nome, url, notte, adulti, notti=7, sab=notte, tipo="Sab→Sab")
-        risultati.append(res)
-        stato = res["prezzo"] or f"NON TROVATO ({res['stato']})"
-        print(f"  {nome:<30} {stato}")
+        entry = scrapa_giorno(page, url, giorno, date(2026, 7, 12), adulti)
+        prezzo = entry.get("prezzo") or f"NON TROVATO ({entry.get('stato')})"
+        notti  = entry.get("notti", 1)
+        sfx    = f" ×{notti}" if notti > 1 else ""
+        print(f"  {nome:<30} {prezzo}{sfx}")
 
     browser.close()
-
-print()
-print(genera_report_testo(risultati, list(urls.keys()) + list(manuali.keys()), manuali, [str(notte)]))

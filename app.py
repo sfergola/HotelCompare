@@ -19,7 +19,7 @@ from datetime import date, datetime
 import pandas as pd
 import streamlit as st
 
-from scraper import parse_valore, is_extra_letti
+from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry
 
 OUTPUT_DIR = Path(__file__).parent / "output"
 
@@ -52,31 +52,7 @@ def mese_label(m: str) -> str:
     return f"{mesi[int(mm)]} {anno}"
 
 
-def _fmt_storico(entry: dict) -> str:
-    sp = entry.get("storico_prezzo")
-    if not sp:
-        return ""
-    sn = entry.get("storico_notti", 1)
-    sd = entry.get("storico_data", "")
-    sfx = f"×{sn}" if sn > 1 else ""
-    d_fmt = sd[8:10] + "/" + sd[5:7] if len(sd) == 10 else sd
-    return f" ({sp}{sfx} · {d_fmt})"
-
-
-def lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
-    entry = calendario.get(nome, {}).get(giorno)
-    if not entry:
-        return "—", 0
-    prezzo = entry.get("prezzo")
-    notti  = entry.get("notti") or 1
-    stato  = entry.get("stato", "non_trovato")
-    if prezzo:
-        sfx = f"×{notti}" if notti > 1 else ""
-        return f"{prezzo}{sfx}", notti
-    storico = _fmt_storico(entry)
-    if stato == "esaurito":
-        return f"✕{storico}", 0
-    return f"—{storico}", 0
+lookup = lookup_entry
 
 
 def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,

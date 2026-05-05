@@ -16,9 +16,7 @@ Formato celle:
     "—"        = non trovato / non disponibile
 """
 
-from datetime import date, timedelta
-
-from scraper import parse_valore, is_extra_letti
+from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry
 
 
 # ── helper ───────────────────────────────────────────────────────────────────
@@ -28,38 +26,8 @@ def _fmt_giorno(d: str) -> str:
     return d[8:10] + "-" + d[5:7]
 
 
-def _lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
-    """
-    Ritorna (cella_testo, notti) per un dato hotel e giorno.
-    cella_testo include il suffisso ×N e, se assente il prezzo corrente,
-    il prezzo storico in formato: — (€120* · 30/04).
-    """
-    entry = calendario.get(nome, {}).get(giorno)
-    if not entry:
-        return "—", 0
-    stato  = entry.get("stato", "non_trovato")
-    prezzo = entry.get("prezzo")
-    notti  = entry.get("notti") or 1
-
-    if prezzo:
-        sfx = f"×{notti}" if notti > 1 else ""
-        return f"{prezzo}{sfx}", notti
-
-    storico = _fmt_storico(entry)
-    if stato == "esaurito":
-        return f"✕{storico}", 0
-    return f"—{storico}", 0
-
-
-def _fmt_storico(entry: dict) -> str:
-    sp = entry.get("storico_prezzo")
-    if not sp:
-        return ""
-    sn = entry.get("storico_notti", 1)
-    sd = entry.get("storico_data", "")
-    sfx = f"×{sn}" if sn > 1 else ""
-    d_fmt = sd[8:10] + "/" + sd[5:7] if len(sd) == 10 else sd
-    return f" ({sp}{sfx} · {d_fmt})"
+_lookup = lookup_entry
+_fmt_storico = fmt_storico
 
 
 def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str,
