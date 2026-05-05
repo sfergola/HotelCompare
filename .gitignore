@@ -1,4 +1,7 @@
-output/
+output/*.txt
+output/*.csv
+output/*_inprogress.json
+output/test_*.json
 venv/
 .venv/
 __pycache__/

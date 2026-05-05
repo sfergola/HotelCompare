@@ -1,6 +1,6 @@
 {
-  "data_inizio": "2026-05-02",
-  "data_fine": "2026-06-30",
+  "data_inizio": "2026-05-08",
+  "data_fine": "2026-09-21",
   "adulti": 2,
   "competitor": [
     {
@@ -62,6 +62,11 @@
       "nome": "Hotel Sylvia",
       "citta": "Lido di Camaiore",
       "booking_url": "https://www.booking.com/hotel/it/sylvia.it.html"
+    },
+    {
+      "nome": "Hotel Nuovo Tirreno",
+      "citta": "Lido di Camaiore",
+      "riferimento": true
     },
     {
       "nome": "Hotel Verbena",

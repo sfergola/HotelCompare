@@ -1,0 +1,313 @@
+"""
+app.py — visualizzazione calendario prezzi competitor.
+
+Uso:
+    streamlit run app.py
+
+Mostra una tabella interattiva per mese con:
+  - righe = hotel competitor
+  - colonne = giorni
+  - celle colorate per prezzo relativo (verde=più economico, rosso=più caro)
+  - suffisso ×N per minimum stay > 1
+  - riga Hotel Nuovo Tirreno (riferimento) separata dalla media
+"""
+
+import json
+from pathlib import Path
+from datetime import date, datetime
+
+import pandas as pd
+import streamlit as st
+
+from scraper import parse_valore, is_extra_letti
+
+OUTPUT_DIR = Path(__file__).parent / "output"
+
+COLORE_ESAURITO    = "#f8d7da"
+COLORE_NON_TROVATO = "#f0f0f0"
+COLORE_MEDIA       = "#e8e8ff"
+COLORE_RIFERIMENTO = "#fef9e7"
+
+
+def colore_prezzo_relativo(valore: int, min_val: int, max_val: int) -> str:
+    if min_val == max_val:
+        return "hsl(120, 55%, 88%)"
+    ratio = (valore - min_val) / (max_val - min_val)
+    hue = int(120 * (1 - ratio))
+    return f"hsl({hue}, 55%, 88%)"
+
+
+GIORNI_IT = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
+
+def fmt_giorno(d: str) -> str:
+    giorno = date.fromisoformat(d)
+    sigla  = GIORNI_IT[giorno.weekday()]
+    return f"{sigla} {d[8:10]}-{d[5:7]}"
+
+
+def mese_label(m: str) -> str:
+    mesi = ["", "Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno",
+            "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre"]
+    anno, mm = m.split("-")
+    return f"{mesi[int(mm)]} {anno}"
+
+
+def _fmt_storico(entry: dict) -> str:
+    sp = entry.get("storico_prezzo")
+    if not sp:
+        return ""
+    sn = entry.get("storico_notti", 1)
+    sd = entry.get("storico_data", "")
+    sfx = f"×{sn}" if sn > 1 else ""
+    d_fmt = sd[8:10] + "/" + sd[5:7] if len(sd) == 10 else sd
+    return f" ({sp}{sfx} · {d_fmt})"
+
+
+def lookup(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
+    entry = calendario.get(nome, {}).get(giorno)
+    if not entry:
+        return "—", 0
+    prezzo = entry.get("prezzo")
+    notti  = entry.get("notti") or 1
+    stato  = entry.get("stato", "non_trovato")
+    if prezzo:
+        sfx = f"×{notti}" if notti > 1 else ""
+        return f"{prezzo}{sfx}", notti
+    storico = _fmt_storico(entry)
+    if stato == "esaurito":
+        return f"✕{storico}", 0
+    return f"—{storico}", 0
+
+
+def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
+                 giorno: str) -> str:
+    valori = []
+    for nome in nomi:
+        if nome in manuali or nome == riferimento:
+            continue
+        entry = calendario.get(nome, {}).get(giorno)
+        if not entry or not entry.get("prezzo"):
+            continue
+        p = parse_valore(entry["prezzo"])
+        if p and not is_extra_letti(entry["prezzo"]):
+            valori.append(p)
+    if not valori:
+        return "—"
+    return f"€ {int(sum(valori) / len(valori))}"
+
+
+def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
+                  giorno: str) -> dict[str, int]:
+    """Ritorna {nome: valore_intero} per tutti i competitor con prezzo valido."""
+    result = {}
+    for nome in nomi:
+        if nome in manuali or nome == riferimento:
+            continue
+        cella, _ = lookup(calendario, nome, giorno)
+        p = parse_valore(cella)
+        if p and not is_extra_letti(cella):
+            result[nome] = p
+    return result
+
+
+def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
+                         riferimento: str, giorni_mese: list[str]):
+    header_giorni = [fmt_giorno(g) for g in giorni_mese]
+
+    # pre-calcola min/max per ogni giorno (per colorazione relativa)
+    minmax = {}
+    for g in giorni_mese:
+        prezzi = prezzi_giorno(calendario, nomi, manuali, riferimento, g)
+        if prezzi:
+            minmax[g] = (min(prezzi.values()), max(prezzi.values()))
+
+    rows_data   = []
+    rows_colori = []
+
+    for nome in nomi:
+        if nome == riferimento:
+            continue
+
+        if nome in manuali:
+            row        = [nome] + ["verifica manuale"] + [""] * (len(giorni_mese) - 1)
+            row_colori = [""] * (len(giorni_mese) + 1)
+            rows_data.append(row)
+            rows_colori.append(row_colori)
+            continue
+
+        row        = [nome]
+        row_colori = [""]
+        for g in giorni_mese:
+            cella, _ = lookup(calendario, nome, g)
+            p = parse_valore(cella)
+            if cella == "✕":
+                colore = COLORE_ESAURITO
+            elif cella == "—" or not cella:
+                colore = COLORE_NON_TROVATO
+            elif p and not is_extra_letti(cella) and g in minmax:
+                mn, mx = minmax[g]
+                colore = colore_prezzo_relativo(p, mn, mx)
+            else:
+                colore = COLORE_NON_TROVATO
+            row.append(cella)
+            row_colori.append(colore)
+        rows_data.append(row)
+        rows_colori.append(row_colori)
+
+    # riga MEDIA
+    row_media        = ["MEDIA"]
+    row_media_colori = [COLORE_MEDIA]
+    for g in giorni_mese:
+        m = media_giorno(calendario, nomi, manuali, riferimento, g)
+        row_media.append(m)
+        row_media_colori.append(COLORE_MEDIA)
+    rows_data.append(row_media)
+    rows_colori.append(row_media_colori)
+
+    # riga Hotel Nuovo Tirreno (riferimento)
+    if riferimento:
+        row_rif        = [f"▶ {riferimento}"]
+        row_rif_colori = [COLORE_RIFERIMENTO]
+        for g in giorni_mese:
+            cella, _ = lookup(calendario, riferimento, g)
+            p = parse_valore(cella)
+            if cella == "✕":
+                colore = COLORE_ESAURITO
+            elif cella == "—" or not cella:
+                colore = COLORE_NON_TROVATO
+            elif p and not is_extra_letti(cella) and g in minmax:
+                mn, mx = minmax[g]
+                colore = colore_prezzo_relativo(p, mn, mx)
+            else:
+                colore = COLORE_RIFERIMENTO
+            row_rif.append(cella)
+            row_rif_colori.append(colore)
+        rows_data.append(row_rif)
+        rows_colori.append(row_rif_colori)
+
+    df = pd.DataFrame(rows_data, columns=["Hotel"] + header_giorni)
+
+    def style_fn(row):
+        idx  = df.index.get_loc(row.name)
+        cols = rows_colori[idx]
+        return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
+
+    styled = df.style.apply(style_fn, axis=1)
+    st.dataframe(styled, use_container_width=True, hide_index=True)
+
+
+# ── UI principale ────────────────────────────────────────────────────────────
+
+st.set_page_config(page_title="HotelCompare", layout="wide")
+st.title("HotelCompare — Prezzi competitor")
+
+# Selezione file
+json_files = sorted(OUTPUT_DIR.glob("calendar_from*_computed*.json"), reverse=True)
+if not json_files:
+    st.warning("Nessun file di dati trovato in output/. Esegui prima: `python run.py`")
+    st.stop()
+
+nomi_file = [f.name for f in json_files]
+scelta    = st.sidebar.selectbox("File dati", nomi_file)
+dati      = json.loads((OUTPUT_DIR / scelta).read_text(encoding="utf-8"))
+
+meta       = dati.get("meta", {})
+calendario = dati.get("calendario", {})
+
+computed = scelta.split("_computed")[-1].replace(".json", "")
+if len(computed) == 8:
+    data_agg_date = date(int(computed[:4]), int(computed[4:6]), int(computed[6:8]))
+    giorni_fa     = (date.today() - data_agg_date).days
+    if giorni_fa == 0:
+        giorni_fa_str = "oggi"
+    elif giorni_fa == 1:
+        giorni_fa_str = "ieri"
+    else:
+        giorni_fa_str = f"{giorni_fa} giorni fa"
+    data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]} ({giorni_fa_str})"
+else:
+    data_agg = "—"
+
+st.sidebar.markdown(f"""
+**Periodo:** {meta.get('data_inizio')} → {meta.get('data_fine')}
+**Adulti:** {meta.get('adulti', 2)}
+**Hotel:** {len(calendario)}
+**Aggiornato il:** {data_agg}
+""")
+
+# Legenda colori
+st.sidebar.markdown("### Colori prezzi")
+st.sidebar.markdown(
+    "<span style='background:hsl(120,55%,88%);padding:2px 8px;border-radius:3px'>più economico</span>"
+    " → "
+    "<span style='background:hsl(0,55%,88%);padding:2px 8px;border-radius:3px'>più caro</span>",
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    f"<span style='background:{COLORE_ESAURITO};padding:2px 8px;border-radius:3px'>✕ esaurito</span>",
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    f"<span style='background:{COLORE_NON_TROVATO};padding:2px 8px;border-radius:3px'>— non trovato</span>",
+    unsafe_allow_html=True
+)
+st.sidebar.markdown(
+    f"<span style='background:{COLORE_RIFERIMENTO};padding:2px 8px;border-radius:3px'>▶ Hotel Nuovo Tirreno</span>",
+    unsafe_allow_html=True
+)
+
+# Tutti i giorni
+tutti_giorni = sorted(set(
+    g for hotel_cal in calendario.values() for g in hotel_cal
+))
+
+if not tutti_giorni:
+    st.warning("Nessun dato nel file selezionato.")
+    st.stop()
+
+# Nomi hotel e riferimento
+cfg_raw    = json.loads((Path(__file__).parent / "competitors.json").read_text())
+manuali    = {c["nome"]: c["nota"] for c in cfg_raw["competitor"] if "nota" in c}
+riferimento = next((c["nome"] for c in cfg_raw["competitor"] if c.get("riferimento")), "")
+nomi       = list(calendario.keys())
+
+# Navigazione mese
+mesi_disponibili = sorted(set(g[:7] for g in tutti_giorni))
+
+if "mese_idx" not in st.session_state:
+    st.session_state.mese_idx = 0
+
+idx = st.session_state.mese_idx
+idx = max(0, min(idx, len(mesi_disponibili) - 1))
+
+col_prev, col_titolo, col_next = st.columns([1, 6, 1])
+with col_prev:
+    if st.button("←", disabled=(idx == 0)):
+        st.session_state.mese_idx = idx - 1
+        st.rerun()
+with col_titolo:
+    st.subheader(mese_label(mesi_disponibili[idx]))
+with col_next:
+    if st.button("→", disabled=(idx == len(mesi_disponibili) - 1)):
+        st.session_state.mese_idx = idx + 1
+        st.rerun()
+
+giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
+render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese)
+
+# Legenda prezzi
+with st.expander("Legenda prezzi"):
+    st.markdown("""
+| Simbolo | Significato |
+|---|---|
+| `€ 120` | solo camera, matrimoniale standard |
+| `€ 120*` | B&B, matrimoniale standard |
+| `€ 120×7` | prezzo da soggiorno minimo 7 notti |
+| `€ 120#` | solo camera, economy double |
+| `€ 120S` | singola (nessuna doppia trovata) |
+| `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
+| `€ 120T` | tripla (fallback — esclusa dalle medie) |
+| `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
+| `✕` | esaurito (indicativo) |
+| `—` | non disponibile / non trovato |
+""")

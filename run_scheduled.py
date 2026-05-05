@@ -1,0 +1,88 @@
+"""
+run_scheduled.py — wrapper per esecuzione automatica settimanale.
+
+Runna solo se:
+- Oggi è lunedì, martedì o mercoledì
+- Non esiste già un file calendar_*_computed{questa_settimana}.json committato
+
+Per esecuzione manuale (es. aggiornamento a richiesta) usa run.py direttamente.
+"""
+
+import json
+import subprocess
+import sys
+from datetime import date, timedelta
+from pathlib import Path
+
+ROOT = Path(__file__).parent
+OUTPUT_DIR = ROOT / "output"
+
+
+def inizio_settimana() -> date:
+    oggi = date.today()
+    return oggi - timedelta(days=oggi.weekday())
+
+
+def gia_fatto_questa_settimana() -> bool:
+    inizio = inizio_settimana()
+    for f in OUTPUT_DIR.glob("calendar_from*_computed*.json"):
+        try:
+            computed_str = f.stem.split("_computed")[-1]
+            computed = date(int(computed_str[:4]), int(computed_str[4:6]), int(computed_str[6:8]))
+            if computed >= inizio:
+                return True
+        except (ValueError, IndexError):
+            continue
+    return False
+
+
+def notifica(messaggio: str):
+    subprocess.run(["notify-send", "-t", "10000", "HotelCompare", messaggio], check=False)
+
+
+def git_push():
+    subprocess.run(["git", "add", "output/calendar_*.json"], cwd=ROOT, check=False)
+    result = subprocess.run(
+        ["git", "diff", "--cached", "--quiet"], cwd=ROOT
+    )
+    if result.returncode != 0:
+        oggi_str = str(date.today().strftime("%d/%m/%Y"))
+        subprocess.run(
+            ["git", "commit", "-m", f"chore: aggiornamento prezzi {oggi_str}"],
+            cwd=ROOT, check=False
+        )
+        subprocess.run(["git", "push"], cwd=ROOT, check=False)
+
+
+def main():
+    oggi = date.today()
+
+    if oggi.weekday() > 2:
+        sys.exit(0)
+
+    if gia_fatto_questa_settimana():
+        print("Run già completato questa settimana. Skip.")
+        sys.exit(0)
+
+    # aggiorna data_inizio a domani nel config
+    cfg_path = ROOT / "competitors.json"
+    cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+    cfg["data_inizio"] = str(oggi + timedelta(days=1))
+    cfg["data_fine"] = "2026-09-21"
+    cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    notifica("Inizio scraping prezzi competitor — non spegnere il PC")
+
+    result = subprocess.run([sys.executable, str(ROOT / "run.py")], cwd=ROOT)
+
+    if result.returncode == 0:
+        git_push()
+        notifica("Scraping completato e pubblicato. Puoi spegnere il PC.")
+    else:
+        notifica("Scraping fallito. Controlla il terminale.")
+
+    sys.exit(result.returncode)
+
+
+if __name__ == "__main__":
+    main()

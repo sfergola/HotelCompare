@@ -1,74 +1,117 @@
 <!--
-  Generato da /explain_project
-  Ultimo aggiornamento: 2026-04-29
-  Commit di riferimento: ce99f2c
-  Aggiornato da audit 2026-04-29
+  Ultimo aggiornamento: 2026-05-01
+  Branch attivo: feature/calendar-view
 -->
 
 ## VISIONE — A COSA SERVE QUESTO PROGETTO
 
-HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i prezzi dei competitor su Booking.com senza doverli cercare a mano ogni settimana. Produce un report con hotel per riga e date per colonna — leggibile come un gestionale — con il prezzo di camera matrimoniale B&B per ogni sabato della stagione.
+HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i prezzi dei competitor su Booking.com. Produce un calendario prezzi giornaliero per ogni hotel, con rilevamento automatico del soggiorno minimo, visualizzabile tramite una web app condivisibile.
 
 ---
 
-## OBIETTIVO FINALE
+## PUNTO DI PARTENZA — BRANCH `main` (stabile)
 
-Script eseguibile ogni lunedì mattina (manuale o schedulato) che genera in ~5 minuti un CSV e un report testo con i prezzi aggiornati di tutti i competitor, pronto da aprire in Excel o leggere nel terminale.
+Il branch `main` contiene lo scraper originale (`compare_booking.py`) che produce report CSV + TXT con colonne per sabato. Funziona, tua mamma lo usa già.
 
----
-
-## PUNTO DI PARTENZA (stato attuale)
-
-**Cosa c'è già:**
-- Scraper funzionante per 12 hotel su Booking.com + 2 in verifica manuale
-- 3 tipi di query per settimana: Sab→Sab (7n), Lun→Sab (5n), Sab→Lun (2n)
-- Dual parser: gestisce sia il layout tabella che il layout card di Booking.com
-- Marker camera: standard / economy `#` / singola `S` / B&B `*`
-- Divisione prezzo settimanale → notte con sanity check (scarta valori < €25)
-- Output CSV `hotel × date` + report testo con legenda
-- Periodo configurabile via `data_inizio` / `data_fine` in `competitors.json`
-
-**Cosa manca:**
-- Run programmato automatico (si lancia a mano)
-- Hotel Verbena e Alba sul Mare non sono su Booking → verifica manuale
+**Come avviarlo:**
+```bash
+source venv/bin/activate
+python compare_booking.py
+```
 
 ---
 
-## CHI USA L'APP E COME
+## NUOVA VERSIONE — BRANCH `feature/calendar-view`
 
-**Utente:** il proprietario / receptionist dell'hotel.
+Riscrittura completa con architettura separata in moduli e visualizzazione web via Streamlit.
 
-Flusso tipico:
-1. Apre il terminale, attiva il venv, lancia `python compare_booking.py`
-2. Aspetta ~5 min (se periodo breve) o ~25 min (stagione completa)
-3. Apre `output/report_YYYYMMDD.csv` in Excel oppure legge il `.txt` nel terminale
-4. Confronta la riga MEDIA con il proprio listino e aggiusta se necessario
-
----
-
-## ARCHITETTURA — COM'È FATTO IL SISTEMA
+### Architettura
 
 ```
 competitors.json
     ↓
-compare_booking.py: main()
-    ├── risolvi_urls()          cerca URL su Booking se mancante, salva nel JSON
-    └── per ogni sabato × hotel:
-            scrapa_notte()
-                ├── page.goto(booking_url?checkin=...&checkout=...7gg)
-                └── estrai_prezzo()
-                        ├── Parser 1: layout tabella ("Tipologia camera")
-                        ├── Parser 2: layout card ("N° max persone")
-                        └── Fallback: primo €  nella sezione principale
+run.py: main()
+    ├── scraper.risolvi_urls()       cerca URL su Booking se mancante
+    └── algorithm.scrapa_calendario()
+            per ogni competitor × giorno:
+                scrapa_giorno()      prova 1n→7n, commit sulla prima doppia
+                    └── scraper.scrapa_query()
+                            └── scraper.estrai_prezzo()
     ↓
-genera_csv() + genera_report_testo()
-    ↓
-output/report_YYYYMMDD.csv + .txt
+report.genera_csv() + genera_report_testo()   → output/*.csv, *.txt
+app.py (Streamlit)                             → legge output/*.json → web app
 ```
 
-**Decisione chiave:** query da 7 notti invece di 1 notte. Gli hotel costieri italiani applicano soggiorno minimo settimanale in alta stagione — con query 1-notte restituiscono "non disponibile". Il prezzo settimanale viene diviso per 7 per ottenere il notte.
+### Logica algoritmo per-giorno
 
-**Dual parser:** Booking.com usa due layout diversi per la pagina hotel. Il parser corretto viene selezionato automaticamente in base al marker presente nella pagina.
+Per ogni hotel, per ogni giorno del periodo:
+1. Prova soggiorni 1n, 2n, ..., 7n in ordine
+2. Commit sulla prima **doppia/singola** trovata — il prezzo viene diviso per le notti
+3. Se solo tripla/quadrupla trovate → usate come fallback visuale (escluse dalle medie)
+4. I giorni successivi coperti dallo stesso soggiorno vengono saltati
+5. Il risultato include `notti` (durata del soggiorno che ha prodotto il prezzo)
+
+Esempio: hotel con minimum stay 6n → `€153*×6` per 6 giorni consecutivi.
+
+### Formato celle
+
+| Cella | Significato |
+|---|---|
+| `€ 120` | solo camera, matrimoniale standard |
+| `€ 120*` | B&B, matrimoniale standard |
+| `€ 120×7` | prezzo da soggiorno minimo 7 notti |
+| `€ 120#` | economy double |
+| `€ 120S` | singola (nessuna doppia trovata) |
+| `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
+| `€ 120T` | tripla (fallback — esclusa dalle medie) |
+| `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
+| `✕` | esaurito (indicativo) |
+| `—` | non disponibile / non trovato |
+
+### File
+
+| File | Responsabilità |
+|---|---|
+| `scraper.py` | Playwright + parsing prezzi da Booking |
+| `algorithm.py` | logica greedy per-giorno + checkpoint |
+| `report.py` | generazione CSV e TXT |
+| `run.py` | entry point, orchestrazione |
+| `app.py` | visualizzazione Streamlit |
+| `competitors.json` | config: hotel, URL, periodo |
+
+### Come avviare
+
+```bash
+source venv/bin/activate
+
+# Genera dati:
+python run.py
+
+# Visualizza web app in locale:
+streamlit run app.py
+```
+
+### Checkpoint e ripresa automatica
+
+Se il run si interrompe (PC sospeso, rete caduta), i dati già scrappati sono salvati in `output/*_inprogress.json`. Al prossimo `python run.py` riprende dal punto di interruzione.
+
+---
+
+## DEPLOY — STREAMLIT CLOUD
+
+La web app è raggiungibile da tua mamma senza che il tuo PC sia acceso.
+
+**Setup (una tantum):**
+1. Vai su share.streamlit.io → accedi con GitHub
+2. New app → repo `HotelCompare`, branch `feature/calendar-view`, file `app.py`
+3. Deploy → ottieni link fisso
+
+**Flusso aggiornamento dati:**
+```bash
+python run.py                          # genera nuovo JSON in output/
+git add output/calendar_*.json
+git push                               # Streamlit Cloud si ricarica automaticamente
+```
 
 ---
 
@@ -76,61 +119,42 @@ output/report_YYYYMMDD.csv + .txt
 
 | Componente | Tecnologia | Perché |
 |---|---|---|
-| Scraping | Playwright + Chromium (headless) | Booking.com usa JavaScript per renderizzare i prezzi |
-| Config | JSON | Modificabile a mano senza codice |
-| Output | CSV + testo | Compatibile con Excel e leggibile nel terminale |
-| Runtime | Python 3.10+ | Standard, venv incluso |
-
-Dipendenze: `playwright`, nient'altro.
+| Scraping | Playwright + Chromium headless | Booking.com usa JS per i prezzi |
+| Config | JSON | Modificabile senza codice |
+| Output | JSON + CSV + TXT | JSON per la web app, CSV per Excel |
+| Web app | Streamlit + Pandas | Python puro, nessun HTML/JS |
+| Deploy | Streamlit Community Cloud | Gratis, link fisso, si aggiorna con git push |
 
 ---
 
-## CONTESTO COMPETITOR
+## COMPETITOR
 
 | Hotel | Stato | Note |
 |---|---|---|
-| Hotel Lido Inn | ✅ prezzi confermati | Layout tabella, matrimoniale B&B rilevato |
-| Hotel Sirio | ✅ prezzi confermati | Layout card |
-| Hotel Capri | ✅ prezzi confermati | Layout card, qualche lacuna in bassa stagione |
-| Hotel Dei Tigli | ⚠️ solo bassa stagione | In alta stagione non disponibile su Booking |
-| Hotel Mariotti | ⚠️ discontinuo | Disponibile luglio-agosto |
-| Hotel La Vela | ✅ alta stagione | Fix ~€4 applicato (bassa stagione) |
-| Hotel Florentia | ✅ aggiunto | URL confermato |
-| Hotel Luca | ✅ aggiunto | URL confermato |
-| Hotel Lungomare | ✅ aggiunto | URL confermato |
-| Hotel Perla del Mare | ✅ aggiunto | URL confermato |
-| Hotel Milani | ✅ aggiunto | URL confermato |
-| Hotel Sylvia | ✅ aggiunto | URL confermato |
-| Hotel Verbena | ❌ non su Booking | Verifica manuale su hotelverbena.it |
-| Hotel Alba sul Mare | ❌ non su Booking | Verifica manuale su hotelalbasulmare.it |
-
----
-
-## COME CONTRIBUIRE — GUIDA PRATICA
-
-```bash
-git clone git@github.com:sfergola/HotelCompare.git
-cd HotelCompare
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-playwright install chromium
-
-# Test rapido su una data:
-python test_one_night.py
-
-# Run completo stagione:
-python compare_booking.py
-```
-
-Per aggiungere un competitor: basta aggiungere `{"nome": "...", "citta": "Lido di Camaiore"}` in `competitors.json`. L'URL viene trovato automaticamente al primo run.
-
-Per debuggare una pagina Booking: `python debug_context.py "Nome Hotel"`.
+| Hotel Lido Inn | ✅ | URL confermato |
+| Hotel Sirio | ✅ | Minimum stay 6n in luglio |
+| Hotel Capri | ✅ | Minimum stay 5n in luglio |
+| Hotel Dei Tigli | ✅ | Accetta 1n, pensione non identificabile (~€) |
+| Hotel Mariotti | ✅ | URL confermato |
+| Hotel La Vela | ✅ | URL confermato |
+| Hotel Florentia | ✅ | URL confermato |
+| Hotel Luca | ✅ | URL confermato |
+| Hotel Lungomare | ✅ | URL confermato |
+| Hotel Perla del Mare | ✅ | URL confermato |
+| Hotel Milani | ✅ | URL confermato |
+| Hotel Sylvia | ✅ | URL confermato |
+| Hotel Verbena | ❌ | Non su Booking — verifica manuale su hotelverbena.it |
+| Hotel Alba sul Mare | ❌ | Non su Booking — verifica manuale su hotelalbasulmare.it |
 
 ---
 
 ## ROADMAP
 
-- [ ] Run schedulato settimanale (cron o `/schedule`)
-- [ ] Notifica via email/Telegram quando i prezzi cambiano significativamente
-- [ ] Supporto multi-valuta (ora fisso EUR)
+- [x] Scraper sabato→sabato (branch `main`)
+- [x] Fallback singola, tripla, quadrupla
+- [x] Algoritmo per-giorno con rilevamento minimum stay
+- [x] Checkpoint con ripresa automatica
+- [x] Web app Streamlit con calendario colorato
+- [x] Deploy su Streamlit Cloud
+- [ ] Run schedulato settimanale automatico
+- [ ] Notifica quando i prezzi cambiano significativamente
