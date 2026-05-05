@@ -1,11 +1,12 @@
 """
-run_scheduled.py — wrapper per esecuzione automatica settimanale.
+run_scheduled.py — wrapper per esecuzione automatica settimanale (solo locale).
 
 Runna solo se:
-- Oggi è lunedì, martedì o mercoledì
-- Non esiste già un file calendar_*_computed{questa_settimana}.json committato
+- Oggi è lunedì, martedì o mercoledì (weekday 0-2)
+- Non esiste già un file calendar_*_computed{questa_settimana}.json
 
-Per esecuzione manuale (es. aggiornamento a richiesta) usa run.py direttamente.
+Per esecuzione manuale o aggiornamento di un singolo periodo usa run.py direttamente.
+GitHub Actions è disabilitato — tutto avviene in locale via cron @reboot.
 """
 
 import json

@@ -86,36 +86,43 @@ def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
     return result
 
 
+def _data_vista_tooltip(entry: dict) -> str:
+    """Restituisce tooltip 'visto: GG/MM/AA' se l'entry ha data_vista."""
+    dv = entry.get("data_vista", "")
+    if len(dv) == 10:
+        return f"visto: {dv[8:10]}/{dv[5:7]}/{dv[2:4]}"
+    return ""
+
+
 def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
                          riferimento: str, giorni_mese: list[str]):
     header_giorni = [fmt_giorno(g) for g in giorni_mese]
 
-    # pre-calcola min/max per ogni giorno (per colorazione relativa)
     minmax = {}
     for g in giorni_mese:
         prezzi = prezzi_giorno(calendario, nomi, manuali, riferimento, g)
         if prezzi:
             minmax[g] = (min(prezzi.values()), max(prezzi.values()))
 
-    rows_data   = []
-    rows_colori = []
+    rows_data     = []
+    rows_colori   = []
+    rows_tooltips = []
 
     for nome in nomi:
         if nome == riferimento:
             continue
 
         if nome in manuali:
-            row        = [nome] + ["verifica manuale"] + [""] * (len(giorni_mese) - 1)
-            row_colori = [""] * (len(giorni_mese) + 1)
-            rows_data.append(row)
-            rows_colori.append(row_colori)
+            rows_data.append([nome] + ["verifica manuale"] + [""] * (len(giorni_mese) - 1))
+            rows_colori.append([""] * (len(giorni_mese) + 1))
+            rows_tooltips.append([""] * (len(giorni_mese) + 1))
             continue
 
-        row        = [nome]
-        row_colori = [""]
+        row = [nome]; row_colori = [""]; row_tt = [""]
         for g in giorni_mese:
             cella, _ = lookup(calendario, nome, g)
-            p = parse_valore(cella)
+            entry    = calendario.get(nome, {}).get(g, {})
+            p        = parse_valore(cella)
             if cella == "✕":
                 colore = COLORE_ESAURITO
             elif cella == "—" or not cella:
@@ -127,26 +134,28 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
                 colore = COLORE_NON_TROVATO
             row.append(cella)
             row_colori.append(colore)
+            row_tt.append(_data_vista_tooltip(entry))
         rows_data.append(row)
         rows_colori.append(row_colori)
+        rows_tooltips.append(row_tt)
 
     # riga MEDIA
-    row_media        = ["MEDIA"]
-    row_media_colori = [COLORE_MEDIA]
+    row_media = ["MEDIA"]; row_media_colori = [COLORE_MEDIA]; row_media_tt = [""]
     for g in giorni_mese:
-        m = media_giorno(calendario, nomi, manuali, riferimento, g)
-        row_media.append(m)
+        row_media.append(media_giorno(calendario, nomi, manuali, riferimento, g))
         row_media_colori.append(COLORE_MEDIA)
+        row_media_tt.append("")
     rows_data.append(row_media)
     rows_colori.append(row_media_colori)
+    rows_tooltips.append(row_media_tt)
 
     # riga Hotel Nuovo Tirreno (riferimento)
     if riferimento:
-        row_rif        = [f"▶ {riferimento}"]
-        row_rif_colori = [COLORE_RIFERIMENTO]
+        row_rif = [f"▶ {riferimento}"]; row_rif_colori = [COLORE_RIFERIMENTO]; row_rif_tt = [""]
         for g in giorni_mese:
             cella, _ = lookup(calendario, riferimento, g)
-            p = parse_valore(cella)
+            entry    = calendario.get(riferimento, {}).get(g, {})
+            p        = parse_valore(cella)
             if cella == "✕":
                 colore = COLORE_ESAURITO
             elif cella == "—" or not cella:
@@ -158,8 +167,10 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
                 colore = COLORE_RIFERIMENTO
             row_rif.append(cella)
             row_rif_colori.append(colore)
+            row_rif_tt.append(_data_vista_tooltip(entry))
         rows_data.append(row_rif)
         rows_colori.append(row_rif_colori)
+        rows_tooltips.append(row_rif_tt)
 
     df = pd.DataFrame(rows_data, columns=["Hotel"] + header_giorni)
 
@@ -169,6 +180,19 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
 
     styled = df.style.apply(style_fn, axis=1)
+
+    # Tooltips data_vista (hover)
+    df_tt = pd.DataFrame(rows_tooltips, columns=["Hotel"] + header_giorni)
+    if df_tt.any(axis=None):
+        styled = styled.set_tooltips(
+            df_tt,
+            props=(
+                "visibility:visible;position:absolute;z-index:1;"
+                "background:#333;color:#fff;border-radius:3px;"
+                "padding:2px 6px;font-size:0.72rem;white-space:nowrap"
+            ),
+        )
+
     st.dataframe(styled, use_container_width=True, hide_index=True)
 
 
@@ -178,33 +202,52 @@ st.set_page_config(page_title="HotelCompare", layout="wide")
 st.title("HotelCompare — Prezzi competitor")
 
 # Selezione file
-json_files = sorted(OUTPUT_DIR.glob("calendar_from*_computed*.json"), reverse=True)
-if not json_files:
+merged_path = OUTPUT_DIR / "calendar_merged.json"
+json_files  = sorted(OUTPUT_DIR.glob("calendar_from*_computed*.json"), reverse=True)
+
+OPZIONE_MERGED = "📊 Unificato (tutti i run)"
+
+if not merged_path.exists() and not json_files:
     st.warning("Nessun file di dati trovato in output/. Esegui prima: `python run.py`")
     st.stop()
 
-nomi_file = [f.name for f in json_files]
-scelta    = st.sidebar.selectbox("File dati", nomi_file)
-dati      = json.loads((OUTPUT_DIR / scelta).read_text(encoding="utf-8"))
+opzioni   = ([OPZIONE_MERGED] if merged_path.exists() else []) + [f.name for f in json_files]
+scelta    = st.sidebar.selectbox("File dati", opzioni)
 
-meta       = dati.get("meta", {})
+if scelta == OPZIONE_MERGED:
+    dati  = json.loads(merged_path.read_text(encoding="utf-8"))
+    meta  = {}
+else:
+    dati  = json.loads((OUTPUT_DIR / scelta).read_text(encoding="utf-8"))
+    meta  = dati.get("meta", {})
+
 calendario = dati.get("calendario", {})
 
-computed = scelta.split("_computed")[-1].replace(".json", "")
-if len(computed) == 8:
-    data_agg_date = date(int(computed[:4]), int(computed[4:6]), int(computed[6:8]))
-    giorni_fa     = (date.today() - data_agg_date).days
-    if giorni_fa == 0:
-        giorni_fa_str = "oggi"
-    elif giorni_fa == 1:
-        giorni_fa_str = "ieri"
-    else:
-        giorni_fa_str = f"{giorni_fa} giorni fa"
-    data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]} ({giorni_fa_str})"
+if scelta == OPZIONE_MERGED:
+    # Calcola periodo dal contenuto del calendario
+    tutti_i_giorni = sorted(g for h in calendario.values() for g in h)
+    periodo = f"{tutti_i_giorni[0]} → {tutti_i_giorni[-1]}" if tutti_i_giorni else "—"
+    data_agg = "merge di tutti i run"
+    st.sidebar.markdown(f"""
+**Periodo:** {periodo}
+**Hotel:** {len(calendario)}
+**Dati:** {data_agg}
+""")
 else:
-    data_agg = "—"
-
-st.sidebar.markdown(f"""
+    computed = scelta.split("_computed")[-1].replace(".json", "")
+    if len(computed) == 8:
+        data_agg_date = date(int(computed[:4]), int(computed[4:6]), int(computed[6:8]))
+        giorni_fa     = (date.today() - data_agg_date).days
+        if giorni_fa == 0:
+            giorni_fa_str = "oggi"
+        elif giorni_fa == 1:
+            giorni_fa_str = "ieri"
+        else:
+            giorni_fa_str = f"{giorni_fa} giorni fa"
+        data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]} ({giorni_fa_str})"
+    else:
+        data_agg = "—"
+    st.sidebar.markdown(f"""
 **Periodo:** {meta.get('data_inizio')} → {meta.get('data_fine')}
 **Adulti:** {meta.get('adulti', 2)}
 **Hotel:** {len(calendario)}

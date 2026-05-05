@@ -7,17 +7,21 @@ Genera un calendario prezzi giornaliero per ogni hotel competitor, visualizzabil
 ## Architettura
 
 ```
-competitors.json
+competitors.json (max_workers=3)
     ↓
 run.py               — entry point, orchestrazione
-    ├── scraper.risolvi_urls()
-    └── algorithm.scrapa_calendario()
-            per ogni competitor × giorno:
-                scrapa_giorno() — prova 1n→7n, commit sulla prima doppia
-filler.py            — arricchisce i — e ✕ con l'ultimo prezzo storico noto
-report.py            — genera CSV e TXT
-app.py               — visualizzazione Streamlit (legge output/*.json)
-run_scheduled.py     — wrapper per esecuzione automatica settimanale
+    ├── Fase 1: scraper.risolvi_urls()  (1 browser)
+    ├── Fase 2: algorithm.scrapa_hotel_worker() × N  (ProcessPoolExecutor)
+    │           ogni worker ha il proprio browser Playwright
+    │           scrive output/partial_<hotel>_..._inprogress.json → _computed.json
+    ├── Fase 3: merge partial → calendar_from..._computed<oggi>.json
+    ├── Fase 4: filler.esegui_filler()
+    └── Fase 5: report.genera_csv() + report.genera_report_testo()
+filler.py            — merge di tutti i run storici → calendar_merged.json
+                       ogni entry ottiene data_vista (quando è stato visto il prezzo)
+report.py            — genera CSV e TXT dal calendario
+app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
+run_scheduled.py     — wrapper per esecuzione automatica (solo locale, Lun-Mer)
 ```
 
 ## File principali
@@ -95,4 +99,11 @@ Per l'hotel di riferimento (non incluso nelle medie):
 ## Deploy
 - Web app: Streamlit Community Cloud → branch `main`, file `app.py`
 - Aggiornamento dati: `python run.py` → `git push origin main`
-- Scraping automatico: GitHub Actions ogni martedì 09:00 e mercoledì 10:00 (CEST), con guard settimanale
+- Scraping automatico: cron locale `@reboot → run_scheduled.py`, esegue solo Lun/Mar/Mer
+  GitHub Actions disabilitato (troppo lento, 5+ ore, surriscaldamento PC)
+
+## Parallelismo
+`competitors.json` → campo `max_workers` (default: 3).
+Ogni hotel ha il proprio processo Playwright. Partial files salvati in `output/partial_<hotel>_...json`.
+Riduce il tempo di esecuzione da ~5h (sequenziale) a ~2h (3 worker).
+Per ridurre RAM/CPU usa `max_workers: 1` (sequenziale, un browser condiviso).

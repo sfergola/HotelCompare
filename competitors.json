@@ -78,5 +78,6 @@
       "citta": "Lido di Camaiore",
       "nota": "non su Booking.com — verifica manuale su hotelalbasulmare.it"
     }
-  ]
+  ],
+  "max_workers": 3
 }
