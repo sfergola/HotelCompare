@@ -16,7 +16,8 @@ run.py               — entry point, orchestrazione
     │           scrive output/partial_<hotel>_..._inprogress.json → _computed.json
     ├── Fase 3: merge partial → calendar_from..._computed<oggi>.json
     ├── Fase 4: filler.esegui_filler()
-    └── Fase 5: report.genera_csv() + report.genera_report_testo()
+    ├── Fase 5: report.genera_csv() + report.genera_report_testo()
+    └── Fase 6: _git_push() → commit calendar_merged.json + push
 filler.py            — merge di tutti i run storici → calendar_merged.json
                        ogni entry ottiene data_vista (quando è stato visto il prezzo)
 report.py            — genera CSV e TXT dal calendario
@@ -32,7 +33,7 @@ run_scheduled.py     — wrapper per esecuzione automatica (solo locale, Lun-Mer
 | `algorithm.py` | algoritmo greedy per-giorno + checkpoint |
 | `report.py` | genera CSV e TXT dal calendario |
 | `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
-| `run.py` | entry point: risolve URL → scrapa → filler → report |
+| `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
 | `run_scheduled.py` | wrapper @reboot: guard settimanale + notifica desktop + auto-push |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
 | `competitors.json` | config: hotel, URL, periodo, riferimento |
@@ -101,9 +102,10 @@ Per l'hotel di riferimento (non incluso nelle medie):
 
 ## Deploy
 - Web app: Streamlit Community Cloud → branch `main`, file `app.py`
-- Aggiornamento dati: `python run.py` → `git push origin main`
+- Aggiornamento dati: `python run.py` → auto-commit + push (nessun passaggio manuale)
 - Scraping automatico: cron locale `@reboot → run_scheduled.py`, esegue solo Lun/Mar/Mer
-  GitHub Actions disabilitato (troppo lento, 5+ ore, surriscaldamento PC)
+- Repo pubblico su GitHub → GitHub Actions gratuito illimitato (da configurare)
+- `output/*.json` gitignored tranne `calendar_merged.json` (unico file dati committato)
 
 ## Parallelismo
 `competitors.json` → campo `max_workers` (default: 3).

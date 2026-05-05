@@ -11,6 +11,7 @@ Fasi:
     4. Unisce i file parziali in un unico calendario JSON
     5. Esegue filler (merge storico + data_vista)
     6. Genera CSV e TXT
+    7. Commit e push di calendar_merged.json
 """
 
 import json
