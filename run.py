@@ -101,14 +101,15 @@ def main():
 
     tutti_nomi  = list(urls.keys()) + list(manuali.keys())
     giorni_str  = [str(g) for g in giorno_range(data_inizio, data_fine)]
+    riferimento = next((c["nome"] for c in cfg["competitor"] if c.get("riferimento")), "")
 
     csv_path.write_text(
-        genera_csv(calendario, tutti_nomi, manuali, giorni_str), encoding="utf-8")
+        genera_csv(calendario, tutti_nomi, manuali, giorni_str, riferimento), encoding="utf-8")
     txt_path.write_text(
-        genera_report_testo(calendario, tutti_nomi, manuali, giorni_str), encoding="utf-8")
+        genera_report_testo(calendario, tutti_nomi, manuali, giorni_str, riferimento), encoding="utf-8")
 
     print(f"\nDone.\n  JSON : {json_done}\n  CSV  : {csv_path}\n  Testo: {txt_path}\n")
-    print(genera_report_testo(calendario, tutti_nomi, manuali, giorni_str[:31]))
+    print(genera_report_testo(calendario, tutti_nomi, manuali, giorni_str[:31], riferimento))
 
 
 if __name__ == "__main__":

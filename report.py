@@ -62,10 +62,11 @@ def _fmt_storico(entry: dict) -> str:
     return f" ({sp}{sfx} · {d_fmt})"
 
 
-def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str) -> str:
+def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str,
+           riferimento: str = "") -> str:
     valori = []
     for nome in nomi:
-        if nome in manuali:
+        if nome in manuali or nome == riferimento:
             continue
         entry = calendario.get(nome, {}).get(giorno)
         if not entry or not entry.get("prezzo"):
@@ -81,7 +82,7 @@ def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str) -> str
 # ── CSV ──────────────────────────────────────────────────────────────────────
 
 def genera_csv(calendario: dict, nomi: list[str], manuali: dict,
-               giorni: list[str]) -> str:
+               giorni: list[str], riferimento: str = "") -> str:
     date_header = ",".join(_fmt_giorno(g) for g in giorni)
     righe = [f"Hotel,{date_header}"]
 
@@ -95,7 +96,7 @@ def genera_csv(calendario: dict, nomi: list[str], manuali: dict,
             celle.append(cella)
         righe.append(f"{nome}," + ",".join(celle))
 
-    medie = [_media(calendario, nomi, manuali, g) for g in giorni]
+    medie = [_media(calendario, nomi, manuali, g, riferimento) for g in giorni]
     righe.append("MEDIA," + ",".join(medie))
 
     if manuali:
@@ -109,7 +110,7 @@ def genera_csv(calendario: dict, nomi: list[str], manuali: dict,
 # ── TXT ──────────────────────────────────────────────────────────────────────
 
 def genera_report_testo(calendario: dict, nomi: list[str], manuali: dict,
-                        giorni: list[str]) -> str:
+                        giorni: list[str], riferimento: str = "") -> str:
     """
     Genera report TXT leggibile, suddiviso per mese.
     Ogni mese occupa un blocco separato.
@@ -152,7 +153,7 @@ def genera_report_testo(calendario: dict, nomi: list[str], manuali: dict,
 
         riga_media = f"{'MEDIA':<{col_nome}}"
         for g in giorni_mese:
-            m = _media(calendario, nomi, manuali, g)
+            m = _media(calendario, nomi, manuali, g, riferimento)
             riga_media += f"{(m or '—'):<{col_data}}"
         righe_output.append(riga_media)
         righe_output.append("")

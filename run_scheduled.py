@@ -42,16 +42,27 @@ def notifica(messaggio: str):
 
 def git_push():
     subprocess.run(["git", "add", "output/calendar_*.json"], cwd=ROOT, check=False)
-    result = subprocess.run(
-        ["git", "diff", "--cached", "--quiet"], cwd=ROOT
+    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT)
+    if diff.returncode == 0:
+        return
+
+    oggi_str = date.today().strftime("%d/%m/%Y")
+    commit = subprocess.run(
+        ["git", "commit", "-m", f"chore: aggiornamento prezzi {oggi_str}"],
+        cwd=ROOT, check=False
     )
-    if result.returncode != 0:
-        oggi_str = str(date.today().strftime("%d/%m/%Y"))
-        subprocess.run(
-            ["git", "commit", "-m", f"chore: aggiornamento prezzi {oggi_str}"],
-            cwd=ROOT, check=False
-        )
-        subprocess.run(["git", "push"], cwd=ROOT, check=False)
+    if commit.returncode != 0:
+        notifica("Commit fallito. Controlla il terminale.")
+        return
+
+    branch_res = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        cwd=ROOT, capture_output=True, text=True
+    )
+    branch = branch_res.stdout.strip() or "main"
+    push = subprocess.run(["git", "push", "origin", branch], cwd=ROOT, check=False)
+    if push.returncode != 0:
+        notifica("Push fallito. Controlla la connessione di rete.")
 
 
 def main():
