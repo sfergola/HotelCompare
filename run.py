@@ -21,7 +21,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 from scraper import risolvi_urls
-from algorithm import scrapa_hotel_worker, giorno_range, _safe_nome
+from algorithm import scrapa_hotel_worker, giorno_range, safe_nome
 from report import genera_csv, genera_report_testo
 
 
@@ -50,7 +50,7 @@ def _merge_partials(urls: dict, from_str: str, to_str: str,
     """Unisce i file partial per-hotel nel calendario finale."""
     calendario = {}
     for nome in urls:
-        safe      = _safe_nome(nome)
+        safe      = safe_nome(nome)
         done_path = OUTPUT_DIR / f"partial_{safe}_from{from_str}_to{to_str}_computed{oggi_str}.json"
         if done_path.exists():
             d         = json.loads(done_path.read_text(encoding="utf-8"))

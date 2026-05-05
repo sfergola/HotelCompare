@@ -14,12 +14,12 @@ Mostra una tabella interattiva per mese con:
 
 import json
 from pathlib import Path
-from datetime import date, datetime
+from datetime import date
 
 import pandas as pd
 import streamlit as st
 
-from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry
+from scraper import parse_valore, is_extra_letti, lookup_entry
 
 OUTPUT_DIR = Path(__file__).parent / "output"
 

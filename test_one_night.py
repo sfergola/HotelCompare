@@ -25,7 +25,7 @@ with sync_playwright() as pw:
 
     print(f"\n=== Test prezzi per {giorno} ===")
     for nome, url in urls.items():
-        entry = scrapa_giorno(page, url, giorno, date(2026, 7, 12), adulti)
+        entry = scrapa_giorno(page, url, giorno, adulti, date(2026, 7, 12))
         prezzo = entry.get("prezzo") or f"NON TROVATO ({entry.get('stato')})"
         notti  = entry.get("notti", 1)
         sfx    = f" ×{notti}" if notti > 1 else ""

@@ -57,7 +57,7 @@ def _is_fallback(prezzo: str) -> bool:
     return is_extra_letti(prezzo)
 
 
-def _safe_nome(nome: str) -> str:
+def safe_nome(nome: str) -> str:
     """Converte il nome hotel in un nome file sicuro."""
     return "".join(c if c.isalnum() else "_" for c in nome).strip("_")[:40]
 
@@ -168,7 +168,7 @@ def scrapa_hotel_worker(args: tuple) -> tuple[str, dict]:
     from playwright.sync_api import sync_playwright
 
     output_dir  = Path(output_dir_str)
-    safe        = _safe_nome(nome)
+    safe        = safe_nome(nome)
     prog_path   = output_dir / f"partial_{safe}_from{from_str}_to{to_str}_inprogress.json"
     done_path   = output_dir / f"partial_{safe}_from{from_str}_to{to_str}_computed{oggi_str}.json"
 
