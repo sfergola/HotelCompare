@@ -210,14 +210,38 @@ else:
 calendario = dati.get("calendario", {})
 
 if scelta == OPZIONE_MERGED:
-    # Calcola periodo dal contenuto del calendario
     tutti_i_giorni = sorted(g for h in calendario.values() for g in h)
     periodo = f"{tutti_i_giorni[0]} → {tutti_i_giorni[-1]}" if tutti_i_giorni else "—"
-    data_agg = "merge di tutti i run"
+
+    # Data più recente tra tutti i data_vista
+    data_vista_vals = []
+    for hotel_cal in calendario.values():
+        for entry in hotel_cal.values():
+            dv = entry.get("data_vista", "")
+            if len(dv) == 8:   # "20260506"
+                data_vista_vals.append(date(int(dv[:4]), int(dv[4:6]), int(dv[6:8])))
+            elif len(dv) == 10:  # "2026-05-06"
+                try:
+                    data_vista_vals.append(date.fromisoformat(dv))
+                except ValueError:
+                    pass
+    if data_vista_vals:
+        ultima = max(data_vista_vals)
+        giorni_fa = (date.today() - ultima).days
+        if giorni_fa == 0:
+            giorni_fa_str = "oggi"
+        elif giorni_fa == 1:
+            giorni_fa_str = "ieri"
+        else:
+            giorni_fa_str = f"{giorni_fa} giorni fa"
+        data_agg = f"{ultima.day:02d}/{ultima.month:02d}/{ultima.year} ({giorni_fa_str})"
+    else:
+        data_agg = "—"
+
     st.sidebar.markdown(f"""
 **Periodo:** {periodo}
 **Hotel:** {len(calendario)}
-**Dati:** {data_agg}
+**Aggiornato il:** {data_agg}
 """)
 else:
     computed = scelta.split("_computed")[-1].replace(".json", "")
