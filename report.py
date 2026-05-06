@@ -136,6 +136,7 @@ def genera_report_testo(calendario: dict, nomi: list[str], manuali: dict,
         "  ~€ 120     = matrimoniale trovata, tipo pensione non identificabile",
         "  € 120T     = tripla (fallback — solo visuale, esclusa dalle medie)",
         "  € 120Q     = quadrupla (fallback estremo — solo visuale, esclusa dalle medie)",
+        "  € 120A     = appartamento (fallback — solo visuale, escluso dalle medie)",
         "  ✕          = esaurito (indicativo — non affidabile al 100%)",
         "  —          = non disponibile / non trovato",
     ]

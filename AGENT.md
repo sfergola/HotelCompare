@@ -23,6 +23,8 @@ filler.py            — merge di tutti i run storici → calendar_merged.json
 report.py            — genera CSV e TXT dal calendario
 app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
 run_scheduled.py     — wrapper per esecuzione automatica (solo locale, Lun-Mer)
+carica_manuale_durante_run.py — push parziale durante run: legge i partial già pronti,
+                       aggiorna calendar_merged.json e fa commit+push senza aspettare il run completo
 ```
 
 ## File principali
@@ -35,6 +37,7 @@ run_scheduled.py     — wrapper per esecuzione automatica (solo locale, Lun-Mer
 | `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
 | `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
 | `run_scheduled.py` | wrapper @reboot: guard settimanale + notifica desktop + auto-push |
+| `carica_manuale_durante_run.py` | push parziale mentre run.py è ancora in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
 | `competitors.json` | config: hotel, URL, periodo, riferimento |
 

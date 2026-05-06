@@ -53,7 +53,7 @@ def _salva_json(path: Path, data: dict):
 
 
 def _is_fallback(prezzo: str) -> bool:
-    """True se il prezzo viene da tripla o quadrupla (T/Q) — non ideale ma accettabile."""
+    """True se il prezzo viene da tripla (T), quadrupla (Q) o appartamento (A) — non ideale ma accettabile."""
     return is_extra_letti(prezzo)
 
 

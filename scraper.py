@@ -125,7 +125,7 @@ def estrai_prezzo(page) -> str | None:
     """
     testo_pagina = page.inner_text("body")
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
-    risultati: list[tuple[str, float, str | None]] = []
+    risultati: list[tuple[str, float, str | None, bool]] = []
 
     # Parser 1: layout tabella con header "Tipologia camera" o "Tipologia appartamento"
     start = None
