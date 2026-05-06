@@ -16,7 +16,10 @@ import time
 from datetime import date, timedelta
 from urllib.parse import quote_plus
 
-from playwright.sync_api import TimeoutError as PlaywrightTimeout
+try:
+    from playwright.sync_api import TimeoutError as PlaywrightTimeout
+except ImportError:
+    PlaywrightTimeout = Exception
 
 
 # ── costanti di parsing ──────────────────────────────────────────────────────
