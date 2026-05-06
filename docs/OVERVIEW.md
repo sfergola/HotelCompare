@@ -1,59 +1,115 @@
 <!--
-  Ultimo aggiornamento: 2026-05-01
-  Branch attivo: feature/calendar-view
+  Generato da /explain_project
+  Ultimo aggiornamento: 2026-05-06
+  Commit di riferimento: 4113b66317cc336e1907c16987d67fa44682cf65
+  NON modificare a mano — aggiornato dalla skill /explain_project
 -->
 
 ## VISIONE — A COSA SERVE QUESTO PROGETTO
 
-HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i prezzi dei competitor su Booking.com. Produce un calendario prezzi giornaliero per ogni hotel, con rilevamento automatico del soggiorno minimo, visualizzabile tramite una web app condivisibile.
+HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i prezzi dei competitor su Booking.com. Produce un calendario prezzi giornaliero per ogni hotel competitor, con rilevamento automatico del soggiorno minimo, visualizzabile tramite una web app condivisibile. L'obiettivo è che la direzione possa vedere ogni settimana, senza intervento tecnico, a quanto vendono i competitor.
 
 ---
 
-## PUNTO DI PARTENZA — BRANCH `main` (stabile)
+## OBIETTIVO FINALE
 
-Il branch `main` contiene lo scraper originale (`compare_booking.py`) che produce report CSV + TXT con colonne per sabato. Funziona, tua mamma lo usa già.
+Sistema completamente automatico:
+1. Il PC si avvia → `run_scheduled.py` parte via cron `@reboot`
+2. Se è lunedì/martedì/mercoledì e non è già stato fatto questa settimana → lancia `run.py`
+3. Al termine → commit + push automatico su GitHub
+4. Streamlit Cloud si ricarica → la mamma apre il link e vede i prezzi aggiornati
+
+Nessun intervento manuale richiesto dopo la configurazione iniziale.
+
+---
+
+## PUNTO DI PARTENZA — STATO ATTUALE
+
+Il sistema è **funzionante in produzione**. Il branch `main` contiene:
+
+- Scraper completo con parsing robusto (doppia, singola, economy, tripla, quadrupla, appartamento)
+- Algoritmo greedy per-giorno con rilevamento minimum stay
+- Parallelismo controllato (max_workers in `competitors.json`)
+- Filler storico: i prezzi di run precedenti riempiono le date mancanti
+- Web app Streamlit con tabella colorata, prima colonna fissa, navigazione per mese
+- Auto-commit e push al termine di ogni run
+- Script per push parziale durante run in corso
 
 **Come avviarlo:**
 ```bash
 source venv/bin/activate
-python compare_booking.py
+python run.py          # scraping completo
+streamlit run app.py   # web app locale
 ```
 
 ---
 
-## NUOVA VERSIONE — BRANCH `feature/calendar-view`
+## CHI USA IL SISTEMA E COME
 
-Riscrittura completa con architettura separata in moduli e visualizzazione web via Streamlit.
+**Flusso normale (settimanale):**
+1. Il PC si avvia → `run_scheduled.py` verifica giorno e settimana
+2. Se non ancora fatto → chiama `run.py` → scrapa tutti i competitor → push automatico
+3. La direzione apre il link Streamlit → vede il calendario prezzi
 
-### Architettura
+**Flusso manuale (quando serve):**
+- `python run.py` → run completo, riprende dal checkpoint se interrotto
+- `python carica_manuale_durante_run.py` → push parziale mentre run.py è ancora in corso
+- Modifica `competitors.json` per cambiare periodo o aggiungere hotel
+
+---
+
+## ARCHITETTURA — COM'È FATTO IL SISTEMA
 
 ```
-competitors.json
+competitors.json  ← config: hotel, URL, periodo, max_workers
     ↓
-run.py: main()
-    ├── scraper.risolvi_urls()       cerca URL su Booking se mancante
-    └── algorithm.scrapa_calendario()
-            per ogni competitor × giorno:
-                scrapa_giorno()      prova 1n→7n, commit sulla prima doppia
-                    └── scraper.scrapa_query()
-                            └── scraper.estrai_prezzo()
-    ↓
-report.genera_csv() + genera_report_testo()   → output/*.csv, *.txt
-app.py (Streamlit)                             → legge output/*.json → web app
+run.py
+    ├── Fase 1: scraper.risolvi_urls()        — 1 browser, risolve URL mancanti
+    ├── Fase 2: algorithm.scrapa_hotel_worker() × max_workers
+    │           ogni worker ha il proprio browser Playwright
+    │           scrive partial_<hotel>_..._inprogress.json → _computed.json
+    ├── Fase 3: merge partial → calendar_from..._computed<oggi>.json
+    ├── Fase 4: filler.esegui_filler()         — merge storico → calendar_merged.json
+    ├── Fase 5: report.genera_csv() + genera_report_testo()
+    └── Fase 6: git commit + push (calendar_merged.json)
 ```
 
-### Logica algoritmo per-giorno
+**Checkpoint e ripresa:** ogni hotel salva il proprio progresso in `output/partial_*_inprogress.json`. Al prossimo run, i giorni già scrappati vengono saltati automaticamente.
 
-Per ogni hotel, per ogni giorno del periodo:
-1. Prova soggiorni 1n, 2n, ..., 7n in ordine
-2. Commit sulla prima **doppia/singola** trovata — il prezzo viene diviso per le notti
-3. Se solo tripla/quadrupla trovate → usate come fallback visuale (escluse dalle medie)
-4. I giorni successivi coperti dallo stesso soggiorno vengono saltati
-5. Il risultato include `notti` (durata del soggiorno che ha prodotto il prezzo)
+**Filler storico:** `filler.py` legge tutti i `calendar_from*_computed*.json` presenti in `output/` (dal più nuovo al più vecchio) e costruisce `calendar_merged.json` con i prezzi più recenti e i prezzi storici come fallback quando il dato manca nel run più recente.
 
-Esempio: hotel con minimum stay 6n → `€153*×6` per 6 giorni consecutivi.
+---
 
-### Formato celle
+## STACK TECNICO
+
+| Componente | Tecnologia | Perché |
+|---|---|---|
+| Scraping | Playwright + Chromium headless | Booking.com usa JS per i prezzi |
+| Parallelismo | ProcessPoolExecutor | Ogni hotel ha il proprio processo e browser |
+| Config | JSON | Modificabile senza codice |
+| Output | JSON + CSV + TXT | JSON per la web app, CSV per Excel |
+| Web app | Streamlit + Pandas | Python puro, nessun HTML/JS |
+| Deploy | Streamlit Community Cloud | Gratis, link fisso, si aggiorna con git push |
+
+---
+
+## CONTESTO DOMINIO
+
+**Hotel di riferimento:** Hotel Nuovo Tirreno (`"riferimento": true` in `competitors.json`) — appare separato dalla media, non incluso nel calcolo medie.
+
+**Hotel manuali:** Hotel Verbena e Hotel Alba sul Mare non sono su Booking.com — appaiono in tabella come "verifica manuale".
+
+**Stagione:** da `data_inizio` a `data_fine` in `competitors.json`. Lo scheduler usa `stagione_fine` come fine stagione fissa.
+
+**File principali in `output/`:**
+- `calendar_merged.json` — unico file committato su git, letto da Streamlit
+- `calendar_from*_computed*.json` — output di ogni run (gitignored)
+- `partial_*_inprogress.json` — checkpoint in corso (gitignored)
+- `partial_*_computed*.json` — checkpoint completati (gitignored)
+
+---
+
+## FORMATO CELLE
 
 | Cella | Significato |
 |---|---|
@@ -65,96 +121,84 @@ Esempio: hotel con minimum stay 6n → `€153*×6` per 6 giorni consecutivi.
 | `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
 | `€ 120T` | tripla (fallback — esclusa dalle medie) |
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
-| `✕` | esaurito (indicativo) |
-| `—` | non disponibile / non trovato |
+| `€ 120A` | appartamento (fallback — escluso dalle medie) |
+| `— (€120* · 30/04)` | non trovato oggi, ultimo prezzo noto dal 30/04 |
+| `✕ (€120* · 30/04)` | esaurito oggi, ultimo prezzo noto dal 30/04 |
+| `✕` | esaurito (nessun prezzo storico disponibile) |
+| `—` | non trovato (nessun prezzo storico disponibile) |
 
-### File
+---
+
+## COME CONTRIBUIRE — GUIDA PRATICA
+
+**Aggiungere un competitor:**
+```json
+{ "nome": "Hotel Esempio", "citta": "Lido di Camaiore" }
+```
+Al primo run lo scraper cerca l'URL su Booking automaticamente.
+Se non è su Booking: `{ "nome": "Hotel Esempio", "nota": "verifica manuale su hotelesempio.it" }`
+
+**Cambiare il periodo:**
+In `competitors.json` modifica `data_inizio` e `data_fine`.
+Per run manuali parziali: cambia le date, esegui `python run.py`, ripristina se necessario.
+
+**Controllare RAM/CPU:**
+Il campo `max_workers` controlla quanti browser Playwright girano in parallelo.
+- `max_workers: 3` → ~2h di run, usa ~3GB RAM
+- `max_workers: 1` → ~5h di run, usa ~1GB RAM (sequenziale, un browser solo)
+
+**Forzare un push parziale durante un run:**
+```bash
+python carica_manuale_durante_run.py
+```
+Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicuro da eseguire mentre `run.py` gira.
+
+---
+
+## FILE DEL PROGETTO
 
 | File | Responsabilità |
 |---|---|
-| `scraper.py` | Playwright + parsing prezzi da Booking |
-| `algorithm.py` | logica greedy per-giorno + checkpoint |
-| `report.py` | generazione CSV e TXT |
-| `run.py` | entry point, orchestrazione |
-| `app.py` | visualizzazione Streamlit |
-| `competitors.json` | config: hotel, URL, periodo |
-
-### Come avviare
-
-```bash
-source venv/bin/activate
-
-# Genera dati:
-python run.py
-
-# Visualizza web app in locale:
-streamlit run app.py
-```
-
-### Checkpoint e ripresa automatica
-
-Se il run si interrompe (PC sospeso, rete caduta), i dati già scrappati sono salvati in `output/*_inprogress.json`. Al prossimo `python run.py` riprende dal punto di interruzione.
-
----
-
-## DEPLOY — STREAMLIT CLOUD
-
-La web app è raggiungibile da tua mamma senza che il tuo PC sia acceso.
-
-**Setup (una tantum):**
-1. Vai su share.streamlit.io → accedi con GitHub
-2. New app → repo `HotelCompare`, branch `feature/calendar-view`, file `app.py`
-3. Deploy → ottieni link fisso
-
-**Flusso aggiornamento dati:**
-```bash
-python run.py                          # genera nuovo JSON in output/
-git add output/calendar_*.json
-git push                               # Streamlit Cloud si ricarica automaticamente
-```
-
----
-
-## STACK TECNICO
-
-| Componente | Tecnologia | Perché |
-|---|---|---|
-| Scraping | Playwright + Chromium headless | Booking.com usa JS per i prezzi |
-| Config | JSON | Modificabile senza codice |
-| Output | JSON + CSV + TXT | JSON per la web app, CSV per Excel |
-| Web app | Streamlit + Pandas | Python puro, nessun HTML/JS |
-| Deploy | Streamlit Community Cloud | Gratis, link fisso, si aggiorna con git push |
-
----
-
-## COMPETITOR
-
-| Hotel | Stato | Note |
-|---|---|---|
-| Hotel Lido Inn | ✅ | URL confermato |
-| Hotel Sirio | ✅ | Minimum stay 6n in luglio |
-| Hotel Capri | ✅ | Minimum stay 5n in luglio |
-| Hotel Dei Tigli | ✅ | Accetta 1n, pensione non identificabile (~€) |
-| Hotel Mariotti | ✅ | URL confermato |
-| Hotel La Vela | ✅ | URL confermato |
-| Hotel Florentia | ✅ | URL confermato |
-| Hotel Luca | ✅ | URL confermato |
-| Hotel Lungomare | ✅ | URL confermato |
-| Hotel Perla del Mare | ✅ | URL confermato |
-| Hotel Milani | ✅ | URL confermato |
-| Hotel Sylvia | ✅ | URL confermato |
-| Hotel Verbena | ❌ | Non su Booking — verifica manuale su hotelverbena.it |
-| Hotel Alba sul Mare | ❌ | Non su Booking — verifica manuale su hotelalbasulmare.it |
+| `scraper.py` | Playwright + parsing prezzi + `lookup_entry`, `fmt_storico` |
+| `algorithm.py` | algoritmo greedy per-giorno + checkpoint |
+| `report.py` | genera CSV e TXT dal calendario |
+| `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
+| `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
+| `run_scheduled.py` | wrapper @reboot: guard settimanale (Lun-Mer) + auto-push |
+| `carica_manuale_durante_run.py` | push parziale durante run in corso |
+| `app.py` | visualizzazione Streamlit con tabella colorata |
+| `competitors.json` | config: hotel, URL, periodo, riferimento |
 
 ---
 
 ## ROADMAP
 
-- [x] Scraper sabato→sabato (branch `main`)
-- [x] Fallback singola, tripla, quadrupla
+- [x] Scraper prezzi Booking.com con parsing robusto
+- [x] Fallback singola, tripla, quadrupla, appartamento
 - [x] Algoritmo per-giorno con rilevamento minimum stay
 - [x] Checkpoint con ripresa automatica
-- [x] Web app Streamlit con calendario colorato
+- [x] Parallelismo multi-worker (ProcessPoolExecutor)
+- [x] Filler storico (`calendar_merged.json`)
+- [x] Web app Streamlit con calendario colorato e colonna fissa
 - [x] Deploy su Streamlit Cloud
-- [ ] Run schedulato settimanale automatico
-- [ ] Notifica quando i prezzi cambiano significativamente
+- [x] Auto-commit e push al termine del run
+- [x] Run schedulato settimanale automatico (cron @reboot)
+- [x] Push parziale durante run in corso
+- [ ] Notifica quando i prezzi cambiano significativamente rispetto alla settimana precedente
+- [ ] Gestione automatica cambio layout Booking.com (rilevamento "Visualizza tariffe")
+
+---
+
+## DOMANDE FREQUENTI
+
+**Il run ha impiegato 24 ore — è normale?**
+Con `max_workers: 1` e ~136 giorni × 13 hotel × 1-7 query per giorno + sleep antibot → sì, è normale. Usa `max_workers: 3` se il PC ha RAM sufficiente (~3GB liberi).
+
+**Streamlit mostra dati vecchi dopo un push?**
+`calendar_merged.json` è l'unico file che conta. Se il push è andato a buon fine e Streamlit non si aggiorna, prova a ricaricare la pagina (Streamlit Cloud impiega qualche minuto).
+
+**Il run si è interrotto — devo ripartire da zero?**
+No. I checkpoint `output/partial_*_inprogress.json` salvano il progresso hotel per hotel. `python run.py` riprende dal punto di interruzione.
+
+**Posso aggiornare i dati mentre un run è già in corso?**
+Sì: `python carica_manuale_durante_run.py` fa un push con i dati parziali già pronti, senza toccare il run in corso.
