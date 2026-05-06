@@ -37,7 +37,8 @@ KEYWORDS_SOLO         = ["solo pernottamento", "room only", "senza colazione"]
 KEYWORDS_ESAURITO     = ["non ci sono camere disponibili per le date selezionate",
                          "no rooms available for your dates",
                          "sold out",
-                         "nessuna disponibilità per le date selezionate"]
+                         "nessuna disponibilità per le date selezionate",
+                         "non abbiamo disponibilità per questa struttura"]
 
 ROOM_START = ["camera", "suite", "appartamento", "stanza", "bungalow", "studio",
               "monolocale", "economy", "double", "twin", "single", "singola",
@@ -129,7 +130,8 @@ def estrai_prezzo(page) -> str | None:
     # Parser 1: layout tabella con header "Tipologia camera"
     start = None
     for i, r in enumerate(righe):
-        if "Tipologia camera" in r or "tipo di camera" in r.lower():
+        if ("Tipologia camera" in r or "tipo di camera" in r.lower()
+                or "Tipologia appartamento" in r or "tipologia alloggio" in r.lower()):
             start = i
             break
 
