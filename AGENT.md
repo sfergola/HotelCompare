@@ -109,6 +109,25 @@ Per l'hotel di riferimento (non incluso nelle medie):
 { "nome": "Hotel Nuovo Tirreno", "citta": "Lido di Camaiore", "riferimento": true }
 ```
 
+## Workflow branch
+
+**Regola:** non lavorare mai direttamente su `main`. Ogni modifica va su un branch dedicato.
+
+```
+main          → produzione stabile (Streamlit Cloud lo legge)
+feature/*     → nuova funzionalità
+fix/*         → bug fix
+refactor/*    → pulizia codice senza cambiare comportamento
+```
+
+**Flusso standard:**
+1. `git checkout -b feature/nome-feature`
+2. lavora, committa sul branch
+3. testa end-to-end (almeno: `streamlit run app.py` e verifica visiva)
+4. solo se tutto ok → `git checkout main && git merge feature/nome-feature && git push`
+
+**Eccezione:** aggiornamenti dati automatici (`run.py`, `run_scheduled.py`) scrivono direttamente su main — è il loro scopo e non toccano il codice.
+
 ## Deploy
 - Web app: Streamlit Community Cloud → branch `main`, file `app.py`
 - Aggiornamento dati: `python run.py` → auto-commit + push (nessun passaggio manuale)
