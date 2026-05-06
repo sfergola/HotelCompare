@@ -55,6 +55,17 @@ def mese_label(m: str) -> str:
 lookup = lookup_entry
 
 
+def _fmt_data_agg(d: date) -> str:
+    giorni_fa = (date.today() - d).days
+    if giorni_fa == 0:
+        label = "oggi"
+    elif giorni_fa == 1:
+        label = "ieri"
+    else:
+        label = f"{giorni_fa} giorni fa"
+    return f"{d.day:02d}/{d.month:02d}/{d.year} ({label})"
+
+
 def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
                  giorno: str) -> str:
     valori = []
@@ -226,15 +237,7 @@ if scelta == OPZIONE_MERGED:
                 except ValueError:
                     pass
     if data_vista_vals:
-        ultima = max(data_vista_vals)
-        giorni_fa = (date.today() - ultima).days
-        if giorni_fa == 0:
-            giorni_fa_str = "oggi"
-        elif giorni_fa == 1:
-            giorni_fa_str = "ieri"
-        else:
-            giorni_fa_str = f"{giorni_fa} giorni fa"
-        data_agg = f"{ultima.day:02d}/{ultima.month:02d}/{ultima.year} ({giorni_fa_str})"
+        data_agg = _fmt_data_agg(max(data_vista_vals))
     else:
         data_agg = "—"
 
@@ -246,15 +249,7 @@ if scelta == OPZIONE_MERGED:
 else:
     computed = scelta.split("_computed")[-1].replace(".json", "")
     if len(computed) == 8:
-        data_agg_date = date(int(computed[:4]), int(computed[4:6]), int(computed[6:8]))
-        giorni_fa     = (date.today() - data_agg_date).days
-        if giorni_fa == 0:
-            giorni_fa_str = "oggi"
-        elif giorni_fa == 1:
-            giorni_fa_str = "ieri"
-        else:
-            giorni_fa_str = f"{giorni_fa} giorni fa"
-        data_agg = f"{computed[6:8]}/{computed[4:6]}/{computed[:4]} ({giorni_fa_str})"
+        data_agg = _fmt_data_agg(date(int(computed[:4]), int(computed[4:6]), int(computed[6:8])))
     else:
         data_agg = "—"
     st.sidebar.markdown(f"""
