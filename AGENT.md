@@ -50,6 +50,11 @@ streamlit run app.py           # web app locale
 python run_scheduled.py        # run automatico (con guard settimanale)
 ```
 
+**Setup cron (una tantum per macchina):**
+```bash
+(crontab -l 2>/dev/null; echo "@reboot /home/salvatore/Projects/HotelCompare/venv/bin/python run_scheduled.py >> /home/salvatore/Projects/HotelCompare/output/run_scheduled.log 2>&1") | crontab -
+```
+
 ## Configurazione date
 In `competitors.json`:
 - `data_inizio` — primo giorno da scrapare (controllo manuale)

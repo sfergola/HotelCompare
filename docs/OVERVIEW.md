@@ -42,6 +42,12 @@ python run.py          # scraping completo
 streamlit run app.py   # web app locale
 ```
 
+**Setup cron (una tantum per macchina):**
+```bash
+(crontab -l 2>/dev/null; echo "@reboot /home/salvatore/Projects/HotelCompare/venv/bin/python run_scheduled.py >> /home/salvatore/Projects/HotelCompare/output/run_scheduled.log 2>&1") | crontab -
+```
+Verifica con `crontab -l`. Il cron usa il path assoluto del venv — non serve `source venv/bin/activate`.
+
 ---
 
 ## CHI USA IL SISTEMA E COME
