@@ -80,6 +80,7 @@ Al prossimo `run.py`, i giorni già scrappati vengono saltati automaticamente.
 | `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
 | `€ 120T` | tripla (fallback — esclusa dalle medie) |
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
+| `€ 120A` | appartamento (fallback — escluso dalle medie) |
 | `— (€120* · 30/04)` | non trovato oggi, ultimo prezzo noto dal 30/04 |
 | `✕ (€120* · 30/04)` | esaurito oggi, ultimo prezzo noto dal 30/04 |
 | `✕` | esaurito (nessun prezzo storico disponibile) |

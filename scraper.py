@@ -59,8 +59,8 @@ def parse_valore(testo: str) -> float | None:
 
 
 def is_extra_letti(prezzo: str) -> bool:
-    """True se il prezzo viene da tripla (T) o quadrupla (Q) — esclusi dalle medie."""
-    return bool(re.search(r"\d[TQ]\*?$", prezzo))
+    """True se il prezzo viene da tripla (T), quadrupla (Q) o appartamento (A) — esclusi dalle medie."""
+    return bool(re.search(r"\d[TQA]\*?$", prezzo))
 
 
 # ── helper privati ───────────────────────────────────────────────────────────
@@ -127,12 +127,16 @@ def estrai_prezzo(page) -> str | None:
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
     risultati: list[tuple[str, float, str | None]] = []
 
-    # Parser 1: layout tabella con header "Tipologia camera"
+    # Parser 1: layout tabella con header "Tipologia camera" o "Tipologia appartamento"
     start = None
+    sezione_appart = False
     for i, r in enumerate(righe):
-        if ("Tipologia camera" in r or "tipo di camera" in r.lower()
-                or "Tipologia appartamento" in r or "tipologia alloggio" in r.lower()):
+        if "Tipologia camera" in r or "tipo di camera" in r.lower():
             start = i
+            break
+        if "Tipologia appartamento" in r or "tipologia alloggio" in r.lower():
+            start = i
+            sezione_appart = True
             break
 
     if start is not None:
@@ -144,7 +148,7 @@ def estrai_prezzo(page) -> str | None:
                     and len(r) < 90 and not EURO_RE.search(r)
                     and "recension" not in rl):
                 if camera_corrente and prezzo_corrente:
-                    risultati.append((camera_corrente, prezzo_corrente, None))
+                    risultati.append((camera_corrente, prezzo_corrente, None, sezione_appart))
                 camera_corrente = r
                 prezzo_corrente = None
                 continue
@@ -154,15 +158,15 @@ def estrai_prezzo(page) -> str | None:
                 continue
             if prezzo_corrente is not None and camera_corrente:
                 if any(k in rl for k in KEYWORDS_COLAZIONE):
-                    risultati.append((camera_corrente, prezzo_corrente, "bb"))
+                    risultati.append((camera_corrente, prezzo_corrente, "bb", sezione_appart))
                     camera_corrente = None
                     prezzo_corrente = None
                 elif any(k in rl for k in KEYWORDS_SOLO):
-                    risultati.append((camera_corrente, prezzo_corrente, "solo"))
+                    risultati.append((camera_corrente, prezzo_corrente, "solo", sezione_appart))
                     camera_corrente = None
                     prezzo_corrente = None
         if camera_corrente and prezzo_corrente:
-            risultati.append((camera_corrente, prezzo_corrente, None))
+            risultati.append((camera_corrente, prezzo_corrente, None, sezione_appart))
 
     # Parser 2: layout card con "N° max persone"
     if not risultati:
@@ -193,15 +197,18 @@ def estrai_prezzo(page) -> str | None:
                             and 10 < len(rm) < 90 and not EURO_RE.search(rm)):
                         camera = rm
                         break
-                risultati.append((camera, v, board))
+                risultati.append((camera, v, board, False))
                 break
 
     if not risultati:
         return None
 
-    matrimoniali = [(n, p, b) for n, p, b in risultati
+    normali      = [(n, p, b) for n, p, b, a in risultati if not a]
+    appartamenti = [(n, p, b) for n, p, b, a in risultati if a]
+
+    matrimoniali = [(n, p, b) for n, p, b in normali
                     if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
-    singole      = [(n, p, b) for n, p, b in risultati
+    singole      = [(n, p, b) for n, p, b in normali
                     if _is_singola(n) and not any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
 
     standard = [(n, p, b) for n, p, b in matrimoniali if not _is_economy(n)]
@@ -221,8 +228,8 @@ def estrai_prezzo(page) -> str | None:
         if none_p:
             return f"~€ {int(min(none_p))}{marker}"
 
-    triple    = [(n, p, b) for n, p, b in risultati if _is_tripla(n)]
-    quadruple = [(n, p, b) for n, p, b in risultati if _is_quadrupla(n)]
+    triple    = [(n, p, b) for n, p, b in normali if _is_tripla(n)]
+    quadruple = [(n, p, b) for n, p, b in normali if _is_quadrupla(n)]
 
     for gruppo, marker in [(triple, "T"), (quadruple, "Q")]:
         if not gruppo:
@@ -236,6 +243,14 @@ def estrai_prezzo(page) -> str | None:
             return f"€ {int(min(bb_p))}{marker}*"
         if any_p:
             return f"€ {int(min(any_p))}{marker}"
+
+    # appartamento (fallback estremo — escluso dalle medie)
+    if appartamenti:
+        any_p = [p for n, p, b in appartamenti]
+        bb_p  = [p for n, p, b in appartamenti if b == "bb"]
+        if bb_p:
+            return f"€ {int(min(bb_p))}A*"
+        return f"€ {int(min(any_p))}A"
 
     return None
 

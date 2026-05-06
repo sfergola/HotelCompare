@@ -313,6 +313,7 @@ with st.expander("Legenda prezzi"):
 | `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
 | `€ 120T` | tripla (fallback — esclusa dalle medie) |
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
+| `€ 120A` | appartamento (fallback — escluso dalle medie) |
 | `✕` | esaurito (indicativo) |
 | `—` | non disponibile / non trovato |
 """)
