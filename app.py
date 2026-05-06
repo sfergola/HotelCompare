@@ -161,8 +161,25 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         cols = rows_colori[idx]
         return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
 
-    styled = df.style.apply(style_fn, axis=1)
-    st.dataframe(styled, use_container_width=True, hide_index=True)
+    sticky_css = [
+        {"selector": "th:nth-child(1)", "props": [
+            ("position", "sticky"), ("left", "0"), ("z-index", "2"),
+            ("background-color", "#f0f2f6"), ("min-width", "150px"),
+            ("border-right", "2px solid #dee2e6"),
+        ]},
+        {"selector": "td:nth-child(1)", "props": [
+            ("position", "sticky"), ("left", "0"), ("z-index", "1"),
+            ("background-color", "white"), ("min-width", "150px"),
+            ("border-right", "2px solid #dee2e6"), ("font-weight", "500"),
+        ]},
+        {"selector": "th, td", "props": [
+            ("padding", "4px 8px"), ("white-space", "nowrap"),
+            ("border", "1px solid #dee2e6"),
+        ]},
+    ]
+    styled = df.style.apply(style_fn, axis=1).set_table_styles(sticky_css)
+    html = styled.to_html(index=False)
+    st.markdown(f'<div style="overflow-x:auto;width:100%">{html}</div>', unsafe_allow_html=True)
 
 
 # ── UI principale ────────────────────────────────────────────────────────────
