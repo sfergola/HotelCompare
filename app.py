@@ -177,8 +177,8 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
             ("border", "1px solid #dee2e6"),
         ]},
     ]
-    styled = df.style.apply(style_fn, axis=1).set_table_styles(sticky_css)
-    html = styled.to_html(index=False)
+    styled = df.style.apply(style_fn, axis=1).set_table_styles(sticky_css).hide(axis="index")
+    html = styled.to_html()
     st.markdown(f'<div style="overflow-x:auto;width:100%">{html}</div>', unsafe_allow_html=True)
 
 
