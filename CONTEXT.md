@@ -63,6 +63,22 @@ Intersezione giorno × competitor nella visualizzazione calendario. Mostra il pr
 Data di fine stagione fissa in `competitors.json`. Usata solo dallo scheduler automatico (`run_scheduled.py`). Non viene mai modificata dai run. `data_fine` è la controparte manuale, modificabile liberamente per run parziali.
 _Avoid_: data_fine dello scheduler, end date
 
+**Pool globale**:
+Insieme di tutti gli hotel da scrapare — union dei competitor di tutti i clienti attivi. Obiettivo: lo scraper lavora solo su questo insieme, non su hotel non referenziati da nessun cliente. (Funzionalità da implementare con il multi-tenant — oggi `competitors.json` è ancora una lista flat.)
+_Avoid_: lista hotel, tutti gli hotel
+
+**Cliente**:
+Hotel che paga per accedere al servizio. Ha un token unico e una lista di competitor assegnata manualmente. Visualizza solo i propri competitor.
+_Avoid_: utente, abbonato
+
+**Token**:
+Stringa unica per cliente, inclusa nell'URL della web app (`app.py?token=abc123`). Determina quali competitor vengono mostrati. Non è un sistema di autenticazione — è un filtro di visualizzazione.
+_Avoid_: password, chiave API
+
+**clienti.json**:
+File di configurazione commerciale, gitignored. Mappa ogni token al nome del cliente e alla lista dei suoi competitor. Separato da `competitors.json` perché contiene dati commerciali (chi paga, cosa vede).
+_Avoid_: config clienti, database clienti
+
 ## Decisioni prese (feature/calendar-view)
 
 1. **Unità di prezzo**: prezzo del soggiorno più breve disponibile diviso le notti — non la media di periodi fissi.
