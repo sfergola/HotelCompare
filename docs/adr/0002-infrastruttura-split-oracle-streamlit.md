@@ -10,7 +10,7 @@ Lo scraping gira su Oracle Cloud Free Tier (VM ARM, Always Free), la web app res
 
 **VPS a pagamento (DigitalOcean, Hetzner)**: costo mensile di mercato, IP migliore, ma inutile finché Oracle Free copre il bisogno.
 
-**Oracle Cloud Free Tier scelto**: VM ARM 4 core / 24GB RAM, gratuita a tempo indeterminato (da verificare: Oracle ha revocato VM inattive in passato — fare login mensile per evitare reclaim). IP Oracle non risulta nella blocklist di Booking.com alla data della decisione — da verificare al primo run. Streamlit Cloud resta separato perché è già configurato, gratuito, e non ha senso duplicarlo.
+**Oracle Cloud Free Tier scelto**: VM ARM 4 core / 24GB RAM, gratuita a tempo indeterminato. Streamlit Cloud resta separato perché è già configurato, gratuito, e non ha senso duplicarlo.
 
 ## Consequences
 
@@ -22,3 +22,5 @@ Lo scraping gira su Oracle Cloud Free Tier (VM ARM, Always Free), la web app res
   3. Configurare `~/.ssh/config` con `IdentityFile ~/.ssh/id_hotelcompare` per il remote
   4. Se la VM viene persa: rigenerare la chiave e aggiornare il Deploy key su GitHub
 - Nessuna credenziale in `.env` richiesta — lo scraper naviga Booking in modo anonimo.
+- Oracle ha revocato VM inattive in passato — fare login mensile alla console per evitare reclaim.
+- IP Oracle non risulta nella blocklist di Booking.com alla data della decisione — da verificare al primo run.

@@ -1,23 +1,6 @@
 # Architettura multi-tenant: token URL + clienti.json
 
-Ogni cliente (hotel pagante) riceve un URL unico con token (`app.py?token=abc123`). La web app filtra automaticamente i competitor in base al token, leggendo `clienti.json`. Vedere `CONTEXT.md` → `Token` e `clienti.json` per le definizioni.
-
-## Struttura clienti.json
-
-```json
-{
-  "abc123": {
-    "nome": "Hotel PincoPanco",
-    "competitor": ["Hotel Riviera", "Hotel Tirreno", "Hotel Sole"]
-  },
-  "xyz789": {
-    "nome": "Hotel Esempio",
-    "competitor": ["Hotel Alpha", "Hotel Beta"]
-  }
-}
-```
-
-`competitors.json` resta invariato: contiene il pool globale (vedi `CONTEXT.md`) di hotel scrapati. Lo scraper non cambia.
+Ogni cliente (hotel pagante) riceve un URL unico con token (`app.py?token=abc123`). La web app filtra automaticamente i competitor in base al token, leggendo `clienti.json` (struttura: `{ "token": { "nome": "...", "competitor": [...] } }`). `competitors.json` resta invariato: contiene il pool globale di hotel scrapati. Lo scraper non cambia. Vedere `CONTEXT.md` → `Token` e `clienti.json` per le definizioni.
 
 ## Considered Options
 
