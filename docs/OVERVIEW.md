@@ -1,7 +1,7 @@
 <!--
   Generato da /explain_project
-  Ultimo aggiornamento: 2026-05-06
-  Commit di riferimento: 4113b66317cc336e1907c16987d67fa44682cf65
+  Ultimo aggiornamento: 2026-05-07
+  Commit di riferimento: efc6eed00e53dc89fa967e1c6aeaa27eb389f74e
   NON modificare a mano — aggiornato dalla skill /explain_project
 -->
 
@@ -13,13 +13,15 @@ HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i p
 
 ## OBIETTIVO FINALE
 
-Sistema completamente automatico:
-1. Il PC si avvia → `run_scheduled.py` parte via cron `@reboot`
-2. Se è lunedì/martedì/mercoledì e non è già stato fatto questa settimana → lancia `run.py`
+Sistema completamente automatico su Oracle Cloud:
+1. La VM Oracle si avvia → cron lancia `run_scheduled.py` (Lun/Mar/Mer)
+2. Se non ancora eseguito questa settimana → lancia `run.py`
 3. Al termine → commit + push automatico su GitHub
-4. Streamlit Cloud si ricarica → la mamma apre il link e vede i prezzi aggiornati
+4. Streamlit Cloud si ricarica → la direzione apre il link e vede i prezzi aggiornati
 
-Nessun intervento manuale richiesto dopo la configurazione iniziale.
+Il PC personale esce dal loop — nessun calore, nessun vincolo di uptime, nessun intervento manuale.
+
+**Prossimo passo (in corso):** branch `Oracle_cloud_migration` — migrazione cron dalla macchina locale alla VM Oracle Cloud Free Tier (ARM A1.Flex, sempre attiva, gratuita). Vedi `docs/adr/0002-infrastruttura-split-oracle-streamlit.md`.
 
 ---
 
@@ -32,6 +34,7 @@ Il sistema è **funzionante in produzione**. Il branch `main` contiene:
 - Parallelismo controllato (max_workers in `competitors.json`)
 - Filler storico: i prezzi di run precedenti riempiono le date mancanti
 - Web app Streamlit con tabella colorata, prima colonna fissa, navigazione per mese
+- Sidebar mostra data aggiornamento effettiva (derivata dai `data_vista` in `calendar_merged.json`)
 - Auto-commit e push al termine di ogni run
 - Script per push parziale durante run in corso
 
@@ -113,6 +116,9 @@ run.py
 - `partial_*_inprogress.json` — checkpoint in corso (gitignored)
 - `partial_*_computed*.json` — checkpoint completati (gitignored)
 
+**Multi-tenant (visione futura):**
+- `clienti.json` — gitignored, mappa token → nome cliente + lista competitor visibili. Ogni cliente riceve un URL `app.py?token=abc123`. Non ancora implementato. Vedi `docs/adr/0003-multitenant-token-clienti-json.md`.
+
 ---
 
 ## FORMATO CELLE
@@ -136,6 +142,16 @@ run.py
 ---
 
 ## COME CONTRIBUIRE — GUIDA PRATICA
+
+**Workflow branch (regola fondamentale):**
+Non lavorare mai direttamente su `main`. Ogni modifica va su un branch dedicato:
+```bash
+git checkout -b feature/nome-feature
+# ... lavora e committa ...
+streamlit run app.py   # testa visivamente
+git checkout main && git merge feature/nome-feature && git push
+```
+Eccezione: `run.py` e `run_scheduled.py` committano direttamente su `main` — è il loro scopo e non toccano il codice.
 
 **Aggiungere un competitor:**
 ```json
@@ -174,6 +190,7 @@ Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicu
 | `carica_manuale_durante_run.py` | push parziale durante run in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
 | `competitors.json` | config: hotel, URL, periodo, riferimento |
+| `scripts/retry_oracle_vm.sh` | retry automatico creazione VM Oracle (OCI CLI, gira in locale) |
 
 ---
 
@@ -190,6 +207,9 @@ Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicu
 - [x] Auto-commit e push al termine del run
 - [x] Run schedulato settimanale automatico (cron @reboot)
 - [x] Push parziale durante run in corso
+- [x] Sidebar con data aggiornamento effettiva (max data_vista)
+- [ ] **Migrazione Oracle Cloud** (branch `Oracle_cloud_migration` — in corso): cron su VM ARM Always Free, nessun PC acceso necessario
+- [ ] **Multi-tenant**: `clienti.json` + token URL → ogni cliente vede solo i suoi competitor (ADR-0003)
 - [ ] Notifica quando i prezzi cambiano significativamente rispetto alla settimana precedente
 - [ ] Gestione automatica cambio layout Booking.com (rilevamento "Visualizza tariffe")
 
