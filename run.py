@@ -69,7 +69,8 @@ def main():
     adulti      = cfg.get("adulti", 2)
     max_workers = cfg.get("max_workers", 3)
     oggi        = date.today()
-    data_inizio = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
+    data_inizio_cfg = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
+    data_inizio = max(data_inizio_cfg, oggi)
 
     giorni    = list(giorno_range(data_inizio, data_fine))
     from_str  = str(data_inizio).replace("-", "")

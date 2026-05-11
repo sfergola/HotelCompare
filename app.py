@@ -281,8 +281,10 @@ st.sidebar.markdown(
 )
 
 # Tutti i giorni
+oggi = date.today().isoformat()
 tutti_giorni = sorted(set(
     g for hotel_cal in calendario.values() for g in hotel_cal
+    if g >= oggi
 ))
 
 if not tutti_giorni:
