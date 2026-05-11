@@ -119,7 +119,8 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
             rows_colori.append([""] * (len(giorni_mese) + 1))
             continue
 
-        row = [nome]; row_colori = [""]
+        row = [nome]
+        row_colori = [""]
         for g in giorni_mese:
             cella, _ = lookup(calendario, nome, g)
             p        = parse_valore(cella)
@@ -138,7 +139,8 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         rows_colori.append(row_colori)
 
     # riga MEDIA
-    row_media = ["MEDIA"]; row_media_colori = [COLORE_MEDIA]
+    row_media = ["MEDIA"]
+    row_media_colori = [COLORE_MEDIA]
     for g in giorni_mese:
         row_media.append(media_giorno(calendario, nomi, manuali, riferimento, g))
         row_media_colori.append(COLORE_MEDIA)
@@ -147,7 +149,8 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
 
     # riga Hotel Nuovo Tirreno (riferimento)
     if riferimento:
-        row_rif = [f"▶ {riferimento}"]; row_rif_colori = [COLORE_RIFERIMENTO]
+        row_rif = [f"▶ {riferimento}"]
+        row_rif_colori = [COLORE_RIFERIMENTO]
         for g in giorni_mese:
             cella, _ = lookup(calendario, riferimento, g)
             p        = parse_valore(cella)
