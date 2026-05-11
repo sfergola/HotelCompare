@@ -15,7 +15,6 @@ Fasi:
 """
 
 import json
-import subprocess
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
@@ -25,6 +24,7 @@ from playwright.sync_api import sync_playwright
 from scraper import risolvi_urls
 from algorithm import scrapa_hotel_worker, giorno_range, safe_nome
 from report import genera_csv, genera_report_testo
+from git_utils import git_push_calendar
 
 
 CONFIG_PATH = Path(__file__).parent / "competitors.json"
@@ -65,11 +65,23 @@ def _merge_partials(urls: dict, from_str: str, to_str: str,
 
 def main():
     cfg         = carica_config()
-    data_fine   = date.fromisoformat(cfg["data_fine"])
     adulti      = cfg.get("adulti", 2)
     max_workers = cfg.get("max_workers", 3)
     oggi        = date.today()
-    data_inizio_cfg = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
+
+    # scheduler_state.json ha priorità su competitors.json per le date.
+    # Viene scritto da run_scheduled.py e cancellato qui dopo l'uso.
+    state_path = OUTPUT_DIR / "scheduler_state.json"
+    if state_path.exists():
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        data_inizio_cfg = date.fromisoformat(state["data_inizio"])
+        data_fine       = date.fromisoformat(state["data_fine"])
+        state_path.unlink()
+        print(f"  (date da scheduler_state.json: {data_inizio_cfg} → {data_fine})\n")
+    else:
+        data_fine       = date.fromisoformat(cfg["data_fine"])
+        data_inizio_cfg = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
+
     data_inizio = max(data_inizio_cfg, oggi)
 
     giorni    = list(giorno_range(data_inizio, data_fine))
@@ -175,29 +187,7 @@ def main():
     print(f"\nDone.\n  JSON  : {json_done}\n  CSV   : {csv_path}\n  Testo : {txt_path}\n")
     print(genera_report_testo(calendario, tutti_nomi, manuali, giorni_str[:31], riferimento))
 
-    _git_push()
-
-
-def _git_push():
-    root = Path(__file__).parent
-    subprocess.run(["git", "add", "output/calendar_merged.json"], cwd=root, check=False)
-    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=root)
-    if diff.returncode == 0:
-        print("Git: nessuna modifica da committare.")
-        return
-    oggi_str = date.today().strftime("%d/%m/%Y")
-    commit = subprocess.run(
-        ["git", "commit", "-m", f"chore: aggiornamento prezzi {oggi_str}"],
-        cwd=root, check=False,
-    )
-    if commit.returncode != 0:
-        print("Git: commit fallito.")
-        return
-    push = subprocess.run(["git", "push", "origin", "main"], cwd=root, check=False)
-    if push.returncode != 0:
-        print("Git: push fallito — controlla la connessione.")
-    else:
-        print("Git: push completato → Streamlit aggiornato.")
+    git_push_calendar()
 
 
 if __name__ == "__main__":
