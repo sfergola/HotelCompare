@@ -1,7 +1,7 @@
 <!--
   Generato da /explain_project
-  Ultimo aggiornamento: 2026-05-07
-  Commit di riferimento: efc6eed00e53dc89fa967e1c6aeaa27eb389f74e
+  Ultimo aggiornamento: 2026-05-12
+  Commit di riferimento: d87906e
   NON modificare a mano — aggiornato dalla skill /explain_project
 -->
 
@@ -189,8 +189,12 @@ Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicu
 | `run_scheduled.py` | wrapper @reboot: guard settimanale (Lun-Mer) + auto-push |
 | `carica_manuale_durante_run.py` | push parziale durante run in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
-| `competitors.json` | config: hotel, URL, periodo, riferimento |
-| `scripts/retry_oracle_vm.sh` | retry automatico creazione VM Oracle (OCI CLI, gira in locale) |
+| `competitors.json` | config statica: hotel, URL, max_workers, riferimento — non modificata a runtime |
+| `git_utils.py` | git commit + push condiviso tra run.py e run_scheduled.py |
+| `scripts/retry_stack_apply.sh` | retry creazione VM Oracle: ruota tra AD-1/2/3, gira in locale con nohup |
+| `scripts/oracle_keepalive.sh` | keepalive giornaliero da installare sulla VM Oracle per evitare reclaim |
+| `tests/test_scraper.py` | unit test parse_valore, is_extra_letti, fmt_storico, lookup_entry |
+| `tests/test_app.py` | unit test colore_prezzo_relativo, media_giorno, fmt_giorno, _fmt_data_agg |
 
 ---
 
@@ -208,7 +212,11 @@ Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicu
 - [x] Run schedulato settimanale automatico (cron @reboot)
 - [x] Push parziale durante run in corso
 - [x] Sidebar con data aggiornamento effettiva (max data_vista)
-- [ ] **Migrazione Oracle Cloud** (branch `Oracle_cloud_migration` — in corso): cron su VM ARM Always Free, nessun PC acceso necessario
+- [x] git_utils.py — logica git push condivisa, branch rilevato automaticamente
+- [x] Unit test 33 funzioni pure (pytest, no rete)
+- [x] Linting ruff — 0 errori
+- [x] competitors.json separato dallo stato runtime (scheduler_state.json)
+- [ ] **Migrazione Oracle Cloud** (in corso — VM non ancora creata, retry attivo in background): cron su VM ARM Always Free, nessun PC acceso necessario
 - [ ] **Multi-tenant**: `clienti.json` + token URL → ogni cliente vede solo i suoi competitor (ADR-0003)
 - [ ] Notifica quando i prezzi cambiano significativamente rispetto alla settimana precedente
 - [ ] Gestione automatica cambio layout Booking.com (rilevamento "Visualizza tariffe")

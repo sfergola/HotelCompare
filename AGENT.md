@@ -17,12 +17,15 @@ run.py               — entry point, orchestrazione
     ├── Fase 3: merge partial → calendar_from..._computed<oggi>.json
     ├── Fase 4: filler.esegui_filler()
     ├── Fase 5: report.genera_csv() + report.genera_report_testo()
-    └── Fase 6: _git_push() → commit calendar_merged.json + push
+    └── Fase 6: git_utils.git_push_calendar() → commit calendar_merged.json + push
 filler.py            — merge di tutti i run storici → calendar_merged.json
                        ogni entry ottiene data_vista (quando è stato visto il prezzo)
 report.py            — genera CSV e TXT dal calendario
 app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
+git_utils.py         — git commit + push condiviso (branch rilevato automaticamente)
 run_scheduled.py     — wrapper per esecuzione automatica (solo locale, Lun-Mer)
+                       scrive output/scheduler_state.json con le date → run.py lo legge e cancella
+                       NON modifica più competitors.json a runtime
 carica_manuale_durante_run.py — push parziale durante run: legge i partial già pronti,
                        aggiorna calendar_merged.json e fa commit+push senza aspettare il run completo
 ```
@@ -39,7 +42,11 @@ carica_manuale_durante_run.py — push parziale durante run: legge i partial gi�
 | `run_scheduled.py` | wrapper @reboot: guard settimanale + notifica desktop + auto-push |
 | `carica_manuale_durante_run.py` | push parziale mentre run.py è ancora in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
-| `competitors.json` | config: hotel, URL, periodo, riferimento |
+| `git_utils.py` | git push condiviso tra run.py e run_scheduled.py |
+| `competitors.json` | config statica: hotel, URL, max_workers — non modificata a runtime |
+| `tests/` | unit test funzioni pure (pytest, no rete, no browser) |
+| `scripts/retry_stack_apply.sh` | retry VM Oracle: ruota AD-1/2/3, gira in locale |
+| `scripts/oracle_keepalive.sh` | keepalive da installare sulla VM Oracle |
 
 ## Come avviare
 
