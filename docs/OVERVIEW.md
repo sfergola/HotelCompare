@@ -1,7 +1,7 @@
 <!--
   Generato da /explain_project
   Ultimo aggiornamento: 2026-05-12
-  Commit di riferimento: d87906e
+  Commit di riferimento: 5c5fe07b613756a0bc483675c067291492fc622c
   NON modificare a mano — aggiornato dalla skill /explain_project
 -->
 
@@ -14,14 +14,14 @@ HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i p
 ## OBIETTIVO FINALE
 
 Sistema completamente automatico su Oracle Cloud:
-1. La VM Oracle si avvia → cron lancia `run_scheduled.py` (Lun/Mar/Mer)
-2. Se non ancora eseguito questa settimana → lancia `run.py`
+1. La VM Oracle (ARM A1.Flex, sempre attiva, gratuita) → cron lancia `run_scheduled.py`
+2. Se non aggiornato negli ultimi 7 giorni → lancia `run.py`
 3. Al termine → commit + push automatico su GitHub
 4. Streamlit Cloud si ricarica → la direzione apre il link e vede i prezzi aggiornati
 
-Il PC personale esce dal loop — nessun calore, nessun vincolo di uptime, nessun intervento manuale.
+Il PC personale esce dal loop. **Piano B già attivo:** GitHub Actions esegue lo stesso workflow (`.github/workflows/scraping.yml`) se la VM non è disponibile.
 
-**Prossimo passo (in corso):** branch `Oracle_cloud_migration` — migrazione cron dalla macchina locale alla VM Oracle Cloud Free Tier (ARM A1.Flex, sempre attiva, gratuita). Vedi `docs/adr/0002-infrastruttura-split-oracle-streamlit.md`.
+**Prossimo passo (in corso):** VM Oracle Frankfurt — `out of host capacity`, retry attivo in background (`scripts/retry_stack_apply.sh`). Terraform config in `terraform/main.tf`. Vedi `docs/adr/0002-infrastruttura-split-oracle-streamlit.md`.
 
 ---
 
@@ -41,27 +41,31 @@ Il sistema è **funzionante in produzione**. Il branch `main` contiene:
 **Come avviarlo:**
 ```bash
 source venv/bin/activate
-python run.py          # scraping completo
+python run.py          # scraping completo (manuale)
 streamlit run app.py   # web app locale
 ```
 
+**Pannello di controllo (launcher GNOME):**
+Premi Super → cerca "HotelCompare" → apre `panel.py`: stato aggiornamento, log in tempo reale, bottoni Avvia/Stop.
+
 **Setup cron (una tantum per macchina):**
 ```bash
-(crontab -l 2>/dev/null; echo "@reboot /home/salvatore/Projects/HotelCompare/venv/bin/python run_scheduled.py >> /home/salvatore/Projects/HotelCompare/output/run_scheduled.log 2>&1") | crontab -
+(crontab -l 2>/dev/null; echo "*/30 * * * * DISPLAY=:0 /home/salvatore/Projects/HotelCompare/venv/bin/python /home/salvatore/Projects/HotelCompare/run_scheduled.py >> /home/salvatore/Projects/HotelCompare/output/run_scheduled.log 2>&1") | crontab -
 ```
-Verifica con `crontab -l`. Il cron usa il path assoluto del venv — non serve `source venv/bin/activate`.
+Ogni 30 minuti: parte solo se > 7 giorni dall'ultimo aggiornamento e orario 19:30–09:00.
 
 ---
 
 ## CHI USA IL SISTEMA E COME
 
-**Flusso normale (settimanale):**
-1. Il PC si avvia → `run_scheduled.py` verifica giorno e settimana
-2. Se non ancora fatto → chiama `run.py` → scrapa tutti i competitor → push automatico
+**Flusso automatico notturno:**
+1. Cron ogni 30 min → `run_scheduled.py` controlla se > 7 giorni dall'ultimo aggiornamento
+2. Se sì e siamo tra 19:30–09:00 → lancia `run.py` → push automatico
 3. La direzione apre il link Streamlit → vede il calendario prezzi
 
 **Flusso manuale (quando serve):**
-- `python run.py` → run completo, riprende dal checkpoint se interrotto
+- Super → "HotelCompare" → pannello → "Avvia" (sempre disponibile, ignora la condizione 7 giorni)
+- `python run.py` → stesso effetto da terminale
 - `python carica_manuale_durante_run.py` → push parziale mentre run.py è ancora in corso
 - Modifica `competitors.json` per cambiare periodo o aggiungere hotel
 
@@ -186,11 +190,14 @@ Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicu
 | `report.py` | genera CSV e TXT dal calendario |
 | `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
 | `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
-| `run_scheduled.py` | wrapper @reboot: guard settimanale (Lun-Mer) + auto-push |
+| `run_scheduled.py` | avvio automatico notturno: condizione 7 giorni, fascia 19:30–09:00, lock file con PID |
+| `panel.py` | pannello Tkinter: stato, log in tempo reale, Avvia/Stop — aperto dal launcher GNOME |
 | `carica_manuale_durante_run.py` | push parziale durante run in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
 | `competitors.json` | config statica: hotel, URL, max_workers, riferimento — non modificata a runtime |
-| `git_utils.py` | git commit + push condiviso tra run.py e run_scheduled.py |
+| `git_utils.py` | git commit + push condiviso tra run.py, run_scheduled.py e panel.py |
+| `terraform/main.tf` | config Terraform VM Oracle ARM (region esplicita, NSG, IP pubblico, AD variabile) |
+| `.github/workflows/scraping.yml` | GitHub Actions piano B: schedule Lun/Mar/Mer 02:00 UTC |
 | `scripts/retry_stack_apply.sh` | retry creazione VM Oracle: ruota tra AD-1/2/3, gira in locale con nohup |
 | `scripts/oracle_keepalive.sh` | keepalive giornaliero da installare sulla VM Oracle per evitare reclaim |
 | `tests/test_scraper.py` | unit test parse_valore, is_extra_letti, fmt_storico, lookup_entry |
@@ -209,14 +216,17 @@ Legge i partial già completati, aggiorna `calendar_merged.json` e fa push. Sicu
 - [x] Web app Streamlit con calendario colorato e colonna fissa
 - [x] Deploy su Streamlit Cloud
 - [x] Auto-commit e push al termine del run
-- [x] Run schedulato settimanale automatico (cron @reboot)
+- [x] Run schedulato settimanale automatico (cron ogni 30 min, condizione 7 giorni)
 - [x] Push parziale durante run in corso
 - [x] Sidebar con data aggiornamento effettiva (max data_vista)
 - [x] git_utils.py — logica git push condivisa, branch rilevato automaticamente
 - [x] Unit test 33 funzioni pure (pytest, no rete)
 - [x] Linting ruff — 0 errori
 - [x] competitors.json separato dallo stato runtime (scheduler_state.json)
-- [ ] **Migrazione Oracle Cloud** (in corso — VM non ancora creata, retry attivo in background): cron su VM ARM Always Free, nessun PC acceso necessario
+- [x] Pannello di controllo Tkinter (`panel.py`) nel launcher GNOME
+- [x] GitHub Actions piano B (`.github/workflows/scraping.yml`)
+- [x] Terraform config tracciato nel repo (`terraform/main.tf`)
+- [ ] **Migrazione Oracle Cloud** (in corso — VM non ancora creata, retry attivo): cron su VM ARM Always Free, nessun PC acceso necessario
 - [ ] **Multi-tenant**: `clienti.json` + token URL → ogni cliente vede solo i suoi competitor (ADR-0003)
 - [ ] Notifica quando i prezzi cambiano significativamente rispetto alla settimana precedente
 - [ ] Gestione automatica cambio layout Booking.com (rilevamento "Visualizza tariffe")

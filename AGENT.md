@@ -23,11 +23,17 @@ filler.py            — merge di tutti i run storici → calendar_merged.json
 report.py            — genera CSV e TXT dal calendario
 app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
 git_utils.py         — git commit + push condiviso (branch rilevato automaticamente)
-run_scheduled.py     — wrapper per esecuzione automatica (solo locale, Lun-Mer)
-                       scrive output/scheduler_state.json con le date → run.py lo legge e cancella
-                       NON modifica più competitors.json a runtime
+run_scheduled.py     — avvio automatico notturno (cron ogni 30 min)
+                       condizione: git log calendar_merged.json > 7 giorni fa
+                       fascia: 19:30–09:00 (fuori fascia: esce silenziosamente)
+                       lock file output/run_in_progress.lock contiene PID di run.py
+panel.py             — pannello Tkinter: stato, log live, Avvia/Stop
+                       lancia da GNOME launcher (Super → "HotelCompare")
+                       avvio manuale ignora la condizione 7 giorni
 carica_manuale_durante_run.py — push parziale durante run: legge i partial già pronti,
                        aggiorna calendar_merged.json e fa commit+push senza aspettare il run completo
+terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
+.github/workflows/scraping.yml — GitHub Actions piano B (Lun/Mar/Mer 02:00 UTC)
 ```
 
 ## File principali
@@ -39,11 +45,14 @@ carica_manuale_durante_run.py — push parziale durante run: legge i partial gi�
 | `report.py` | genera CSV e TXT dal calendario |
 | `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
 | `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
-| `run_scheduled.py` | wrapper @reboot: guard settimanale + notifica desktop + auto-push |
+| `run_scheduled.py` | avvio automatico notturno: 7gg, fascia 19:30–09:00, lock file con PID |
+| `panel.py` | pannello Tkinter: stato, log live, Avvia/Stop (launcher GNOME) |
 | `carica_manuale_durante_run.py` | push parziale mentre run.py è ancora in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
-| `git_utils.py` | git push condiviso tra run.py e run_scheduled.py |
+| `git_utils.py` | git push condiviso tra run.py, run_scheduled.py, panel.py |
 | `competitors.json` | config statica: hotel, URL, max_workers — non modificata a runtime |
+| `terraform/main.tf` | Terraform VM Oracle ARM — tracciato nel repo |
+| `.github/workflows/scraping.yml` | GitHub Actions piano B |
 | `tests/` | unit test funzioni pure (pytest, no rete, no browser) |
 | `scripts/retry_stack_apply.sh` | retry VM Oracle: ruota AD-1/2/3, gira in locale |
 | `scripts/oracle_keepalive.sh` | keepalive da installare sulla VM Oracle |
