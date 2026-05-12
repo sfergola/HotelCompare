@@ -39,7 +39,7 @@ def _ultimo_aggiornamento() -> tuple[str, int]:
 
 
 def _ha_checkpoint() -> bool:
-    return any(OUTPUT_DIR.glob("*_inprogress.json"))
+    return any(OUTPUT_DIR.glob("partial_*_inprogress.json"))
 
 
 def _processo_attivo() -> tuple[bool, int | None]:
