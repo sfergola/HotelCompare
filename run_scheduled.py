@@ -15,6 +15,8 @@ import sys
 from datetime import date, timedelta
 from pathlib import Path
 
+from git_utils import git_push_calendar
+
 ROOT = Path(__file__).parent
 OUTPUT_DIR = ROOT / "output"
 
@@ -41,31 +43,6 @@ def notifica(messaggio: str):
     subprocess.run(["notify-send", "-t", "10000", "HotelCompare", messaggio], check=False)
 
 
-def git_push():
-    subprocess.run(["git", "add", "output/calendar_*.json"], cwd=ROOT, check=False)
-    diff = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT)
-    if diff.returncode == 0:
-        return
-
-    oggi_str = date.today().strftime("%d/%m/%Y")
-    commit = subprocess.run(
-        ["git", "commit", "-m", f"chore: aggiornamento prezzi {oggi_str}"],
-        cwd=ROOT, check=False
-    )
-    if commit.returncode != 0:
-        notifica("Commit fallito. Controlla il terminale.")
-        return
-
-    branch_res = subprocess.run(
-        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-        cwd=ROOT, capture_output=True, text=True
-    )
-    branch = branch_res.stdout.strip() or "main"
-    push = subprocess.run(["git", "push", "origin", branch], cwd=ROOT, check=False)
-    if push.returncode != 0:
-        notifica("Push fallito. Controlla la connessione di rete.")
-
-
 def main():
     oggi = date.today()
 
@@ -76,20 +53,23 @@ def main():
         print("Run già completato questa settimana. Skip.")
         sys.exit(0)
 
-    # aggiorna solo data_inizio — data_fine è under controllo manuale
-    # lo scheduler usa stagione_fine come fine stagione fissa
+    # Scrive le date di run in scheduler_state.json invece di modificare competitors.json.
+    # run.py legge da qui se il file esiste, e lo cancella dopo l'uso.
     cfg_path = ROOT / "competitors.json"
     cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
-    cfg["data_inizio"] = str(oggi + timedelta(days=1))
-    cfg["data_fine"]   = cfg.get("stagione_fine", "2026-09-21")
-    cfg_path.write_text(json.dumps(cfg, ensure_ascii=False, indent=2), encoding="utf-8")
+    state = {
+        "data_inizio": str(oggi + timedelta(days=1)),
+        "data_fine":   cfg.get("stagione_fine", "2026-09-21"),
+    }
+    state_path = OUTPUT_DIR / "scheduler_state.json"
+    state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
     notifica("Inizio scraping prezzi competitor — non spegnere il PC")
 
     result = subprocess.run([sys.executable, str(ROOT / "run.py")], cwd=ROOT)
 
     if result.returncode == 0:
-        git_push()
+        git_push_calendar(notifica_fn=notifica)
         notifica("Scraping completato e pubblicato. Puoi spegnere il PC.")
     else:
         notifica("Scraping fallito. Controlla il terminale.")

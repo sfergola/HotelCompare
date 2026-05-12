@@ -1,0 +1,45 @@
+name: Scraping prezzi competitor
+
+on:
+  schedule:
+    # Lun/Mar/Mer alle 02:00 UTC (= 03:00 CET / 04:00 CEST)
+    - cron: '0 2 * * 1,2,3'
+  workflow_dispatch:
+
+# evita run paralleli se una settimana parte in ritardo
+concurrency:
+  group: scraping
+  cancel-in-progress: false
+
+# GITHUB_TOKEN ha bisogno di write per fare il push del calendario
+permissions:
+  contents: write
+
+jobs:
+  scraping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Installa dipendenze Python
+        run: pip install -r requirements.txt
+
+      - name: Installa Chromium
+        run: |
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Configura git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Scraping e push calendario
+        run: python run_scheduled.py

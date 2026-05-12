@@ -19,6 +19,9 @@ Output: calendario JSON, CSV, report testo, web app Streamlit.
 | Web app Streamlit con tabella colorata per mese | ✅ |
 | Report CSV e TXT | ✅ |
 | Esecuzione automatica (cron @reboot, Lun-Mer) | ✅ |
+| Unit test funzioni pure (pytest, no rete) | ✅ |
+| Linting ruff | ✅ |
+| Migrazione Oracle Cloud (VM ARM Always Free) | 🔄 in corso |
 
 ## Quick start
 
