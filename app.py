@@ -66,7 +66,7 @@ GIORNI_IT = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
 def fmt_giorno(d: str) -> str:
     giorno = date.fromisoformat(d)
     sigla  = GIORNI_IT[giorno.weekday()]
-    return f"{sigla} {d[8:10]}-{d[5:7]}"
+    return f"{sigla} {d[8:10]}"
 
 
 def mese_label(m: str) -> str:
@@ -223,9 +223,13 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     for i, g in enumerate(giorni_mese):
         col_n = i + 2  # colonna 1 = Hotel, CSS è 1-indexed
         giorno_dt = date.fromisoformat(g)
-        if giorno_dt.weekday() >= 5:  # sabato=5, domenica=6
+        if giorno_dt.weekday() == 4:  # venerdì
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
-                ("background-color", "#dbeafe"), ("color", "#1e40af"),
+                ("background-color", "#ffedd5"), ("color", "#c2410c"),
+            ]})
+        elif giorno_dt.weekday() >= 5:  # sabato=5, domenica=6
+            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
+                ("background-color", "#fee2e2"), ("color", "#b91c1c"),
             ]})
         if g == today_iso:
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
@@ -290,20 +294,14 @@ if scelta == OPZIONE_MERGED:
     else:
         data_agg = "—"
 
-    st.sidebar.markdown(f"📅 **{periodo}**")
-    col1, col2 = st.sidebar.columns(2)
-    col1.metric("Hotel", len(calendario))
-    col2.metric("Aggiornato", data_agg.split(" ")[0])
+    st.sidebar.markdown(f"📅 **{periodo}**  \n🏨 {len(calendario)} hotel &nbsp;·&nbsp; 🔄 {data_agg.split(' ')[0]}", unsafe_allow_html=True)
 else:
     computed = scelta.split("_computed")[-1].replace(".json", "")
     if len(computed) == 8:
         data_agg = _fmt_data_agg(date(int(computed[:4]), int(computed[4:6]), int(computed[6:8])))
     else:
         data_agg = "—"
-    st.sidebar.markdown(f"📅 **{meta.get('data_inizio')} → {meta.get('data_fine')}**")
-    col1, col2 = st.sidebar.columns(2)
-    col1.metric("Hotel", len(calendario))
-    col2.metric("Aggiornato", data_agg.split(" ")[0])
+    st.sidebar.markdown(f"📅 **{meta.get('data_inizio')} → {meta.get('data_fine')}**  \n🏨 {len(calendario)} hotel &nbsp;·&nbsp; 🔄 {data_agg.split(' ')[0]}", unsafe_allow_html=True)
 
 # Legenda colori
 st.sidebar.markdown("### Colori prezzi")
