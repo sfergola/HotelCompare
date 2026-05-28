@@ -21,6 +21,30 @@ import streamlit as st
 
 from scraper import parse_valore, is_extra_letti, lookup_entry
 
+CSS_GLOBALE = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+.block-container {padding-top: 1.2rem; padding-bottom: 1rem;}
+h1 {font-size: 1.5rem !important; font-weight: 700 !important; margin-bottom: 0.2rem !important;}
+h2 {font-size: 1.15rem !important; font-weight: 600 !important; margin: 0.4rem 0 0.6rem 0 !important;}
+[data-testid="stSidebar"] {min-width: 220px; max-width: 260px;}
+[data-testid="stSidebar"] .stSelectbox label {font-size: 0.85rem;}
+.stButton > button {
+    border-radius: 6px;
+    font-size: 1.1rem;
+    padding: 2px 14px;
+    line-height: 1.8;
+    border: 1px solid #ccd0d6;
+    background: #f8f9fa;
+    color: #333;
+}
+.stButton > button:hover {background: #e9ecef;}
+.stButton > button:disabled {opacity: 0.35;}
+</style>
+"""
+
 OUTPUT_DIR = Path(__file__).parent / "output"
 
 COLORE_ESAURITO    = "#f8d7da"
@@ -175,6 +199,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         cols = rows_colori[idx]
         return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
 
+    today_iso = date.today().isoformat()
     sticky_css = [
         {"selector": "th:nth-child(1)", "props": [
             ("position", "sticky"), ("left", "0"), ("z-index", "2"),
@@ -190,7 +215,27 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
             ("padding", "4px 8px"), ("white-space", "nowrap"),
             ("border", "1px solid #dee2e6"),
         ]},
+        {"selector": "th", "props": [
+            ("background-color", "#f0f2f6"), ("font-size", "0.78rem"),
+            ("font-weight", "600"), ("text-align", "center"),
+        ]},
     ]
+    for i, g in enumerate(giorni_mese):
+        col_n = i + 2  # colonna 1 = Hotel, CSS è 1-indexed
+        giorno_dt = date.fromisoformat(g)
+        if giorno_dt.weekday() >= 5:  # sabato=5, domenica=6
+            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
+                ("background-color", "#dbeafe"), ("color", "#1e40af"),
+            ]})
+        if g == today_iso:
+            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
+                ("background-color", "#fef3c7"), ("color", "#92400e"),
+                ("border-bottom", "2px solid #f59e0b"),
+            ]})
+            sticky_css.append({"selector": f"td:nth-child({col_n})", "props": [
+                ("border-left", "2px solid #f59e0b"),
+                ("border-right", "2px solid #f59e0b"),
+            ]})
     styled = df.style.apply(style_fn, axis=1).set_table_styles(sticky_css).hide(axis="index")
     html = styled.to_html()
     st.markdown(f'<div style="overflow-x:auto;width:100%">{html}</div>', unsafe_allow_html=True)
@@ -199,6 +244,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
 # ── UI principale ────────────────────────────────────────────────────────────
 
 st.set_page_config(page_title="HotelCompare", layout="wide")
+st.markdown(CSS_GLOBALE, unsafe_allow_html=True)
 st.title("HotelCompare — Prezzi competitor")
 
 # Selezione file
@@ -244,23 +290,20 @@ if scelta == OPZIONE_MERGED:
     else:
         data_agg = "—"
 
-    st.sidebar.markdown(f"""
-**Periodo:** {periodo}
-**Hotel:** {len(calendario)}
-**Aggiornato il:** {data_agg}
-""")
+    st.sidebar.markdown(f"📅 **{periodo}**")
+    col1, col2 = st.sidebar.columns(2)
+    col1.metric("Hotel", len(calendario))
+    col2.metric("Aggiornato", data_agg.split(" ")[0])
 else:
     computed = scelta.split("_computed")[-1].replace(".json", "")
     if len(computed) == 8:
         data_agg = _fmt_data_agg(date(int(computed[:4]), int(computed[4:6]), int(computed[6:8])))
     else:
         data_agg = "—"
-    st.sidebar.markdown(f"""
-**Periodo:** {meta.get('data_inizio')} → {meta.get('data_fine')}
-**Adulti:** {meta.get('adulti', 2)}
-**Hotel:** {len(calendario)}
-**Aggiornato il:** {data_agg}
-""")
+    st.sidebar.markdown(f"📅 **{meta.get('data_inizio')} → {meta.get('data_fine')}**")
+    col1, col2 = st.sidebar.columns(2)
+    col1.metric("Hotel", len(calendario))
+    col2.metric("Aggiornato", data_agg.split(" ")[0])
 
 # Legenda colori
 st.sidebar.markdown("### Colori prezzi")
