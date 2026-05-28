@@ -231,12 +231,21 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         idx  = df.index.get_loc(row.name)
         cols = rows_colori[idx]
         nome = rows_data[idx][0]
-        extra = "font-size: 0.85rem"
+        border_bold = ""
         if nome == "MEDIA":
-            extra += "; font-weight: bold; border-top: 3px solid #6b7280"
+            border_bold = "font-weight: bold; border-top: 3px solid #6b7280"
         elif nome.startswith("▶"):
-            extra += "; border-top: 3px solid #d1d5db"
-        return [f"background-color: {c}; {extra}" if c else extra for c in cols]
+            border_bold = "border-top: 3px solid #d1d5db"
+        result = []
+        for c in cols:
+            if c:
+                s = f"background-color: {c}; font-size: 0.85rem"
+                if border_bold:
+                    s += f"; {border_bold}"
+                result.append(s)
+            else:
+                result.append(border_bold)
+        return result
 
     today_iso = date.today().isoformat()
     anni = {date.fromisoformat(g).year for g in giorni_mese}
