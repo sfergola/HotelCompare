@@ -80,7 +80,7 @@ def main():
         print(f"  (date da scheduler_state.json: {data_inizio_cfg} → {data_fine})\n")
     else:
         data_fine       = date.fromisoformat(cfg["data_fine"])
-        data_inizio_cfg = date.fromisoformat(cfg["data_inizio"]) if "data_inizio" in cfg else oggi
+        data_inizio_cfg = oggi + timedelta(days=1)
 
     data_inizio = max(data_inizio_cfg, oggi)
 
