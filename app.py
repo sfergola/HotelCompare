@@ -225,11 +225,11 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         giorno_dt = date.fromisoformat(g)
         if giorno_dt.weekday() == 4:  # venerdì
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
-                ("background-color", "#ffedd5"), ("color", "#c2410c"),
+                ("color", "#c2410c"),
             ]})
         elif giorno_dt.weekday() >= 5:  # sabato=5, domenica=6
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
-                ("background-color", "#fee2e2"), ("color", "#b91c1c"),
+                ("color", "#b91c1c"),
             ]})
         if g == today_iso:
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
