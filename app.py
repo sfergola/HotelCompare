@@ -258,16 +258,9 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     for i, g in enumerate(giorni_mese):
         col_n = i + 2  # colonna 1 = Hotel, CSS è 1-indexed
         giorno_dt = date.fromisoformat(g)
-        domani = (giorno_dt + timedelta(days=1)).isoformat()
-        is_rosso = giorno_dt.weekday() >= 5 or g in festivi
-        is_arancione = not is_rosso and (domani in festivi or date.fromisoformat(domani).weekday() >= 5)
-        if is_rosso:
+        if giorno_dt.weekday() >= 5 or g in festivi:
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
                 ("color", "#b91c1c"),
-            ]})
-        elif is_arancione:
-            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
-                ("color", "#c2410c"),
             ]})
         if g == today_iso:
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
