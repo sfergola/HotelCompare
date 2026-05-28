@@ -349,20 +349,24 @@ mesi_disponibili = sorted(set(g[:7] for g in tutti_giorni))
 if "mese_idx" not in st.session_state:
     st.session_state.mese_idx = 0
 
-idx = st.session_state.mese_idx
-idx = max(0, min(idx, len(mesi_disponibili) - 1))
+idx = max(0, min(st.session_state.mese_idx, len(mesi_disponibili) - 1))
 
-col_prev, col_titolo, col_next = st.columns([1, 6, 1])
-with col_prev:
-    if st.button("←", disabled=(idx == 0)):
-        st.session_state.mese_idx = idx - 1
-        st.rerun()
-with col_titolo:
-    st.subheader(mese_label(mesi_disponibili[idx]))
-with col_next:
-    if st.button("→", disabled=(idx == len(mesi_disponibili) - 1)):
-        st.session_state.mese_idx = idx + 1
-        st.rerun()
+mesi_per_riga = min(len(mesi_disponibili), 6)
+righe = [mesi_disponibili[i:i+mesi_per_riga] for i in range(0, len(mesi_disponibili), mesi_per_riga)]
+for riga in righe:
+    cols = st.columns(mesi_per_riga)
+    for j, mese in enumerate(riga):
+        with cols[j]:
+            if st.button(
+                mese_label(mese),
+                key=f"mese_{mese}",
+                use_container_width=True,
+                type="primary" if mese == mesi_disponibili[idx] else "secondary",
+            ):
+                st.session_state.mese_idx = mesi_disponibili.index(mese)
+                st.rerun()
+
+st.subheader(mese_label(mesi_disponibili[idx]))
 
 giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
 render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese)
