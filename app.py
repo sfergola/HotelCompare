@@ -14,12 +14,36 @@ Mostra una tabella interattiva per mese con:
 
 import json
 from pathlib import Path
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 import streamlit as st
 
 from scraper import parse_valore, is_extra_letti, lookup_entry
+
+CSS_GLOBALE = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+.block-container {padding-top: 1.2rem; padding-bottom: 1rem;}
+h1 {font-size: 1.5rem !important; font-weight: 700 !important; margin-bottom: 0.2rem !important;}
+h2 {font-size: 1.15rem !important; font-weight: 600 !important; margin: 0.4rem 0 0.6rem 0 !important;}
+[data-testid="stSidebar"] {min-width: 220px; max-width: 260px;}
+[data-testid="stSidebar"] .stSelectbox label {font-size: 0.85rem;}
+.stButton > button {
+    border-radius: 6px;
+    font-size: 1.1rem;
+    padding: 2px 14px;
+    line-height: 1.8;
+    border: 1px solid #ccd0d6;
+    background: #f8f9fa;
+    color: #333;
+}
+.stButton > button:hover {background: #e9ecef;}
+.stButton > button:disabled {opacity: 0.35;}
+</style>
+"""
 
 OUTPUT_DIR = Path(__file__).parent / "output"
 
@@ -39,10 +63,43 @@ def colore_prezzo_relativo(valore: int, min_val: int, max_val: int) -> str:
 
 GIORNI_IT = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
 
+
+def _pasqua(anno: int) -> date:
+    a = anno % 19
+    b, c = divmod(anno, 100)
+    d, e = divmod(b, 4)
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = divmod(c, 4)
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    mese = (h + l - 7 * m + 114) // 31
+    giorno = (h + l - 7 * m + 114) % 31 + 1
+    return date(anno, mese, giorno)
+
+
+def festivi_italiani(anno: int) -> set[str]:
+    pasqua = _pasqua(anno)
+    return {d.isoformat() for d in [
+        date(anno, 1, 1),   # Capodanno
+        date(anno, 1, 6),   # Epifania
+        date(anno, 4, 25),  # Liberazione
+        date(anno, 5, 1),   # Festa del Lavoro
+        date(anno, 6, 2),   # Repubblica
+        date(anno, 8, 15),  # Ferragosto
+        date(anno, 11, 1),  # Ognissanti
+        date(anno, 12, 8),  # Immacolata
+        date(anno, 12, 25), # Natale
+        date(anno, 12, 26), # Santo Stefano
+        pasqua,
+        pasqua + timedelta(days=1),  # Pasquetta
+    ]}
+
 def fmt_giorno(d: str) -> str:
     giorno = date.fromisoformat(d)
     sigla  = GIORNI_IT[giorno.weekday()]
-    return f"{sigla} {d[8:10]}-{d[5:7]}"
+    return f"{sigla} {d[8:10]}"
 
 
 def mese_label(m: str) -> str:
@@ -173,8 +230,26 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     def style_fn(row):
         idx  = df.index.get_loc(row.name)
         cols = rows_colori[idx]
-        return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
+        nome = rows_data[idx][0]
+        border_bold = ""
+        if nome == "MEDIA":
+            border_bold = "font-weight: bold; border-top: 3px solid #6b7280"
+        elif nome.startswith("▶"):
+            border_bold = "border-top: 3px solid #d1d5db"
+        result = []
+        for c in cols:
+            if c:
+                s = f"background-color: {c}; font-size: 0.85rem"
+                if border_bold:
+                    s += f"; {border_bold}"
+                result.append(s)
+            else:
+                result.append(border_bold)
+        return result
 
+    today_iso = date.today().isoformat()
+    anni = {date.fromisoformat(g).year for g in giorni_mese}
+    festivi = set().union(*(festivi_italiani(a) for a in anni))
     sticky_css = [
         {"selector": "th:nth-child(1)", "props": [
             ("position", "sticky"), ("left", "0"), ("z-index", "2"),
@@ -190,7 +265,27 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
             ("padding", "4px 8px"), ("white-space", "nowrap"),
             ("border", "1px solid #dee2e6"),
         ]},
+        {"selector": "th", "props": [
+            ("background-color", "#f0f2f6"), ("font-size", "0.78rem"),
+            ("font-weight", "600"), ("text-align", "center"),
+        ]},
     ]
+    for i, g in enumerate(giorni_mese):
+        col_n = i + 2  # colonna 1 = Hotel, CSS è 1-indexed
+        giorno_dt = date.fromisoformat(g)
+        if giorno_dt.weekday() >= 5 or g in festivi:
+            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
+                ("color", "#b91c1c"),
+            ]})
+        if g == today_iso:
+            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
+                ("background-color", "#fef3c7"), ("color", "#92400e"),
+                ("border-bottom", "2px solid #f59e0b"),
+            ]})
+            sticky_css.append({"selector": f"td:nth-child({col_n})", "props": [
+                ("border-left", "2px solid #f59e0b"),
+                ("border-right", "2px solid #f59e0b"),
+            ]})
     styled = df.style.apply(style_fn, axis=1).set_table_styles(sticky_css).hide(axis="index")
     html = styled.to_html()
     st.markdown(f'<div style="overflow-x:auto;width:100%">{html}</div>', unsafe_allow_html=True)
@@ -199,6 +294,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
 # ── UI principale ────────────────────────────────────────────────────────────
 
 st.set_page_config(page_title="HotelCompare", layout="wide")
+st.markdown(CSS_GLOBALE, unsafe_allow_html=True)
 st.title("HotelCompare — Prezzi competitor")
 
 # Selezione file
@@ -244,23 +340,14 @@ if scelta == OPZIONE_MERGED:
     else:
         data_agg = "—"
 
-    st.sidebar.markdown(f"""
-**Periodo:** {periodo}
-**Hotel:** {len(calendario)}
-**Aggiornato il:** {data_agg}
-""")
+    st.sidebar.markdown(f"📅 **{periodo}**  \n🏨 {len(calendario)} hotel &nbsp;·&nbsp; 🔄 {data_agg.split(' ')[0]}", unsafe_allow_html=True)
 else:
     computed = scelta.split("_computed")[-1].replace(".json", "")
     if len(computed) == 8:
         data_agg = _fmt_data_agg(date(int(computed[:4]), int(computed[4:6]), int(computed[6:8])))
     else:
         data_agg = "—"
-    st.sidebar.markdown(f"""
-**Periodo:** {meta.get('data_inizio')} → {meta.get('data_fine')}
-**Adulti:** {meta.get('adulti', 2)}
-**Hotel:** {len(calendario)}
-**Aggiornato il:** {data_agg}
-""")
+    st.sidebar.markdown(f"📅 **{meta.get('data_inizio')} → {meta.get('data_fine')}**  \n🏨 {len(calendario)} hotel &nbsp;·&nbsp; 🔄 {data_agg.split(' ')[0]}", unsafe_allow_html=True)
 
 # Legenda colori
 st.sidebar.markdown("### Colori prezzi")
@@ -306,20 +393,24 @@ mesi_disponibili = sorted(set(g[:7] for g in tutti_giorni))
 if "mese_idx" not in st.session_state:
     st.session_state.mese_idx = 0
 
-idx = st.session_state.mese_idx
-idx = max(0, min(idx, len(mesi_disponibili) - 1))
+idx = max(0, min(st.session_state.mese_idx, len(mesi_disponibili) - 1))
 
-col_prev, col_titolo, col_next = st.columns([1, 6, 1])
-with col_prev:
-    if st.button("←", disabled=(idx == 0)):
-        st.session_state.mese_idx = idx - 1
-        st.rerun()
-with col_titolo:
-    st.subheader(mese_label(mesi_disponibili[idx]))
-with col_next:
-    if st.button("→", disabled=(idx == len(mesi_disponibili) - 1)):
-        st.session_state.mese_idx = idx + 1
-        st.rerun()
+mesi_per_riga = min(len(mesi_disponibili), 6)
+righe = [mesi_disponibili[i:i+mesi_per_riga] for i in range(0, len(mesi_disponibili), mesi_per_riga)]
+for riga in righe:
+    cols = st.columns(mesi_per_riga)
+    for j, mese in enumerate(riga):
+        with cols[j]:
+            if st.button(
+                mese_label(mese),
+                key=f"mese_{mese}",
+                use_container_width=True,
+                type="primary" if mese == mesi_disponibili[idx] else "secondary",
+            ):
+                st.session_state.mese_idx = mesi_disponibili.index(mese)
+                st.rerun()
+
+st.subheader(mese_label(mesi_disponibili[idx]))
 
 giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
 render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese)

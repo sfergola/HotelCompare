@@ -154,5 +154,5 @@ refactor/*    → pulizia codice senza cambiare comportamento
 ## Parallelismo
 `competitors.json` → campo `max_workers` (default: 3).
 Ogni hotel ha il proprio processo Playwright. Partial files salvati in `output/partial_<hotel>_...json`.
-Riduce il tempo di esecuzione da ~5h (sequenziale) a ~2h (3 worker).
+Durata reale osservata: ~6h con 3 worker e 13 hotel (stagione maggio–settembre).
 Per ridurre RAM/CPU usa `max_workers: 1` (sequenziale, un browser condiviso).
