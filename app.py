@@ -14,7 +14,7 @@ Mostra una tabella interattiva per mese con:
 
 import json
 from pathlib import Path
-from datetime import date
+from datetime import date, timedelta
 
 import pandas as pd
 import streamlit as st
@@ -62,6 +62,39 @@ def colore_prezzo_relativo(valore: int, min_val: int, max_val: int) -> str:
 
 
 GIORNI_IT = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]
+
+
+def _pasqua(anno: int) -> date:
+    a = anno % 19
+    b, c = divmod(anno, 100)
+    d, e = divmod(b, 4)
+    f = (b + 8) // 25
+    g = (b - f + 1) // 3
+    h = (19 * a + b - d - g + 15) % 30
+    i, k = divmod(c, 4)
+    l = (32 + 2 * e + 2 * i - h - k) % 7
+    m = (a + 11 * h + 22 * l) // 451
+    mese = (h + l - 7 * m + 114) // 31
+    giorno = (h + l - 7 * m + 114) % 31 + 1
+    return date(anno, mese, giorno)
+
+
+def festivi_italiani(anno: int) -> set[str]:
+    pasqua = _pasqua(anno)
+    return {d.isoformat() for d in [
+        date(anno, 1, 1),   # Capodanno
+        date(anno, 1, 6),   # Epifania
+        date(anno, 4, 25),  # Liberazione
+        date(anno, 5, 1),   # Festa del Lavoro
+        date(anno, 6, 2),   # Repubblica
+        date(anno, 8, 15),  # Ferragosto
+        date(anno, 11, 1),  # Ognissanti
+        date(anno, 12, 8),  # Immacolata
+        date(anno, 12, 25), # Natale
+        date(anno, 12, 26), # Santo Stefano
+        pasqua,
+        pasqua + timedelta(days=1),  # Pasquetta
+    ]}
 
 def fmt_giorno(d: str) -> str:
     giorno = date.fromisoformat(d)
@@ -200,6 +233,8 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
 
     today_iso = date.today().isoformat()
+    anni = {date.fromisoformat(g).year for g in giorni_mese}
+    festivi = set().union(*(festivi_italiani(a) for a in anni))
     sticky_css = [
         {"selector": "th:nth-child(1)", "props": [
             ("position", "sticky"), ("left", "0"), ("z-index", "2"),
@@ -223,13 +258,13 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     for i, g in enumerate(giorni_mese):
         col_n = i + 2  # colonna 1 = Hotel, CSS è 1-indexed
         giorno_dt = date.fromisoformat(g)
-        if giorno_dt.weekday() == 4:  # venerdì
-            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
-                ("color", "#c2410c"),
-            ]})
-        elif giorno_dt.weekday() >= 5:  # sabato=5, domenica=6
+        if giorno_dt.weekday() >= 5 or g in festivi:  # sab, dom, festivi
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
                 ("color", "#b91c1c"),
+            ]})
+        elif giorno_dt.weekday() == 4:  # venerdì
+            sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
+                ("color", "#c2410c"),
             ]})
         if g == today_iso:
             sticky_css.append({"selector": f"th:nth-child({col_n})", "props": [
