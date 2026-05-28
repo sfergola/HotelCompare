@@ -230,7 +230,13 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     def style_fn(row):
         idx  = df.index.get_loc(row.name)
         cols = rows_colori[idx]
-        return [f"background-color: {c}; font-size: 0.8rem" if c else "" for c in cols]
+        nome = rows_data[idx][0]
+        extra = "font-size: 0.85rem"
+        if nome == "MEDIA":
+            extra += "; font-weight: bold; border-top: 3px solid #6b7280"
+        elif nome.startswith("▶"):
+            extra += "; border-top: 3px solid #d1d5db"
+        return [f"background-color: {c}; {extra}" if c else extra for c in cols]
 
     today_iso = date.today().isoformat()
     anni = {date.fromisoformat(g).year for g in giorni_mese}
