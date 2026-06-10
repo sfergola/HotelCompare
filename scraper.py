@@ -59,8 +59,11 @@ def parse_valore(testo: str) -> float | None:
 
 
 def is_extra_letti(prezzo: str) -> bool:
-    """True se il prezzo viene da tripla (T), quadrupla (Q) o appartamento (A) — esclusi dalle medie."""
-    return bool(re.search(r"\d[TQA]\*?$", prezzo))
+    """True se il prezzo viene da tripla (T), quadrupla (Q) o appartamento (A) — esclusi dalle medie.
+
+    Gestisce anche il formato cella con suffisso minimum stay: "€ 120T×3".
+    """
+    return bool(re.search(r"\d[TQA]\*?(?:×\d+)?$", prezzo))
 
 
 # ── helper privati ───────────────────────────────────────────────────────────

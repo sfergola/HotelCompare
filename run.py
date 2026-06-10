@@ -16,7 +16,7 @@ Fasi:
 
 import json
 from concurrent.futures import ProcessPoolExecutor, as_completed
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright

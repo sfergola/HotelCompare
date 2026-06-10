@@ -8,7 +8,7 @@ from datetime import date
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from app import colore_prezzo_relativo, media_giorno, _fmt_data_agg, fmt_giorno
+from app import colore_prezzo_relativo, media_giorno, prezzi_giorno, _fmt_data_agg, fmt_giorno
 
 
 # ── colore_prezzo_relativo ────────────────────────────────────────────────────
@@ -64,6 +64,41 @@ def test_media_giorno_nessun_dato():
     assert m == "—"
 
 
+# ── prezzi_giorno ─────────────────────────────────────────────────────────────
+
+def test_prezzi_giorno_esclude_storico():
+    # cella senza prezzo corrente ma con storico: "— (€ 120* · 30/04)"
+    # il € storico non deve entrare nella scala colori
+    calendario = {
+        "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
+        "Hotel B": {"2026-07-01": {
+            "prezzo": None, "notti": None, "stato": "non_trovato",
+            "storico_prezzo": "€ 120*", "storico_notti": 1, "storico_data": "2026-04-30",
+        }},
+    }
+    p = prezzi_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01")
+    assert p == {"Hotel A": 100.0}
+
+def test_prezzi_giorno_esclude_esaurito_con_storico():
+    calendario = {
+        "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
+        "Hotel B": {"2026-07-01": {
+            "prezzo": None, "notti": None, "stato": "esaurito",
+            "storico_prezzo": "€ 90", "storico_notti": 1, "storico_data": "2026-04-30",
+        }},
+    }
+    p = prezzi_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01")
+    assert p == {"Hotel A": 100.0}
+
+def test_prezzi_giorno_esclude_tripla_con_minimum_stay():
+    calendario = {
+        "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
+        "Hotel B": {"2026-07-01": {"prezzo": "€ 80T", "notti": 3, "stato": "ok"}},
+    }
+    p = prezzi_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01")
+    assert p == {"Hotel A": 100.0}
+
+
 # ── _fmt_data_agg ─────────────────────────────────────────────────────────────
 
 def test_fmt_data_agg_oggi():
@@ -85,8 +120,8 @@ def test_fmt_data_agg_giorni_fa():
 
 def test_fmt_giorno_formato():
     s = fmt_giorno("2026-07-06")  # lunedì
-    assert s == "Lun 06-07"
+    assert s == "Lun 06"
 
 def test_fmt_giorno_domenica():
     s = fmt_giorno("2026-07-05")  # domenica
-    assert s == "Dom 05-07"
+    assert s == "Dom 05"

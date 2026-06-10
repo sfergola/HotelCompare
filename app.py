@@ -148,6 +148,10 @@ def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
         if nome in manuali or nome == riferimento:
             continue
         cella, _ = lookup(calendario, nome, giorno)
+        # le celle senza prezzo corrente ("— (€120 · 30/04)", "✕ (...)") contengono
+        # un € storico che parse_valore catturerebbe come prezzo vero
+        if cella.startswith(("—", "✕")):
+            continue
         p = parse_valore(cella)
         if p and not is_extra_letti(cella):
             result[nome] = p
@@ -181,9 +185,9 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         for g in giorni_mese:
             cella, _ = lookup(calendario, nome, g)
             p        = parse_valore(cella)
-            if cella == "✕":
+            if cella.startswith("✕"):
                 colore = COLORE_ESAURITO
-            elif cella == "—" or not cella:
+            elif cella.startswith("—") or not cella:
                 colore = COLORE_NON_TROVATO
             elif p and not is_extra_letti(cella) and g in minmax:
                 mn, mx = minmax[g]
@@ -211,9 +215,9 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         for g in giorni_mese:
             cella, _ = lookup(calendario, riferimento, g)
             p        = parse_valore(cella)
-            if cella == "✕":
+            if cella.startswith("✕"):
                 colore = COLORE_ESAURITO
-            elif cella == "—" or not cella:
+            elif cella.startswith("—") or not cella:
                 colore = COLORE_NON_TROVATO
             elif p and not is_extra_letti(cella) and g in minmax:
                 mn, mx = minmax[g]
@@ -340,14 +344,14 @@ if scelta == OPZIONE_MERGED:
     else:
         data_agg = "—"
 
-    st.sidebar.markdown(f"📅 **{periodo}**  \n🏨 {len(calendario)} hotel &nbsp;·&nbsp; 🔄 {data_agg.split(' ')[0]}", unsafe_allow_html=True)
+    st.sidebar.markdown(f"📅 **{periodo}**  \n🏨 {len(calendario)} hotel  \n🔄 {data_agg}", unsafe_allow_html=True)
 else:
     computed = scelta.split("_computed")[-1].replace(".json", "")
     if len(computed) == 8:
         data_agg = _fmt_data_agg(date(int(computed[:4]), int(computed[4:6]), int(computed[6:8])))
     else:
         data_agg = "—"
-    st.sidebar.markdown(f"📅 **{meta.get('data_inizio')} → {meta.get('data_fine')}**  \n🏨 {len(calendario)} hotel &nbsp;·&nbsp; 🔄 {data_agg.split(' ')[0]}", unsafe_allow_html=True)
+    st.sidebar.markdown(f"📅 **{meta.get('data_inizio')} → {meta.get('data_fine')}**  \n🏨 {len(calendario)} hotel  \n🔄 {data_agg}", unsafe_allow_html=True)
 
 # Legenda colori
 st.sidebar.markdown("### Colori prezzi")

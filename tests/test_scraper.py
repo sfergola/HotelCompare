@@ -60,6 +60,14 @@ def test_is_extra_letti_standard():
     assert is_extra_letti("€ 120S") is False
     assert is_extra_letti("~€ 110") is False
 
+def test_is_extra_letti_con_minimum_stay():
+    # formato cella prodotto da lookup_entry: "€ 90T×3"
+    assert is_extra_letti("€ 90T×3") is True
+    assert is_extra_letti("€ 90Q*×2") is True
+    assert is_extra_letti("€ 110A×7") is True
+    assert is_extra_letti("€ 90×3") is False
+    assert is_extra_letti("€ 90*×3") is False
+
 
 # ── fmt_storico ───────────────────────────────────────────────────────────────
 
