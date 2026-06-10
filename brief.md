@@ -1,0 +1,70 @@
+# Brief — Audit veridicità prezzi (Treno 1, 10/06/2026)
+
+Branch: `fix/veridicita-prezzi` (2 commit, NON mergiato su main — decidi tu dopo review).
+Audit richiesto da Salvatore: "i prezzi visualizzati sono veritieri?". Eseguito con 2 agenti
+(analisi dati storici + verifica live su Booking con dump pagina) + review codice completa.
+
+## Verdetto in una riga
+
+I dati erano veri al ~98% come *numeri*, ma con un bias sistematico appena scoperto: **con
+sconti attivi il parser catturava il prezzo barrato, non quello effettivo → competitor
+sovrastimati del 7-9%**. Rischio concreto: prezzare HNT troppo alto rispetto al mercato reale.
+
+## Cosa è stato verificato live (10/06, dump in tests/fixtures/)
+
+| Caso | Calendario diceva | Prezzo VERO | Causa |
+|---|---|---|---|
+| Lido Inn 08/08 (3n) | € 252*/notte | € 232/notte solo camera | barrato € 757 vs attuale € 696 + board sbagliata |
+| Capri 20/06 (5n) | € 178*/notte (live parser) | € 174/notte B&B | barrato + tariffa "Solo per 1 ospite" contata come doppia |
+| Lido Inn 20/06 (1n) | € 319* | € 319 solo camera | board contaminata dalla tariffa successiva |
+| Esauriti (5 casi) | ✕ | ✕ | corretto ✓ |
+| URL "le-cirque-club" per Lido Inn | — | è davvero Lido Inn ✓ | slug vecchio Booking, falso allarme |
+
+## Fix applicati sul branch (tutti testati, 64 test passano)
+
+1. **Parser riscritto a blocchi-tariffa** (`scraper.py:estrai_prezzo`): usa "Prezzo attuale € Y",
+   altrimenti il minimo della tariffa (il barrato è sempre più alto); board legata alla singola
+   tariffa; "colazione per € N" = solo camera; tariffe 1-ospite escluse dalle doppie; header
+   "Tipologia" nudo riconosciuto; stop a fine tabella. **3 dump reali come fixture di test.**
+2. **MEDIA protetta da outlier** (>3× mediana del giorno): il caso reale è Dei Tigli 06/06
+   `~€ 888` che gonfiava la MEDIA da €161 a €242. I picchi-evento sincronizzati (26-27/06,
+   confermati reali su 5 hotel) sopravvivono perché alzano la mediana.
+3. **Scala colori**: i prezzi storici dentro "— (€120 · 30/04)" e "✕ (...)" non vengono più
+   trattati come prezzi correnti; T/Q/A con suffisso ×N ora correttamente esclusi.
+4. **`run.py`: `timedelta` non importato** → ogni run manuale senza scheduler_state crashava
+   (regressione del commit 4d71c1b, mai eseguito da allora).
+5. **`carica_manuale_durante_run.py`** cercava i partial col range date di competitors.json,
+   ma run.py ora calcola le date a runtime → non avrebbe trovato nulla. Ora glob sui file <48h.
+6. **filler**: `data_vista` dello scrape preservata (prima sovrascritta con la data del file)
+   e normalizzata ISO (c'erano 2 formati); stesso per `storico_data`.
+7. Sidebar: mostra "aggiornato 04/06/2026 (6 giorni fa)" per esteso (il label di età veniva troncato).
+
+## Cosa NON ho toccato (decisioni tue — Treno 2)
+
+1. **Semantica "vince la tariffa più economica"**: prima la solo-camera aveva precedenza sul
+   B&B anche se più cara (Capri: avrebbe mostrato € 245/notte solo camera invece di € 174 B&B).
+   Ho cambiato in cheapest-wins (il cliente vede la più economica) con marker che dice quale.
+   È nel fix 1 ma è una scelta di prodotto: **ratificala o dimmi di tornare a solo>B&B**.
+2. **Soglia outlier 3× mediana**: conservativa, da ratificare. La cella €888 resta visibile
+   in tabella (potrebbe essere l'ultima camera vera) — esce solo dalla MEDIA.
+3. **Mariotti è quasi cieco**: 27% copertura, 0 prezzi puliti (solo ~/T/Q), 73% celle "✕ +
+   storico di 3+ settimane". Trend coerente con sell-out reale, non bug. Opzioni: flag UI
+   "dato inaffidabile", escluderlo dalla MEDIA, o lasciare.
+4. **Cadenza run**: tutto ciò che vedi ha sempre 7 giorni (cron settimanale). In stagione i
+   prezzi si muovono più in fretta. Valutare 2-3 run/settimana.
+5. **Singole S in MEDIA**: abbassano la media fino a −15€ su giorni puntuali (04/07). Escludere?
+6. **Off-by-one**: `data_fine 2026-09-21` ma l'ultimo giorno scrapato è il 20/09 (il 21 è
+   checkout). Voluto?
+
+## Prossimo passo operativo (importante)
+
+Il calendario in produzione contiene ancora i prezzi barrati (~7-9% gonfiati dove c'erano
+sconti). Dopo il merge: **lanciare un run completo** per rigenerare i dati col parser nuovo.
+Test consigliato prima del merge: `streamlit run app.py` + verifica visiva (MEDIA 06/06 deve
+dire ~€161, non €242).
+
+## Domande aperte
+
+- Le 4 decisioni sopra (semantica cheapest-wins, soglia outlier, Mariotti, cadenza).
+- Vuoi un alert automatico quando un prezzo salta >X% tra run (sanity inter-run)? L'audit ha
+  trovato ~1-2% di celle per run con "swap camera" (es. € 629* → € 214*) che oggi passano in silenzio.
