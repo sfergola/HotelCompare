@@ -44,6 +44,14 @@ ROOM_START = ["camera", "suite", "appartamento", "stanza", "bungalow", "studio",
               "monolocale", "economy", "double", "twin", "single", "singola",
               "standard", "superior", "deluxe", "classic", "comfort", "junior"]
 
+# fine della tabella camere — oltre questi marker i prezzi appartengono ad altre sezioni
+STOP_MARKERS = ["recensioni degli ospiti", "domande frequenti", "regole della struttura"]
+
+RE_OCCUPANZA           = re.compile(r"n° max persone[^\d]*(\d+)")
+RE_PREZZO_ATTUALE      = re.compile(r"prezzo attuale\s*€\s*([\d.,]+)")
+RE_SOTTOCAMERA         = re.compile(r"camera \d+\s*:")
+RE_COLAZIONE_PAGAMENTO = re.compile(r"colazione\s+(?:a pagamento|(?:a|per)\s*€)")
+
 
 # ── helper pubblici (usati anche da report.py) ───────────────────────────────
 
@@ -56,6 +64,22 @@ def parse_valore(testo: str) -> float | None:
         except ValueError:
             pass
     return None
+
+
+def filtra_prezzi_anomali(valori: list[float]) -> list[float]:
+    """Esclude dalla media i valori >3× la mediana del giorno.
+
+    Protegge la MEDIA da prezzi anomali (es. ultima camera rimasta a €888
+    quando gli altri hotel stanno a €120-150). I picchi reali sincronizzati
+    tra più hotel (weekend-evento) alzano la mediana e quindi sopravvivono.
+    Con meno di 4 valori non filtra: troppo pochi per distinguere un outlier.
+    """
+    if len(valori) < 4:
+        return valori
+    ordinati = sorted(valori)
+    n = len(ordinati)
+    mediana = ordinati[n // 2] if n % 2 else (ordinati[n // 2 - 1] + ordinati[n // 2]) / 2
+    return [v for v in valori if v <= 3 * mediana]
 
 
 def is_extra_letti(prezzo: str) -> bool:
@@ -128,102 +152,152 @@ def estrai_prezzo(page) -> str | None:
     """
     testo_pagina = page.inner_text("body")
     righe = [r.strip() for r in testo_pagina.split("\n") if r.strip()]
-    risultati: list[tuple[str, float, str | None, bool]] = []
+    # (camera, prezzo, board, sezione_appartamenti, occupanza)
+    risultati: list[tuple[str, float, str | None, bool, int | None]] = []
 
-    # Parser 1: layout tabella con header "Tipologia camera" o "Tipologia appartamento"
+    # Parser 1: layout tabella con header "Tipologia ..." ("camera", "appartamento",
+    # o il solo "Tipologia" usato da alcune strutture)
     start = None
     sezione_appart = False
     for i, r in enumerate(righe):
-        if "Tipologia camera" in r or "tipo di camera" in r.lower():
+        rl = r.lower()
+        if rl.startswith("tipologia") or "tipo di camera" in rl:
             start = i
-            break
-        if "Tipologia appartamento" in r or "tipologia alloggio" in r.lower():
-            start = i
-            sezione_appart = True
+            sezione_appart = "appartament" in rl or "alloggio" in rl
             break
 
     if start is not None:
-        camera_corrente: str | None = None
-        prezzo_corrente: float | None = None
-        for r in righe[start: start + 250]:
+        camera: str | None = None
+        occupanza: int | None = None
+        prezzo: float | None = None   # minimo delle righe-prezzo brevi della tariffa
+        attuale: float | None = None  # prezzo esplicito "Prezzo attuale € Y" (post-sconto)
+
+        def chiudi_tariffa(board: str | None):
+            nonlocal prezzo, attuale
+            p = attuale if attuale is not None else prezzo
+            if camera and p:
+                risultati.append((camera, p, board, sezione_appart, occupanza))
+            prezzo = attuale = None
+
+        for r in righe[start: start + 400]:
             rl = r.lower()
+
+            if any(m in rl for m in STOP_MARKERS):
+                break
+
             if (any(rl.startswith(k) for k in ROOM_START)
-                    and len(r) < 90 and not EURO_RE.search(r)
-                    and "recension" not in rl):
-                if camera_corrente and prezzo_corrente:
-                    risultati.append((camera_corrente, prezzo_corrente, None, sezione_appart))
-                camera_corrente = r
-                prezzo_corrente = None
+                    and 10 < len(r) < 90 and not EURO_RE.search(r)
+                    and "recension" not in rl
+                    and not RE_SOTTOCAMERA.match(rl)):
+                chiudi_tariffa(None)
+                camera = r
+                occupanza = None
                 continue
+
+            m_occ = RE_OCCUPANZA.match(rl)
+            if m_occ:
+                chiudi_tariffa(None)
+                occupanza = int(m_occ.group(1))
+                continue
+
+            # "Prezzo iniziale € X Prezzo attuale € Y" — Y è il prezzo vero post-sconto
+            m_att = RE_PREZZO_ATTUALE.search(rl)
+            if m_att:
+                v = parse_valore(f"€ {m_att.group(1)}")
+                if v and v > 20:
+                    attuale = v
+                continue
+
             v = parse_valore(r)
-            if v and v > 20 and len(r) < 25 and prezzo_corrente is None:
-                prezzo_corrente = v
+            if v and v > 20 and len(r) < 25:
+                # con sconto attivo il barrato (più alto) precede l'attuale: si tiene il minimo
+                prezzo = v if prezzo is None else min(prezzo, v)
                 continue
-            if prezzo_corrente is not None and camera_corrente:
-                if any(k in rl for k in KEYWORDS_COLAZIONE):
-                    risultati.append((camera_corrente, prezzo_corrente, "bb", sezione_appart))
-                    camera_corrente = None
-                    prezzo_corrente = None
-                elif any(k in rl for k in KEYWORDS_SOLO):
-                    risultati.append((camera_corrente, prezzo_corrente, "solo", sezione_appart))
-                    camera_corrente = None
-                    prezzo_corrente = None
-        if camera_corrente and prezzo_corrente:
-            risultati.append((camera_corrente, prezzo_corrente, None, sezione_appart))
+
+            if (prezzo is not None or attuale is not None) and camera:
+                # "colazione per € 10" = a pagamento → solo camera; va controllato
+                # prima delle keyword di inclusione ("eccezionale colazione per € 12")
+                if RE_COLAZIONE_PAGAMENTO.search(rl) or any(k in rl for k in KEYWORDS_SOLO):
+                    chiudi_tariffa("solo")
+                elif any(k in rl for k in KEYWORDS_COLAZIONE):
+                    chiudi_tariffa("bb")
+        chiudi_tariffa(None)
 
     # Parser 2: layout card con "N° max persone"
     if not risultati:
         for i, r in enumerate(righe):
-            if "n° max persone" not in r.lower() and "max persone" not in r.lower():
+            rl = r.lower()
+            if "max persone" not in rl:
                 continue
-            for j in range(i + 1, min(i + 6, len(righe))):
-                rj = righe[j]
-                if rj.lower().startswith("prezzo"):
+            m_occ = RE_OCCUPANZA.search(rl)
+            occupanza = int(m_occ.group(1)) if m_occ else None
+
+            # blocco tariffa: dalle righe dopo "max persone" fino al blocco successivo
+            fine = min(i + 12, len(righe))
+            for j in range(i + 1, min(i + 12, len(righe))):
+                if "max persone" in righe[j].lower():
+                    fine = j
+                    break
+
+            prezzo_blocco: float | None = None
+            board: str | None = None
+            for j in range(i + 1, fine):
+                rj  = righe[j]
+                rjl = rj.lower()
+                m_att = RE_PREZZO_ATTUALE.search(rjl)
+                if m_att:
+                    v = parse_valore(f"€ {m_att.group(1)}")
+                    if v and v > 20:
+                        prezzo_blocco = v
+                    continue
+                if rjl.startswith("prezzo"):
                     continue
                 v = parse_valore(rj)
-                if not (v and v > 20):
+                if v and v > 20 and len(rj) < 25:
+                    prezzo_blocco = v if prezzo_blocco is None else min(prezzo_blocco, v)
                     continue
-                board: str | None = None
-                for k in range(j + 1, min(j + 8, len(righe))):
-                    rl = righe[k].lower()
-                    if any(kw in rl for kw in KEYWORDS_COLAZIONE):
-                        board = "bb"
-                        break
-                    if any(kw in rl for kw in KEYWORDS_SOLO):
+                if board is None:
+                    if RE_COLAZIONE_PAGAMENTO.search(rjl) or any(kw in rjl for kw in KEYWORDS_SOLO):
                         board = "solo"
-                        break
-                camera = "camera"
-                for m_idx in range(i - 1, max(i - 45, -1), -1):
-                    rm  = righe[m_idx]
-                    rml = rm.lower()
-                    if (any(rml.startswith(k) for k in ROOM_START)
-                            and 10 < len(rm) < 90 and not EURO_RE.search(rm)):
-                        camera = rm
-                        break
-                risultati.append((camera, v, board, False))
-                break
+                    elif any(kw in rjl for kw in KEYWORDS_COLAZIONE):
+                        board = "bb"
+            if not prezzo_blocco:
+                continue
+
+            camera = "camera"
+            for m_idx in range(i - 1, max(i - 45, -1), -1):
+                rm  = righe[m_idx]
+                rml = rm.lower()
+                if (any(rml.startswith(k) for k in ROOM_START)
+                        and 10 < len(rm) < 90 and not EURO_RE.search(rm)
+                        and not RE_SOTTOCAMERA.match(rml)):
+                    camera = rm
+                    break
+            risultati.append((camera, prezzo_blocco, board, False, occupanza))
 
     if not risultati:
         return None
 
-    normali      = [(n, p, b) for n, p, b, a in risultati if not a]
-    appartamenti = [(n, p, b) for n, p, b, a in risultati if a]
+    normali      = [(n, p, b, occ) for n, p, b, a, occ in risultati if not a]
+    appartamenti = [(n, p, b) for n, p, b, a, occ in risultati if a]
 
-    matrimoniali = [(n, p, b) for n, p, b in normali
-                    if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
-    singole      = [(n, p, b) for n, p, b in normali
+    # le tariffe per 1 ospite in camera doppia non sono il prezzo della doppia
+    matrimoniali = [(n, p, b) for n, p, b, occ in normali
+                    if any(k in n.lower() for k in KEYWORDS_MATRIMONIALE) and occ != 1]
+    singole      = [(n, p, b) for n, p, b, occ in normali
                     if _is_singola(n) and not any(k in n.lower() for k in KEYWORDS_MATRIMONIALE)]
 
     standard = [(n, p, b) for n, p, b in matrimoniali if not _is_economy(n)]
     economy  = [(n, p, b) for n, p, b in matrimoniali if _is_economy(n)]
 
     for gruppo, marker in [(standard, ""), (economy, "#"), (singole, "S")]:
-        solo_p = [p for n, p, b in gruppo if b == "solo"]
-        bb_p   = [p for n, p, b in gruppo if b == "bb"]
-        if solo_p:
-            return f"€ {int(min(solo_p))}{marker}"
-        if bb_p:
-            return f"€ {int(min(bb_p))}{marker}*"
+        # vince la tariffa più economica davvero prenotabile (il cliente vede quella);
+        # a parità di prezzo si preferisce la solo camera
+        candidati = [(p, 0 if b == "solo" else 1, b) for n, p, b in gruppo if b in ("solo", "bb")]
+        if candidati:
+            p, _, b = min(candidati)
+            star = "*" if b == "bb" else ""
+            return f"€ {int(p)}{marker}{star}"
 
     # board non identificata ma camera giusta trovata
     for gruppo, marker in [(standard, ""), (economy, "#"), (singole, "S")]:
@@ -231,8 +305,8 @@ def estrai_prezzo(page) -> str | None:
         if none_p:
             return f"~€ {int(min(none_p))}{marker}"
 
-    triple    = [(n, p, b) for n, p, b in normali if _is_tripla(n)]
-    quadruple = [(n, p, b) for n, p, b in normali if _is_quadrupla(n)]
+    triple    = [(n, p, b) for n, p, b, occ in normali if _is_tripla(n)]
+    quadruple = [(n, p, b) for n, p, b, occ in normali if _is_quadrupla(n)]
 
     for gruppo, marker in [(triple, "T"), (quadruple, "Q")]:
         if not gruppo:

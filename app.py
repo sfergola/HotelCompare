@@ -19,7 +19,7 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 
-from scraper import parse_valore, is_extra_letti, lookup_entry
+from scraper import parse_valore, is_extra_letti, lookup_entry, filtra_prezzi_anomali
 
 CSS_GLOBALE = """
 <style>
@@ -135,6 +135,7 @@ def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
         p = parse_valore(entry["prezzo"])
         if p and not is_extra_letti(entry["prezzo"]):
             valori.append(p)
+    valori = filtra_prezzi_anomali(valori)
     if not valori:
         return "—"
     return f"€ {int(sum(valori) / len(valori))}"

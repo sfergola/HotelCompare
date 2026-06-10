@@ -16,7 +16,9 @@ Il run al termine sovrascriverà il calendario con i dati completi e farà push 
 """
 
 import json
+import re
 import subprocess
+import time
 from datetime import date
 from pathlib import Path
 
@@ -27,17 +29,28 @@ from filler import esegui_filler
 CONFIG_PATH = Path(__file__).parent / "competitors.json"
 OUTPUT_DIR  = Path(__file__).parent / "output"
 
+# run.py calcola le date a runtime (oggi+1 o scheduler_state.json), quindi il
+# range nel nome file non è ricostruibile da competitors.json: si cerca per
+# glob il partial più recente di ogni hotel, ignorando i file di run vecchi.
+MAX_ETA_PARTIAL_ORE = 48
+
+
+def _trova_partial(safe: str) -> Path | None:
+    candidati = sorted(
+        OUTPUT_DIR.glob(f"partial_{safe}_from*.json"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    for p in candidati:
+        if time.time() - p.stat().st_mtime <= MAX_ETA_PARTIAL_ORE * 3600:
+            return p
+    return None
+
 
 def main():
-    cfg         = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
-    data_inizio = date.fromisoformat(cfg["data_inizio"])
-    data_fine   = date.fromisoformat(cfg["data_fine"])
-    oggi        = date.today()
-    from_str    = str(data_inizio).replace("-", "")
-    to_str      = str(data_fine).replace("-", "")
-    oggi_str    = str(oggi).replace("-", "")
-
-    print(f"Range run: {data_inizio} → {data_fine}\n")
+    cfg      = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+    oggi     = date.today()
+    oggi_str = str(oggi).replace("-", "")
 
     urls = {
         c["nome"]: c.get("booking_url")
@@ -46,33 +59,39 @@ def main():
     }
 
     calendario = {}
+    from_str = to_str = None
 
     for nome in urls:
-        safe      = safe_nome(nome)
-        computed  = OUTPUT_DIR / f"partial_{safe}_from{from_str}_to{to_str}_computed{oggi_str}.json"
-        inprogress = OUTPUT_DIR / f"partial_{safe}_from{from_str}_to{to_str}_inprogress.json"
+        safe = safe_nome(nome)
+        path = _trova_partial(safe)
 
-        if computed.exists():
-            d   = json.loads(computed.read_text(encoding="utf-8"))
-            cal = d.get("calendario", {}).get(nome, {})
-            calendario[nome] = cal
-            print(f"  ✓ {nome}: {len(cal)} giorni (completo)")
-        elif inprogress.exists():
-            d   = json.loads(inprogress.read_text(encoding="utf-8"))
-            cal = d.get("calendario", {}).get(nome, {})
-            if cal:
-                calendario[nome] = cal
-                print(f"  ~ {nome}: {len(cal)} giorni (in corso)")
-            else:
-                print(f"  - {nome}: ancora da iniziare")
-        else:
+        if path is None:
+            print(f"  - {nome}: nessun partial recente")
+            continue
+
+        m = re.search(r"_from(\d{8})_to(\d{8})_", path.name)
+        if m and from_str is None:
+            from_str, to_str = m.group(1), m.group(2)
+
+        d   = json.loads(path.read_text(encoding="utf-8"))
+        cal = d.get("calendario", {}).get(nome, {})
+        if not cal:
             print(f"  - {nome}: ancora da iniziare")
+            continue
+        calendario[nome] = cal
+        stato = "completo" if "_computed" in path.name else "in corso"
+        print(f"  {'✓' if stato == 'completo' else '~'} {nome}: {len(cal)} giorni ({stato})")
 
-    if not calendario:
+    if not calendario or not from_str:
         print("\nNessun dato disponibile — run non ancora avviato?")
         return
 
-    meta    = {"data_inizio": str(data_inizio), "data_fine": str(data_fine), "adulti": cfg.get("adulti", 2)}
+    def _iso(s: str) -> str:
+        return f"{s[:4]}-{s[4:6]}-{s[6:8]}"
+
+    print(f"\nRange run rilevato: {_iso(from_str)} → {_iso(to_str)}")
+
+    meta    = {"data_inizio": _iso(from_str), "data_fine": _iso(to_str), "adulti": cfg.get("adulti", 2)}
     outfile = OUTPUT_DIR / f"calendar_from{from_str}_to{to_str}_computed{oggi_str}.json"
     tmp     = outfile.with_suffix(".tmp")
     tmp.write_text(json.dumps({"meta": meta, "calendario": calendario}, ensure_ascii=False, indent=2), encoding="utf-8")

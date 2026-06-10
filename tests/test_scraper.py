@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry
+from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry, filtra_prezzi_anomali
 
 
 # ── parse_valore ─────────────────────────────────────────────────────────────
@@ -67,6 +67,26 @@ def test_is_extra_letti_con_minimum_stay():
     assert is_extra_letti("€ 110A×7") is True
     assert is_extra_letti("€ 90×3") is False
     assert is_extra_letti("€ 90*×3") is False
+
+
+# ── filtra_prezzi_anomali ────────────────────────────────────────────────────
+
+def test_filtra_outlier_estremo():
+    # il caso reale: €888 con gli altri hotel a 120-160
+    assert filtra_prezzi_anomali([120, 130, 150, 160, 888]) == [120, 130, 150, 160]
+
+def test_filtra_picco_sincronizzato_sopravvive():
+    # weekend-evento: più hotel alti insieme → la mediana sale, nessuna esclusione
+    valori = [300, 320, 350, 380, 520]
+    assert filtra_prezzi_anomali(valori) == valori
+
+def test_filtra_pochi_valori_non_filtra():
+    # con meno di 4 valori non si può distinguere un outlier
+    assert filtra_prezzi_anomali([100, 888]) == [100, 888]
+    assert filtra_prezzi_anomali([100, 120, 888]) == [100, 120, 888]
+
+def test_filtra_lista_vuota():
+    assert filtra_prezzi_anomali([]) == []
 
 
 # ── fmt_storico ───────────────────────────────────────────────────────────────

@@ -21,6 +21,13 @@ from pathlib import Path
 OUTPUT_DIR = Path(__file__).parent / "output"
 
 
+def _iso_data(dv: str) -> str:
+    """Normalizza '20260526' → '2026-05-26'. I formati già ISO passano invariati."""
+    if len(dv) == 8 and dv.isdigit():
+        return f"{dv[:4]}-{dv[4:6]}-{dv[6:8]}"
+    return dv
+
+
 def _computed_date(path: Path) -> date | None:
     try:
         s = path.stem.split("_computed")[-1]
@@ -62,9 +69,15 @@ def _build_merged() -> dict:
             hotel_m = merged.setdefault(hotel, {})
             for giorno, entry in giorni.items():
                 if giorno not in hotel_m:
-                    # Prima volta che vediamo questo giorno per questo hotel
+                    # Prima volta che vediamo questo giorno per questo hotel.
+                    # data_vista: preferisce quella scritta dallo scraper (data
+                    # reale dello scrape, più precisa del nome file in run
+                    # multi-giorno o push parziali), normalizzata in ISO.
                     new_entry = dict(entry)
-                    if entry.get("prezzo"):
+                    dv = _iso_data(entry.get("data_vista", ""))
+                    if dv:
+                        new_entry["data_vista"] = dv
+                    elif entry.get("prezzo"):
                         new_entry["data_vista"] = run_date_str
                     hotel_m[giorno] = new_entry
                     contributi += 1
@@ -75,7 +88,8 @@ def _build_merged() -> dict:
                         if not existing.get("storico_prezzo"):
                             existing["storico_prezzo"] = entry["prezzo"]
                             existing["storico_notti"]  = entry.get("notti", 1)
-                            existing["storico_data"]   = run_date_str
+                            existing["storico_data"]   = (_iso_data(entry.get("data_vista", ""))
+                                                          or run_date_str)
                             contributi += 1
 
         if contributi == 0:

@@ -16,7 +16,7 @@ Formato celle:
     "—"        = non trovato / non disponibile
 """
 
-from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry
+from scraper import parse_valore, is_extra_letti, fmt_storico, lookup_entry, filtra_prezzi_anomali
 
 
 # ── helper ───────────────────────────────────────────────────────────────────
@@ -42,6 +42,7 @@ def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str,
         p = parse_valore(entry["prezzo"])
         if p and not is_extra_letti(entry["prezzo"]):
             valori.append(p)
+    valori = filtra_prezzi_anomali(valori)
     if not valori:
         return ""
     return f"€ {int(sum(valori) / len(valori))}"

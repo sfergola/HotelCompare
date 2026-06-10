@@ -125,6 +125,102 @@ def test_appartamento_fallback():
     assert estrai_prezzo(page) == "€ 210A"
 
 
+# ── prezzo barrato e sconti ──────────────────────────────────────────────────
+
+def test_prezzo_barrato_prende_attuale():
+    # con sconto attivo Booking mostra: barrato, attuale, riga esplicita
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "N° max persone: 2",
+        "€ 757",
+        "€ 696",
+        "Prezzo iniziale € 757 Prezzo attuale € 696",
+        "Include tasse e costi",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 696*"
+
+
+def test_prezzo_barrato_senza_riga_esplicita():
+    # anche senza la riga "Prezzo attuale": il barrato è più alto, vince il minimo
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "€ 150",
+        "€ 138",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 138*"
+
+
+def test_colazione_a_pagamento_e_solo_camera():
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "N° max persone: 2",
+        "€ 120",
+        "Ottima colazione per € 10",
+    )
+    assert estrai_prezzo(page) == "€ 120"
+
+
+def test_tariffa_singolo_ospite_esclusa():
+    # la tariffa "per 1 ospite" della doppia non è il prezzo della doppia
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "N° max persone: 1",
+        "Solo per 1 ospite",
+        "€ 90",
+        "Prima colazione inclusa",
+        "N° max persone: 2",
+        "€ 130",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 130*"
+
+
+def test_vince_tariffa_piu_economica_tra_board():
+    # B&B più economica della solo camera → si mostra la B&B (è quella che il cliente vede)
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "N° max persone: 2",
+        "€ 871",
+        "Buona colazione inclusa",
+        "N° max persone: 2",
+        "€ 1229",
+        "Buona colazione per € 21",
+    )
+    assert estrai_prezzo(page) == "€ 871*"
+
+
+def test_header_tipologia_nudo():
+    # alcune strutture usano l'header "Tipologia" senza "camera"
+    page = _page(
+        "Tipologia\tNumero di ospiti",
+        "Camera Matrimoniale",
+        "€ 120",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 120*"
+
+
+def test_riga_camera_nuda_non_sovrascrive_nome():
+    # "Camera" da solo è una label di feature, non un nome camera
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale Vista Mare",
+        "Camera",
+        "18 m²",
+        "N° max persone: 2",
+        "€ 140",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 140*"
+
+
 # ── Parser 2: layout card ────────────────────────────────────────────────────
 
 def test_layout_card_max_persone():
@@ -136,3 +232,54 @@ def test_layout_card_max_persone():
         "Prima colazione inclusa",
     )
     assert estrai_prezzo(page) == "€ 135*"
+
+
+def test_layout_card_esclude_singolo_ospite():
+    page = _page(
+        "Camera Matrimoniale Comfort",
+        "N° max persone: 1",
+        "Solo per 1 ospite",
+        "€ 95",
+        "Prima colazione inclusa",
+        "N° max persone: 2",
+        "€ 135",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 135*"
+
+
+def test_layout_card_prezzo_barrato():
+    page = _page(
+        "Camera Matrimoniale Comfort",
+        "N° max persone: 2",
+        "€ 150",
+        "€ 138",
+        "Prezzo iniziale € 150 Prezzo attuale € 138",
+        "Prima colazione inclusa",
+    )
+    assert estrai_prezzo(page) == "€ 138*"
+
+
+# ── pagine reali Booking (dump del 10/06/2026, verificati a mano) ───────────
+
+FIXTURES = Path(__file__).parent / "fixtures"
+
+
+def _fixture_page(nome: str) -> FakePage:
+    return FakePage((FIXTURES / nome).read_text(encoding="utf-8"))
+
+
+def test_pagina_reale_lido_inn_sconto_8pct():
+    # 3 notti 08/08: barrato € 757, attuale € 696, colazione a € 10 (solo camera)
+    assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-08-08_3n.txt")) == "€ 696"
+
+
+def test_pagina_reale_capri_header_nudo_e_tariffa_1_ospite():
+    # header "Tipologia", doppia vera € 871 B&B; la tariffa "Solo per 1 ospite"
+    # (€ 827) e la riga-feature "Camera" non devono ingannare il parser
+    assert estrai_prezzo(_fixture_page("Hotel_Capri_2026-06-20_5n.txt")) == "€ 871*"
+
+
+def test_pagina_reale_lido_inn_giugno():
+    # 1 notte 20/06: € 319 solo camera (colazione a € 10, non inclusa)
+    assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-06-20.txt")) == "€ 319"
