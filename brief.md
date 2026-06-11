@@ -50,18 +50,22 @@ sovrastimati del 7-9%**. Rischio concreto: prezzare HNT troppo alto rispetto al 
 3. **Mariotti è quasi cieco**: 27% copertura, 0 prezzi puliti (solo ~/T/Q), 73% celle "✕ +
    storico di 3+ settimane". Trend coerente con sell-out reale, non bug. Opzioni: flag UI
    "dato inaffidabile", escluderlo dalla MEDIA, o lasciare.
-4. **Cadenza run**: tutto ciò che vedi ha sempre 7 giorni (cron settimanale). In stagione i
-   prezzi si muovono più in fretta. Valutare 2-3 run/settimana.
+4. ~~**Cadenza run**~~ → **DECISO 11/06 (Salvatore): ogni 3 giorni.** Implementato:
+   `GIORNI_TRA_RUN = 3` in run_scheduled.py, usato anche dal pannello.
 5. **Singole S in MEDIA**: abbassano la media fino a −15€ su giorni puntuali (04/07). Escludere?
 6. **Off-by-one**: `data_fine 2026-09-21` ma l'ultimo giorno scrapato è il 20/09 (il 21 è
    checkout). Voluto?
 
-## Prossimo passo operativo (importante)
+## Prossimo passo operativo (aggiornato 11/06)
 
-Il calendario in produzione contiene ancora i prezzi barrati (~7-9% gonfiati dove c'erano
-sconti). Dopo il merge: **lanciare un run completo** per rigenerare i dati col parser nuovo.
-Test consigliato prima del merge: `streamlit run app.py` + verifica visiva (MEDIA 06/06 deve
-dire ~€161, non €242).
+La notte 10→11/06 il run automatico è partito **dal branch** (repo checked-out su
+fix/veridicita-prezzi) e ha usato il parser nuovo: 13/13 hotel, 0 non_trovato, 100% celle
+fresche, output coerente con la ground truth verificata a mano (Lido Inn 20/06 → € 319 solo
+camera). Il commit dati `ed14b1d` è sul branch, pushato su origin/fix-veridicita-prezzi.
+
+Quindi: **il merge porta su main sia il codice sia i dati già puliti** — non serve più un run
+completo dopo. Produzione (main/Streamlit) resta coi dati barrati del 04/06 finché non mergi.
+Test pre-merge: `streamlit run app.py` + verifica visiva.
 
 ## Domande aperte
 

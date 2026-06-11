@@ -2,7 +2,7 @@
 run_scheduled.py — avvio automatico notturno dello scraping.
 
 Gira ogni 30 minuti via cron. Parte solo se:
-- l'ultimo aggiornamento di calendar_merged.json è più vecchio di 7 giorni
+- l'ultimo aggiornamento di calendar_merged.json è più vecchio di GIORNI_TRA_RUN giorni
 - siamo nella fascia oraria 19:30–09:00 (PC libero)
 - non c'è già un run in corso (lock file assente)
 
@@ -25,6 +25,9 @@ ROOT = Path(__file__).parent
 OUTPUT_DIR = ROOT / "output"
 LOCK_FILE = OUTPUT_DIR / "run_in_progress.lock"
 
+# in stagione i prezzi si muovono in fretta: 7 giorni di età erano troppi
+GIORNI_TRA_RUN = 3
+
 
 def aggiornamento_necessario() -> bool:
     result = subprocess.run(
@@ -34,7 +37,7 @@ def aggiornamento_necessario() -> bool:
     ts = result.stdout.strip()
     if not ts:
         return True
-    return (time.time() - int(ts)) / 86400 >= 7
+    return (time.time() - int(ts)) / 86400 >= GIORNI_TRA_RUN
 
 
 def in_fascia_automatica() -> bool:

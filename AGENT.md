@@ -24,12 +24,12 @@ report.py            — genera CSV e TXT dal calendario
 app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
 git_utils.py         — git commit + push condiviso (branch rilevato automaticamente)
 run_scheduled.py     — avvio automatico notturno (cron ogni 30 min)
-                       condizione: git log calendar_merged.json > 7 giorni fa
+                       condizione: git log calendar_merged.json > 3 giorni fa (GIORNI_TRA_RUN)
                        fascia: 19:30–09:00 (fuori fascia: esce silenziosamente)
                        lock file output/run_in_progress.lock contiene PID di run.py
 panel.py             — pannello Tkinter: stato, log live, Avvia/Stop
                        lancia da GNOME launcher (Super → "HotelCompare")
-                       avvio manuale ignora la condizione 7 giorni
+                       avvio manuale ignora la condizione 3 giorni
 carica_manuale_durante_run.py — push parziale durante run: legge i partial già pronti,
                        aggiorna calendar_merged.json e fa commit+push senza aspettare il run completo
 terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
@@ -45,7 +45,7 @@ terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
 | `report.py` | genera CSV e TXT dal calendario |
 | `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
 | `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
-| `run_scheduled.py` | avvio automatico notturno: 7gg, fascia 19:30–09:00, lock file con PID |
+| `run_scheduled.py` | avvio automatico notturno: 3gg (GIORNI_TRA_RUN), fascia 19:30–09:00, lock file con PID |
 | `panel.py` | pannello Tkinter: stato, log live, Avvia/Stop (launcher GNOME) |
 | `carica_manuale_durante_run.py` | push parziale mentre run.py è ancora in corso |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
@@ -63,7 +63,7 @@ terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
 source venv/bin/activate
 python run.py                  # scraping + report
 streamlit run app.py           # web app locale
-python run_scheduled.py        # run automatico (con guard settimanale)
+python run_scheduled.py        # run automatico (con guard 3 giorni)
 ```
 
 **Setup cron (una tantum per macchina):**
@@ -147,7 +147,7 @@ refactor/*    → pulizia codice senza cambiare comportamento
 ## Deploy
 - Web app: Streamlit Community Cloud → branch `main`, file `app.py`
 - Aggiornamento dati: `python run.py` → auto-commit + push (nessun passaggio manuale)
-- Scraping automatico: cron locale `@reboot → run_scheduled.py`, esegue solo Lun/Mar/Mer
+- Scraping automatico: cron locale `@reboot → run_scheduled.py`, parte quando i dati hanno ≥3 giorni (fascia 19:30–09:00)
 - Repo pubblico su GitHub → GitHub Actions gratuito illimitato (da configurare)
 - `output/*.json` gitignored tranne `calendar_merged.json` (unico file dati committato)
 

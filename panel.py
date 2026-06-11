@@ -15,6 +15,8 @@ import time
 import tkinter as tk
 from datetime import date, datetime, timedelta
 from pathlib import Path
+
+from run_scheduled import GIORNI_TRA_RUN
 from tkinter import scrolledtext
 
 ROOT = Path(__file__).parent
@@ -118,7 +120,7 @@ class Panel:
             data, giorni = _ultimo_aggiornamento()
             checkpoint = _ha_checkpoint()
 
-            if giorni >= 7:
+            if giorni >= GIORNI_TRA_RUN:
                 self.lbl_stato.config(
                     text=f"Da aggiornare  ({data} · {giorni} giorni fa)", fg="#cc3333"
                 )
