@@ -53,6 +53,17 @@ RE_SOTTOCAMERA         = re.compile(r"camera \d+\s*:")
 RE_COLAZIONE_PAGAMENTO = re.compile(r"colazione\s+(?:a pagamento|(?:a|per)\s*€)")
 
 
+# ── soglie della MEDIA (parametri di dominio, modificabili) ───────────────────
+# Tutto ciò che decide quali prezzi entrano nella media dei competitor vive qui,
+# non sparso nella logica: cambiare un confronto = cambiare un numero.
+
+COLAZIONE_STIMA_PERSONA = 8     # €/persona: stima aggiunta alla solo-camera per
+                                # confrontarla con le doppie-colazione (marker ≈)
+SOGLIA_STALENESS_GIORNI = 30    # un prezzo visto oltre N giorni fa esce dalla media
+SOGLIA_OUTLIER          = 2.5   # un prezzo oltre N× la mediana del giorno esce dalla media
+COPERTURA_MIN           = 0.30  # un hotel sotto questa quota di celle pulite esce dalla media
+
+
 # ── helper pubblici (usati anche da report.py) ───────────────────────────────
 
 def parse_valore(testo: str) -> float | None:
@@ -67,7 +78,7 @@ def parse_valore(testo: str) -> float | None:
 
 
 def filtra_prezzi_anomali(valori: list[float]) -> list[float]:
-    """Esclude dalla media i valori >3× la mediana del giorno.
+    """Esclude dalla media i valori oltre SOGLIA_OUTLIER× la mediana del giorno.
 
     Protegge la MEDIA da prezzi anomali (es. ultima camera rimasta a €888
     quando gli altri hotel stanno a €120-150). I picchi reali sincronizzati
@@ -79,15 +90,65 @@ def filtra_prezzi_anomali(valori: list[float]) -> list[float]:
     ordinati = sorted(valori)
     n = len(ordinati)
     mediana = ordinati[n // 2] if n % 2 else (ordinati[n // 2 - 1] + ordinati[n // 2]) / 2
-    return [v for v in valori if v <= 3 * mediana]
+    return [v for v in valori if v <= SOGLIA_OUTLIER * mediana]
 
 
 def is_extra_letti(prezzo: str) -> bool:
-    """True se il prezzo viene da tripla (T), quadrupla (Q) o appartamento (A) — esclusi dalle medie.
+    """True se il prezzo non è una doppia confrontabile: singola (S), tripla (T),
+    quadrupla (Q), appartamento (A) — tutti esclusi dalle medie.
 
-    Gestisce anche il formato cella con suffisso minimum stay: "€ 120T×3".
+    Gestisce il marker board (* B&B reale, ≈ colazione stimata) e il suffisso
+    minimum stay: "€ 120T×3", "€ 120S*", "€ 136S≈".
     """
-    return bool(re.search(r"\d[TQA]\*?(?:×\d+)?$", prezzo))
+    return bool(re.search(r"\d[STQA][*≈]?(?:×\d+)?$", prezzo))
+
+
+def parse_data_vista(dv: str) -> "date | None":
+    """Interpreta una data_vista/storico_data in uno dei due formati storici
+    ('20260506' o '2026-05-06'). Ritorna None se non riconosciuta."""
+    if not dv:
+        return None
+    try:
+        if len(dv) == 8 and dv.isdigit():
+            return date(int(dv[:4]), int(dv[4:6]), int(dv[6:8]))
+        return date.fromisoformat(dv[:10])
+    except (ValueError, IndexError):
+        return None
+
+
+def prezzo_stantio(entry: dict, oggi: "date | None") -> bool:
+    """True se l'entry ha un prezzo ma è stato visto oltre SOGLIA_STALENESS_GIORNI
+    giorni fa: con la pipeline ferma il dato non è più affidabile come prezzo corrente.
+    Con oggi=None la staleness non viene valutata (retro-compatibile)."""
+    if oggi is None:
+        return False
+    d = parse_data_vista(entry.get("data_vista", ""))
+    return d is not None and (oggi - d).days > SOGLIA_STALENESS_GIORNI
+
+
+def valore_per_media(entry: dict, oggi: "date | None" = None) -> "float | None":
+    """Ritorna il prezzo dell'entry se è valido per la MEDIA, altrimenti None.
+
+    Esclude: entry senza prezzo, non-doppie (S/T/Q/A via is_extra_letti) e prezzi
+    stantii (>SOGLIA_STALENESS_GIORNI). L'outlier 2,5× è applicato a valle, sul
+    giorno intero, da filtra_prezzi_anomali."""
+    prezzo = entry.get("prezzo")
+    if not prezzo or is_extra_letti(prezzo) or prezzo_stantio(entry, oggi):
+        return None
+    return parse_valore(prezzo)
+
+
+def hotel_in_media(calendario: dict, nome: str, giorni: list[str],
+                   oggi: "date | None" = None) -> bool:
+    """True se l'hotel ha celle pulite a sufficienza (≥ COPERTURA_MIN) per
+    contribuire a una media sensata. Sotto soglia viene escluso: un hotel quasi
+    sempre sold-out (pochi dati, per lo più storici/sporchi, es. Mariotti) avrebbe
+    rari valori che distorcerebbero la media senza rappresentare il mercato."""
+    if not giorni:
+        return False
+    pulite = sum(1 for g in giorni
+                 if (e := calendario.get(nome, {}).get(g)) and valore_per_media(e, oggi) is not None)
+    return pulite >= COPERTURA_MIN * len(giorni)
 
 
 # ── helper privati ───────────────────────────────────────────────────────────
@@ -138,13 +199,14 @@ def estrai_prezzo(page) -> str | None:
     Analizza il testo della pagina e restituisce il prezzo totale del soggiorno trovato.
     La divisione per notti è responsabilità del chiamante (scrapa_query).
 
+    Restituisce il prezzo TOTALE del soggiorno; la stima colazione sulle celle ≈
+    viene aggiunta da normalizza_prezzo (che conosce notti e adulti).
+
     Formato restituito:
-      "€ NNN"   = solo camera, matrimoniale standard
-      "€ NNN*"  = B&B, matrimoniale standard
-      "€ NNN#"  = solo camera, economy double
-      "€ NNN#*" = B&B, economy double
-      "€ NNNS"  = solo camera, singola
-      "€ NNNS*" = B&B, singola
+      "€ NNN*"  = B&B, matrimoniale standard (doppia + colazione, prezzo reale)
+      "€ NNN≈"  = solo camera, matrimoniale standard (→ +stima colazione)
+      "€ NNN#*" = B&B, economy double      ("€ NNN#≈" = economy solo camera)
+      "€ NNNS*" = B&B, singola              ("€ NNNS≈" = singola solo camera)
       "~€ NNN"  = matrimoniale trovata, tipo pensione non identificabile
       "€ NNNT"  = tripla (fallback visuale)
       "€ NNNQ"  = quadrupla (fallback estremo)
@@ -291,13 +353,16 @@ def estrai_prezzo(page) -> str | None:
     economy  = [(n, p, b) for n, p, b in matrimoniali if _is_economy(n)]
 
     for gruppo, marker in [(standard, ""), (economy, "#"), (singole, "S")]:
-        # vince la tariffa più economica davvero prenotabile (il cliente vede quella);
-        # a parità di prezzo si preferisce la solo camera
-        candidati = [(p, 0 if b == "solo" else 1, b) for n, p, b in gruppo if b in ("solo", "bb")]
-        if candidati:
-            p, _, b = min(candidati)
-            star = "*" if b == "bb" else ""
-            return f"€ {int(p)}{marker}{star}"
+        # confronto omogeneo "doppia + colazione": la B&B reale vince sempre (è la
+        # cosa che vogliamo confrontare). Se l'hotel quel giorno vende solo la camera
+        # nuda, la marchiamo ≈ → normalizza_prezzo aggiunge la stima colazione, così
+        # non confrontiamo solo-camera con B&B (mele con pere).
+        bb   = [p for n, p, b in gruppo if b == "bb"]
+        solo = [p for n, p, b in gruppo if b == "solo"]
+        if bb:
+            return f"€ {int(min(bb))}{marker}*"
+        if solo:
+            return f"€ {int(min(solo))}{marker}≈"
 
     # board non identificata ma camera giusta trovata
     for gruppo, marker in [(standard, ""), (economy, "#"), (singole, "S")]:
@@ -332,6 +397,26 @@ def estrai_prezzo(page) -> str | None:
     return None
 
 
+def normalizza_prezzo(prezzo: str, notti: int, adulti: int) -> "str | None":
+    """Trasforma il prezzo-totale-soggiorno di estrai_prezzo in prezzo/notte e,
+    sulle celle solo-camera (marker ≈), aggiunge la stima colazione
+    (COLAZIONE_STIMA_PERSONA × adulti, per notte). Ritorna None sotto €25/notte
+    (prezzo implausibile per una doppia)."""
+    v = parse_valore(prezzo)
+    if v is None:
+        return None
+    prefix = "~" if prezzo.startswith("~") else ""
+    m_sfx  = re.match(r"~?€\s*[\d.,]+(.*)", prezzo)
+    suffix = m_sfx.group(1) if m_sfx else ""
+    per_notte = v / notti if notti else v
+    if "≈" in suffix:
+        per_notte += COLAZIONE_STIMA_PERSONA * adulti
+    per_notte = int(per_notte)
+    if per_notte < 25:
+        return None
+    return f"{prefix}€ {per_notte}{suffix}"
+
+
 def scrapa_query(page, booking_url: str, checkin: date, notti: int, adulti: int) -> dict:
     """
     Esegue una singola richiesta Booking per checkin + notti.
@@ -353,14 +438,8 @@ def scrapa_query(page, booking_url: str, checkin: date, notti: int, adulti: int)
             return {"prezzo": None, "stato": "esaurito"}
 
         prezzo = estrai_prezzo(page)
-        if prezzo and notti > 1:
-            v = parse_valore(prezzo)
-            if v:
-                prefix    = "~" if prezzo.startswith("~") else ""
-                m_sfx     = re.match(r"~?€\s*\d+(.*)", prezzo)
-                suffix    = m_sfx.group(1) if m_sfx else ""
-                per_notte = int(v / notti)
-                prezzo    = f"{prefix}€ {per_notte}{suffix}" if per_notte >= 25 else None
+        if prezzo:
+            prezzo = normalizza_prezzo(prezzo, notti, adulti)
 
         return {"prezzo": prezzo, "stato": "ok" if prezzo else "non_trovato"}
     except Exception as e:
@@ -441,11 +520,16 @@ def fmt_storico(entry: dict) -> str:
     return f" ({sp}{sfx} · {d_fmt})"
 
 
-def lookup_entry(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
+def lookup_entry(calendario: dict, nome: str, giorno: str,
+                 oggi: "date | None" = None) -> tuple[str, int]:
     """
     Ritorna (cella_testo, notti) per un hotel e giorno.
     cella_testo include ×N se minimum stay > 1 e, se assente il prezzo corrente,
     il prezzo storico in formato: — (€120* · 30/04).
+
+    Se oggi è passato e il prezzo è stantio (>SOGLIA_STALENESS_GIORNI), viene
+    declassato allo stesso formato storico: esce dalla media e in tabella si vede
+    che è un dato vecchio, non un prezzo corrente.
     """
     entry = calendario.get(nome, {}).get(giorno)
     if not entry:
@@ -453,9 +537,14 @@ def lookup_entry(calendario: dict, nome: str, giorno: str) -> tuple[str, int]:
     prezzo = entry.get("prezzo")
     notti  = entry.get("notti") or 1
     stato  = entry.get("stato", "non_trovato")
-    if prezzo:
+    if prezzo and not prezzo_stantio(entry, oggi):
         sfx = f"×{notti}" if notti > 1 else ""
         return f"{prezzo}{sfx}", notti
+    if prezzo:  # presente ma stantio → mostralo come storico
+        sfx = f"×{notti}" if notti > 1 else ""
+        d = parse_data_vista(entry.get("data_vista", ""))
+        d_fmt = f"{d.day:02d}/{d.month:02d}" if d else ""
+        return f"— ({prezzo}{sfx} · {d_fmt})", 0
     storico = fmt_storico(entry)
     if stato == "esaurito":
         return f"✕{storico}", 0

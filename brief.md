@@ -1,3 +1,38 @@
+# AGGIORNAMENTO 16/06/2026 — blocco decisioni implementato (Treno 1)
+
+Salvatore ha ratificato le decisioni aperte; implementate tutte sul branch
+`fix/veridicita-prezzi`. **85 test verdi.** Pronto per review + merge.
+
+### Cosa è stato implementato
+1. **Semantica cella = "doppia + colazione"** (non più "cheapest"). In `estrai_prezzo`
+   la **B&B reale vince sempre**; se l'hotel quel giorno vende solo camera nuda → marker
+   `≈` e `normalizza_prezzo` aggiunge la stima colazione (`COLAZIONE_STIMA_PERSONA = €8/
+   persona × adulti`, per notte). Verificato sui dump reali: Lido Inn 20/06 ora `€ 329*`
+   (= 319 camera + 10 colazione reale), 08/08 `€ 724*` — la B&B reale è più accurata della
+   stima, che resta solo fallback.
+2. **Singole (`S`) fuori dalla media** (`is_extra_letti` ora include S).
+3. **Outlier a 2,5×** la mediana (`SOGLIA_OUTLIER`).
+4. **Hotel sotto 30% celle pulite fuori dalla media** (`hotel_in_media`, `COPERTURA_MIN`).
+   Audit dati reali: l'unico escluso è **Mariotti** (17,5%); tutti gli altri 64–100%.
+5. **Staleness: prezzo >30gg fuori dalla media + declassato a storico in tabella**
+   (`prezzo_stantio`, `SOGLIA_STALENESS_GIORNI`). Logica media centralizzata in
+   `valore_per_media` (prima duplicata tra app.py e report.py).
+
+### Impatto sui dati attuali (audit calendar_merged.json, 97 giorni)
+Media nuova vs vecchia: **+2,5€ medio** (max +32 sul 26/06), sale per la rimozione di
+Mariotti. Dopo il prossimo run (parser nuovo) le celle solo-camera/`~` diventeranno
+B&B-reale o `≈` → la media salirà ancora un po': è il confronto doppia+colazione voluto.
+
+### Deciso ma NON ancora fatto
+- **Alert inter-run** (salto prezzo >X% tra run = swap camera): Salvatore lo vuole,
+  "poi ne ragioniamo meglio". Non urgente per il merge → resta nel TODO.
+
+### Prossimo passo
+Verifica visiva `streamlit run app.py` → merge su main → run completo col parser nuovo
+("runniamo i prezzi con nuove features").
+
+---
+
 # Brief — Audit veridicità prezzi (Treno 1, 10/06/2026)
 
 Branch: `fix/veridicita-prezzi` (2 commit, NON mergiato su main — decidi tu dopo review).

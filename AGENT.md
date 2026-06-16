@@ -94,21 +94,33 @@ Al prossimo `run.py`, i giorni già scrappati vengono saltati automaticamente.
 
 ## Legenda celle
 
+Obiettivo del confronto: **doppia + colazione**. La B&B reale vince sempre; se l'hotel
+quel giorno vende solo la camera nuda, si stima la colazione (marker `≈`).
+
 | Cella | Significato |
 |---|---|
-| `€ 120` | solo camera, matrimoniale standard |
-| `€ 120*` | B&B, matrimoniale standard |
+| `€ 120*` | B&B, matrimoniale standard (doppia + colazione, prezzo reale) |
+| `€ 136≈` | solo camera + stima colazione (`COLAZIONE_STIMA_PERSONA`=€8/persona) |
 | `€ 120×7` | prezzo da soggiorno minimo 7 notti |
-| `€ 120#` | economy double |
-| `€ 120S` | singola (nessuna doppia trovata) |
+| `€ 120#*` | B&B economy double (`#≈` = economy + stima colazione) |
 | `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
+| `€ 120S` | singola (**esclusa dalle medie**) |
 | `€ 120T` | tripla (fallback — esclusa dalle medie) |
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
 | `€ 120A` | appartamento (fallback — escluso dalle medie) |
-| `— (€120* · 30/04)` | non trovato oggi, ultimo prezzo noto dal 30/04 |
+| `— (€120* · 30/04)` | non trovato oggi (o prezzo >30gg), ultimo prezzo noto dal 30/04 |
 | `✕ (€120* · 30/04)` | esaurito oggi, ultimo prezzo noto dal 30/04 |
 | `✕` | esaurito (nessun prezzo storico disponibile) |
 | `—` | non trovato (nessun prezzo storico disponibile) |
+
+## Regole della MEDIA (competitor)
+Tutte le soglie vivono in `scraper.py` (`COLAZIONE_STIMA_PERSONA`, `SOGLIA_OUTLIER`,
+`SOGLIA_STALENESS_GIORNI`, `COPERTURA_MIN`). Entra nella media solo una **doppia
+confrontabile**: esclusi singole/triple/quadruple/appartamenti (`is_extra_letti`),
+prezzi visti >30gg fa (`prezzo_stantio` → declassati a storico anche in tabella),
+outlier oltre 2,5× la mediana del giorno, e gli hotel sotto il 30% di celle pulite
+(`hotel_in_media` — es. Mariotti, quasi sempre sold-out). Logica condivisa tra
+`app.py` e `report.py` via `valore_per_media`.
 
 ## Aggiungere un competitor
 In `competitors.json`, aggiungi nella lista `competitor`:

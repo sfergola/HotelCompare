@@ -19,7 +19,9 @@ from datetime import date, timedelta
 import pandas as pd
 import streamlit as st
 
-from scraper import parse_valore, is_extra_letti, lookup_entry, filtra_prezzi_anomali
+from scraper import (parse_valore, is_extra_letti, lookup_entry,
+                     filtra_prezzi_anomali, valore_per_media, hotel_in_media,
+                     COPERTURA_MIN)
 
 CSS_GLOBALE = """
 <style>
@@ -124,17 +126,19 @@ def _fmt_data_agg(d: date) -> str:
 
 
 def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
-                 giorno: str) -> str:
+                 giorno: str, oggi=None, nomi_in_media: set | None = None) -> str:
     valori = []
     for nome in nomi:
         if nome in manuali or nome == riferimento:
             continue
-        entry = calendario.get(nome, {}).get(giorno)
-        if not entry or not entry.get("prezzo"):
+        if nomi_in_media is not None and nome not in nomi_in_media:
             continue
-        p = parse_valore(entry["prezzo"])
-        if p and not is_extra_letti(entry["prezzo"]):
-            valori.append(p)
+        entry = calendario.get(nome, {}).get(giorno)
+        if not entry:
+            continue
+        v = valore_per_media(entry, oggi)
+        if v is not None:
+            valori.append(v)
     valori = filtra_prezzi_anomali(valori)
     if not valori:
         return "—"
@@ -142,13 +146,14 @@ def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
 
 
 def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
-                  giorno: str) -> dict[str, int]:
-    """Ritorna {nome: valore_intero} per tutti i competitor con prezzo valido."""
+                  giorno: str, oggi=None) -> dict[str, int]:
+    """Ritorna {nome: valore_intero} per tutti i competitor con prezzo valido
+    (esclude storici, esauriti, non-doppie e prezzi stantii)."""
     result = {}
     for nome in nomi:
         if nome in manuali or nome == riferimento:
             continue
-        cella, _ = lookup(calendario, nome, giorno)
+        cella, _ = lookup(calendario, nome, giorno, oggi)
         # le celle senza prezzo corrente ("— (€120 · 30/04)", "✕ (...)") contengono
         # un € storico che parse_valore catturerebbe come prezzo vero
         if cella.startswith(("—", "✕")):
@@ -160,12 +165,13 @@ def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
 
 
 def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
-                         riferimento: str, giorni_mese: list[str]):
+                         riferimento: str, giorni_mese: list[str],
+                         oggi=None, nomi_in_media: set | None = None):
     header_giorni = [fmt_giorno(g) for g in giorni_mese]
 
     minmax = {}
     for g in giorni_mese:
-        prezzi = prezzi_giorno(calendario, nomi, manuali, riferimento, g)
+        prezzi = prezzi_giorno(calendario, nomi, manuali, riferimento, g, oggi)
         if prezzi:
             minmax[g] = (min(prezzi.values()), max(prezzi.values()))
 
@@ -184,7 +190,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         row = [nome]
         row_colori = [""]
         for g in giorni_mese:
-            cella, _ = lookup(calendario, nome, g)
+            cella, _ = lookup(calendario, nome, g, oggi)
             p        = parse_valore(cella)
             if cella.startswith("✕"):
                 colore = COLORE_ESAURITO
@@ -204,7 +210,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     row_media = ["MEDIA"]
     row_media_colori = [COLORE_MEDIA]
     for g in giorni_mese:
-        row_media.append(media_giorno(calendario, nomi, manuali, riferimento, g))
+        row_media.append(media_giorno(calendario, nomi, manuali, riferimento, g, oggi, nomi_in_media))
         row_media_colori.append(COLORE_MEDIA)
     rows_data.append(row_media)
     rows_colori.append(row_media_colori)
@@ -214,7 +220,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         row_rif = [f"▶ {riferimento}"]
         row_rif_colori = [COLORE_RIFERIMENTO]
         for g in giorni_mese:
-            cella, _ = lookup(calendario, riferimento, g)
+            cella, _ = lookup(calendario, riferimento, g, oggi)
             p        = parse_valore(cella)
             if cella.startswith("✕"):
                 colore = COLORE_ESAURITO
@@ -392,6 +398,13 @@ manuali    = {c["nome"]: c["nota"] for c in cfg_raw["competitor"] if "nota" in c
 riferimento = next((c["nome"] for c in cfg_raw["competitor"] if c.get("riferimento")), "")
 nomi       = list(calendario.keys())
 
+# hotel ammessi alla media: calcolato una volta su tutti i giorni futuri
+oggi_d = date.today()
+nomi_in_media = {n for n in nomi if n not in manuali and n != riferimento
+                 and hotel_in_media(calendario, n, tutti_giorni, oggi_d)}
+esclusi_media = [n for n in nomi if n not in manuali and n != riferimento
+                 and n not in nomi_in_media]
+
 # Navigazione mese
 mesi_disponibili = sorted(set(g[:7] for g in tutti_giorni))
 
@@ -418,22 +431,27 @@ for riga in righe:
 st.subheader(mese_label(mesi_disponibili[idx]))
 
 giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
-render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese)
+render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese, oggi_d, nomi_in_media)
+
+if esclusi_media:
+    soglia_pct = int(COPERTURA_MIN * 100)
+    st.caption(f"⚠️ Esclusi dalla media — meno del {soglia_pct}% di celle affidabili "
+               f"(quasi sempre sold-out / dati storici): {', '.join(esclusi_media)}")
 
 # Legenda prezzi
 with st.expander("Legenda prezzi"):
     st.markdown("""
 | Simbolo | Significato |
 |---|---|
-| `€ 120` | solo camera, matrimoniale standard |
-| `€ 120*` | B&B, matrimoniale standard |
+| `€ 120*` | B&B, matrimoniale standard (doppia + colazione, prezzo reale) |
+| `€ 136≈` | solo camera + stima colazione (€8/persona) — colazione non trovata |
 | `€ 120×7` | prezzo da soggiorno minimo 7 notti |
-| `€ 120#` | solo camera, economy double |
-| `€ 120S` | singola (nessuna doppia trovata) |
+| `€ 120#*` | B&B economy double (`#≈` = economy + stima colazione) |
 | `~€ 120` | matrimoniale trovata, tipo pensione non identificabile |
+| `€ 120S` | singola (esclusa dalle medie) |
 | `€ 120T` | tripla (fallback — esclusa dalle medie) |
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
 | `€ 120A` | appartamento (fallback — escluso dalle medie) |
 | `✕` | esaurito (indicativo) |
-| `—` | non disponibile / non trovato |
+| `— (€120 · 30/04)` | non disponibile oggi (o prezzo troppo vecchio) — ultimo noto |
 """)

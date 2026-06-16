@@ -36,13 +36,14 @@ def test_matrimoniale_bb():
 
 
 def test_matrimoniale_solo_camera():
+    # solo camera → marker ≈ (la stima colazione la aggiunge normalizza_prezzo)
     page = _page(
         "Tipologia camera",
         "Camera Matrimoniale Standard",
         "€ 110",
         "Solo pernottamento",
     )
-    assert estrai_prezzo(page) == "€ 110"
+    assert estrai_prezzo(page) == "€ 110≈"
 
 
 def test_economy_double():
@@ -52,7 +53,7 @@ def test_economy_double():
         "€ 95",
         "Solo pernottamento",
     )
-    assert estrai_prezzo(page) == "€ 95#"
+    assert estrai_prezzo(page) == "€ 95#≈"
 
 
 def test_singola_quando_nessuna_doppia():
@@ -97,7 +98,9 @@ def test_min_tra_piu_matrimoniali():
     assert estrai_prezzo(page) == "€ 120*"
 
 
-def test_solo_camera_preferita_a_bb():
+def test_bb_preferita_a_solo_camera():
+    # confronto omogeneo doppia+colazione: la B&B reale vince anche se più cara
+    # della solo-camera (la solo-camera +stima sarebbe comunque ~€141)
     page = _page(
         "Tipologia camera",
         "Camera Matrimoniale",
@@ -107,7 +110,7 @@ def test_solo_camera_preferita_a_bb():
         "€ 125",
         "Solo pernottamento",
     )
-    assert estrai_prezzo(page) == "€ 125"
+    assert estrai_prezzo(page) == "€ 140*"
 
 
 def test_nessuna_camera():
@@ -162,7 +165,7 @@ def test_colazione_a_pagamento_e_solo_camera():
         "€ 120",
         "Ottima colazione per € 10",
     )
-    assert estrai_prezzo(page) == "€ 120"
+    assert estrai_prezzo(page) == "€ 120≈"
 
 
 def test_tariffa_singolo_ospite_esclusa():
@@ -181,8 +184,8 @@ def test_tariffa_singolo_ospite_esclusa():
     assert estrai_prezzo(page) == "€ 130*"
 
 
-def test_vince_tariffa_piu_economica_tra_board():
-    # B&B più economica della solo camera → si mostra la B&B (è quella che il cliente vede)
+def test_bb_vince_su_solo_camera_con_colazione_a_pagamento():
+    # B&B reale €871 vs solo-camera €1229: vince la B&B (doppia + colazione)
     page = _page(
         "Tipologia camera",
         "Camera Matrimoniale",
@@ -270,8 +273,10 @@ def _fixture_page(nome: str) -> FakePage:
 
 
 def test_pagina_reale_lido_inn_sconto_8pct():
-    # 3 notti 08/08: barrato € 757, attuale € 696, colazione a € 10 (solo camera)
-    assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-08-08_3n.txt")) == "€ 696"
+    # 3 notti 08/08: la matrimoniale standard ha due tariffe — € 696 solo camera
+    # (colazione a € 10) e € 724 "colazione inclusa". Vince la B&B reale (doppia +
+    # colazione vera), più accurata della stima ≈.
+    assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-08-08_3n.txt")) == "€ 724*"
 
 
 def test_pagina_reale_capri_header_nudo_e_tariffa_1_ospite():
@@ -281,5 +286,6 @@ def test_pagina_reale_capri_header_nudo_e_tariffa_1_ospite():
 
 
 def test_pagina_reale_lido_inn_giugno():
-    # 1 notte 20/06: € 319 solo camera (colazione a € 10, non inclusa)
-    assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-06-20.txt")) == "€ 319"
+    # 1 notte 20/06: stessa matrimoniale, € 319 solo camera vs € 329 "colazione
+    # inclusa" (= 319 + i € 10 di colazione). Vince la B&B reale € 329.
+    assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-06-20.txt")) == "€ 329*"

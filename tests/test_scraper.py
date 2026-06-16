@@ -53,11 +53,19 @@ def test_is_extra_letti_appartamento():
     assert is_extra_letti("€ 110A") is True
     assert is_extra_letti("€ 110A*") is True
 
+def test_is_extra_letti_singola():
+    # le singole non sono doppie confrontabili → escluse dalla media
+    assert is_extra_letti("€ 120S") is True
+    assert is_extra_letti("€ 120S*") is True
+    assert is_extra_letti("€ 136S≈") is True
+
 def test_is_extra_letti_standard():
     assert is_extra_letti("€ 120") is False
     assert is_extra_letti("€ 120*") is False
+    assert is_extra_letti("€ 136≈") is False    # solo camera + stima colazione = doppia
     assert is_extra_letti("€ 120#") is False
-    assert is_extra_letti("€ 120S") is False
+    assert is_extra_letti("€ 120#*") is False
+    assert is_extra_letti("€ 120#≈") is False
     assert is_extra_letti("~€ 110") is False
 
 def test_is_extra_letti_con_minimum_stay():
@@ -65,8 +73,10 @@ def test_is_extra_letti_con_minimum_stay():
     assert is_extra_letti("€ 90T×3") is True
     assert is_extra_letti("€ 90Q*×2") is True
     assert is_extra_letti("€ 110A×7") is True
+    assert is_extra_letti("€ 120S×2") is True
     assert is_extra_letti("€ 90×3") is False
     assert is_extra_letti("€ 90*×3") is False
+    assert is_extra_letti("€ 136≈×3") is False
 
 
 # ── filtra_prezzi_anomali ────────────────────────────────────────────────────
