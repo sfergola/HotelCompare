@@ -168,6 +168,30 @@ def test_colazione_a_pagamento_e_solo_camera():
     assert estrai_prezzo(page) == "€ 120≈"
 
 
+def test_colazione_a_pagamento_oltre_20_non_e_prezzo():
+    # regressione: "colazione per € 21" (>20, riga corta) NON deve essere catturata
+    # come prezzo. Senza riga "Prezzo attuale" il bug scriveva ~€ 21 invece di € 130≈.
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "€ 130",
+        "Buona colazione per € 21",
+    )
+    assert estrai_prezzo(page) == "€ 130≈"
+
+
+def test_colazione_inclusa_oltre_20_non_e_prezzo():
+    # stesso bug lato B&B: "colazione inclusa" con cifra alta sulla riga non deve
+    # falsare il minimo verso il basso
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "€ 130",
+        "Colazione inclusa € 22",
+    )
+    assert estrai_prezzo(page) == "€ 130*"
+
+
 def test_tariffa_singolo_ospite_esclusa():
     # la tariffa "per 1 ospite" della doppia non è il prezzo della doppia
     page = _page(

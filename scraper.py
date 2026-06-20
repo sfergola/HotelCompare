@@ -270,8 +270,13 @@ def estrai_prezzo(page) -> str | None:
                     attuale = v
                 continue
 
+            # una riga "colazione per € NN" non è una tariffa camera: deve arrivare al
+            # board-check sotto, non essere catturata come prezzo (un NN>20 su riga corta
+            # falserebbe il minimo e mangerebbe il segnale di board)
             v = parse_valore(r)
-            if v and v > 20 and len(r) < 25:
+            if (v and v > 20 and len(r) < 25
+                    and not RE_COLAZIONE_PAGAMENTO.search(rl)
+                    and not any(k in rl for k in KEYWORDS_COLAZIONE)):
                 # con sconto attivo il barrato (più alto) precede l'attuale: si tiene il minimo
                 prezzo = v if prezzo is None else min(prezzo, v)
                 continue
@@ -315,7 +320,9 @@ def estrai_prezzo(page) -> str | None:
                 if rjl.startswith("prezzo"):
                     continue
                 v = parse_valore(rj)
-                if v and v > 20 and len(rj) < 25:
+                if (v and v > 20 and len(rj) < 25
+                        and not RE_COLAZIONE_PAGAMENTO.search(rjl)
+                        and not any(kw in rjl for kw in KEYWORDS_COLAZIONE)):
                     prezzo_blocco = v if prezzo_blocco is None else min(prezzo_blocco, v)
                     continue
                 if board is None:
