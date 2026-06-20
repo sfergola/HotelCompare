@@ -22,8 +22,12 @@ pushato** — review tua, poi merge.
    char) veniva catturata dal `min()` come prezzo candidato **e** mangiava il segnale di board.
    Senza riga "Prezzo attuale" a mascherarla, una doppia solo-camera veniva scritta come
    **`~€ 21` invece di `€ 130≈`** — un prezzo-spazzatura bassissimo. Guard su `KEYWORDS_COLAZIONE`
-   + `RE_COLAZIONE_PAGAMENTO` in entrambi i parser. **+2 test di regressione, 87 verdi**, le 3
-   fixture reali ancora ok (fix non tocca il percorso sconti).
+   + `RE_COLAZIONE_PAGAMENTO` in entrambi i parser. **+2 test di regressione**, le 3 fixture reali
+   ancora ok (fix non tocca il percorso sconti).
+4. **REFACTOR a comportamento invariato** (commit `ecc5ae9`): `app.media_giorno` e `report._media`
+   erano **identiche riga per riga** → rischio che web app e CSV mostrino medie diverse toccandone
+   una sola. Estratta `media_competitor()` in `scraper.py` (ritorna `float|None`), usata da
+   entrambi. **+5 test. Totale suite: 92 verdi.**
 
 ### Divergenze PER DESIGN (legittime, ma vanno sapute — rispondono alla tua paura)
 - **Scrivi la doppia più ECONOMICA**, non la prima che vede il cliente.
@@ -43,6 +47,11 @@ pushato** — review tua, poi merge.
 3. **Spot-check live = l'unica cosa che ti leva il dubbio dallo stomaco.** 3-4 hotel × 2-3 date,
    aprire Booking ora e diffare con `calendar_merged.json`. Posso lanciare query live mirate (non
    il run da 4h), ma **serve il tuo ok perché colpisce Booking**.
+4. **Incoerenza fonte-dati CSV/TXT vs web app** (osservata, NON un bug, da decidere): `run.py:147`
+   genera i report da `_merge_partials` (**solo il run fresco**), mentre `app.py` legge
+   `calendar_merged.json` (**con storico + staleness**). Quindi la MEDIA di un giorno nel CSV può
+   differire da quella mostrata nell'app. Va deciso quale fonte vuoi nei report (probabilmente la
+   merged, per coerenza con ciò che guardi).
 
 ### Prossimo passo
 Review del commit `8f88f33` su `audit/veridicita-followup` → se ok, merge su main. Poi decidere
