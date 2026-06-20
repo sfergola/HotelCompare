@@ -151,6 +151,33 @@ def hotel_in_media(calendario: dict, nome: str, giorni: list[str],
     return pulite >= COPERTURA_MIN * len(giorni)
 
 
+def media_competitor(calendario: dict, nomi: list[str], manuali: dict, giorno: str,
+                     riferimento: str = "", oggi: "date | None" = None,
+                     nomi_in_media: "set | None" = None) -> "float | None":
+    """Media dei prezzi competitor per un giorno, o None se nessun prezzo valido.
+
+    Logica unica condivisa da app.py e report.py (prima duplicata): esclude il
+    riferimento e gli hotel a verifica manuale, tiene solo le doppie confrontabili e
+    fresche (valore_per_media), poi scarta gli outlier del giorno (filtra_prezzi_anomali).
+    Ritorna il numero; sono i chiamanti a formattarlo e a scegliere il placeholder di vuoto."""
+    valori = []
+    for nome in nomi:
+        if nome in manuali or nome == riferimento:
+            continue
+        if nomi_in_media is not None and nome not in nomi_in_media:
+            continue
+        entry = calendario.get(nome, {}).get(giorno)
+        if not entry:
+            continue
+        v = valore_per_media(entry, oggi)
+        if v is not None:
+            valori.append(v)
+    valori = filtra_prezzi_anomali(valori)
+    if not valori:
+        return None
+    return sum(valori) / len(valori)
+
+
 # ── helper privati ───────────────────────────────────────────────────────────
 
 def _is_economy(nome: str) -> bool:

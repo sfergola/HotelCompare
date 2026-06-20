@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from scraper import (normalizza_prezzo, valore_per_media, hotel_in_media,
                      prezzo_stantio, parse_data_vista, lookup_entry,
-                     COLAZIONE_STIMA_PERSONA)
+                     media_competitor, COLAZIONE_STIMA_PERSONA)
 
 OGGI = date(2026, 6, 16)
 
@@ -97,6 +97,42 @@ def test_hotel_quasi_cieco_escluso():
 
 def test_hotel_senza_giorni():
     assert hotel_in_media({}, "H", [], OGGI) is False
+
+
+# ── media_competitor: logica unica condivisa app.py / report.py ───────────────
+
+def _entry(prezzo):
+    return {"prezzo": prezzo, "data_vista": "2026-06-10"}
+
+def test_media_competitor_media_semplice():
+    cal = {"A": {"2026-08-01": _entry("€ 100*")},
+           "B": {"2026-08-01": _entry("€ 140*")}}
+    assert media_competitor(cal, ["A", "B"], {}, "2026-08-01", oggi=OGGI) == 120
+
+def test_media_competitor_esclude_riferimento_e_manuali():
+    cal = {"A": {"2026-08-01": _entry("€ 100*")},
+           "REF": {"2026-08-01": _entry("€ 500*")},
+           "MAN": {"2026-08-01": _entry("€ 900*")}}
+    m = media_competitor(cal, ["A", "REF", "MAN"], {"MAN": "nota"},
+                         "2026-08-01", riferimento="REF", oggi=OGGI)
+    assert m == 100
+
+def test_media_competitor_rispetta_nomi_in_media():
+    cal = {"A": {"2026-08-01": _entry("€ 100*")},
+           "B": {"2026-08-01": _entry("€ 200*")}}
+    m = media_competitor(cal, ["A", "B"], {}, "2026-08-01",
+                         oggi=OGGI, nomi_in_media={"A"})
+    assert m == 100
+
+def test_media_competitor_vuoto_none():
+    assert media_competitor({}, ["A"], {}, "2026-08-01", oggi=OGGI) is None
+
+def test_media_competitor_scarta_outlier():
+    # 4 valori: il 5° a 10× la mediana esce (filtra_prezzi_anomali, ≥4 valori)
+    cal = {n: {"2026-08-01": _entry(f"€ {p}*")}
+           for n, p in [("A", 100), ("B", 110), ("C", 120), ("D", 130), ("E", 1500)]}
+    m = media_competitor(cal, list(cal), {}, "2026-08-01", oggi=OGGI)
+    assert m == 115  # (100+110+120+130)/4, l'outlier 1500 è escluso
 
 
 # ── lookup_entry: declassamento staleness ─────────────────────────────────────

@@ -20,8 +20,7 @@ import pandas as pd
 import streamlit as st
 
 from scraper import (parse_valore, is_extra_letti, lookup_entry,
-                     filtra_prezzi_anomali, valore_per_media, hotel_in_media,
-                     COPERTURA_MIN)
+                     hotel_in_media, media_competitor, COPERTURA_MIN)
 
 CSS_GLOBALE = """
 <style>
@@ -127,22 +126,8 @@ def _fmt_data_agg(d: date) -> str:
 
 def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
                  giorno: str, oggi=None, nomi_in_media: set | None = None) -> str:
-    valori = []
-    for nome in nomi:
-        if nome in manuali or nome == riferimento:
-            continue
-        if nomi_in_media is not None and nome not in nomi_in_media:
-            continue
-        entry = calendario.get(nome, {}).get(giorno)
-        if not entry:
-            continue
-        v = valore_per_media(entry, oggi)
-        if v is not None:
-            valori.append(v)
-    valori = filtra_prezzi_anomali(valori)
-    if not valori:
-        return "—"
-    return f"€ {int(sum(valori) / len(valori))}"
+    m = media_competitor(calendario, nomi, manuali, giorno, riferimento, oggi, nomi_in_media)
+    return f"€ {int(m)}" if m is not None else "—"
 
 
 def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
