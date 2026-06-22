@@ -62,13 +62,22 @@ def _verdetto(stored: str | None, live: str | None, stato: str) -> str:
     return "ESAURITO" if stato == "esaurito" else "EMPTY"
 
 
-def mostra_candidati(cal, urls):
-    print(f"{'HOTEL':22} {'DATA':12} {'SALVATO':16} {'notti':6} {'visto':12} url?")
+def mostra_candidati(cal, cfg, urls):
+    adulti = cfg.get("adulti", 2)
+    print("Celle-campione. Apri il link Booking e confronta col 'salvato' COL TUO OCCHIO:")
+    print("il parser che controlla sé stesso non vede i propri errori sistematici (es. il")
+    print("prezzo barrato). La verità è la pagina Booking, non il numero che leggiamo noi.\n")
     for nome, g in CAMPIONI:
         e = cal.get(nome, {}).get(g, {})
-        print(f"{nome:22} {g:12} {str(e.get('prezzo')):16} "
-              f"{str(e.get('notti')):6} {e.get('data_vista', '-'):12} "
-              f"{'ok' if nome in urls else 'MANCA'}")
+        notti = e.get("notti") or 1
+        if nome in urls:
+            checkin = date.fromisoformat(g)
+            url = build_url(urls[nome], checkin, checkin + timedelta(days=notti), adulti)
+        else:
+            url = "(nessun booking_url)"
+        print(f"  {nome} — {g} ({notti}n)")
+        print(f"    salvato: {e.get('prezzo')}   (visto {e.get('data_vista', '-')})")
+        print(f"    booking: {url}\n")
 
 
 def live(cal, cfg, urls):
@@ -95,12 +104,13 @@ def live(cal, cfg, urls):
             res = scrapa_query(page, urls[nome], checkin, notti, adulti)
             v = _verdetto(stored, res["prezzo"], res["stato"])
             esiti.append((nome, g, v))
+            url = build_url(urls[nome], checkin, checkin + timedelta(days=notti), adulti)
             print(f"\n=== {nome}  {g}  ({notti}n) === [{v}]")
             print(f"  salvato:  {stored}  (visto {e.get('data_vista', '-')})")
             print(f"  live:     {res['prezzo']}   [stato: {res['stato']}]")
+            print(f"  booking:  {url}   <- aprilo e verifica col tuo occhio")
             # dump del testo grezzo per ispezione a mano
             try:
-                url = build_url(urls[nome], checkin, checkin + timedelta(days=notti), adulti)
                 page.goto(url, wait_until="networkidle", timeout=40000)
                 chiudi_popup(page)
                 page.evaluate("window.scrollTo(0,1200)")
@@ -124,7 +134,7 @@ def live(cal, cfg, urls):
 
 if __name__ == "__main__":
     cal, cfg, urls = _carica()
-    mostra_candidati(cal, urls)
+    mostra_candidati(cal, cfg, urls)
     if "--live" in sys.argv:
         print("\n" + "=" * 50 + "\nSCRAPE LIVE (~2-4 min, tocca Booking)\n" + "=" * 50)
         live(cal, cfg, urls)
