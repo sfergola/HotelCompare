@@ -5,6 +5,7 @@ output/*.log
 !output/calendar_merged.json
 output/*_inprogress.json
 output/test_*.json
+output/spotcheck/
 venv/
 .venv/
 __pycache__/

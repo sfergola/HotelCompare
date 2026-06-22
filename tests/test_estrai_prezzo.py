@@ -313,3 +313,32 @@ def test_pagina_reale_lido_inn_giugno():
     # 1 notte 20/06: stessa matrimoniale, € 319 solo camera vs € 329 "colazione
     # inclusa" (= 319 + i € 10 di colazione). Vince la B&B reale € 329.
     assert estrai_prezzo(_fixture_page("Hotel_Lido_Inn_2026-06-20.txt")) == "€ 329*"
+
+
+def test_pagina_reale_dei_tigli_pranzo_non_e_prezzo():
+    # dump 15/07 (spot-check 22/06): la riga "Pranzo € 35 (facoltativa)" NON deve
+    # essere catturata come prezzo. Doppia "con Balcone" € 119, board non
+    # identificabile (solo pasti a pagamento) → ~€ 119.
+    assert estrai_prezzo(_fixture_page("Hotel_Dei_Tigli_2026-07-15_pranzo.txt")) == "~€ 119"
+
+
+def test_pagina_reale_mariotti_esaurito():
+    # struttura sold-out: Booking mostra "Non abbiamo disponibilità per questa
+    # struttura" + prezzi di ALTRI hotel suggeriti. rileva_esaurito deve scattare
+    # (gira prima di estrai_prezzo in scrapa_query) per non contaminare la cella
+    # con il prezzo di un competitor.
+    from scraper import rileva_esaurito
+    assert rileva_esaurito(_fixture_page("Hotel_Mariotti_2026-07-15_esaurito.txt")) is True
+
+
+def test_riga_pasto_extra_generico_non_e_prezzo():
+    # generalizza il fix colazione: QUALSIASI riga-extra con €>20 (pranzo, cena,
+    # garage…) non è una tariffa camera, qualunque sia la sua lunghezza
+    page = _page(
+        "Tipologia camera",
+        "Camera Matrimoniale",
+        "€ 119",
+        "Pranzo € 30",
+        "Solo pernottamento",
+    )
+    assert estrai_prezzo(page) == "€ 119≈"
