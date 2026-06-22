@@ -1,8 +1,11 @@
 # AGGIORNAMENTO 21/06/2026 — follow-up audit veridicità (Treno 1, notturno)
 
 Salvatore ha richiesto un audit della **logica completa che porta a scrivere un prezzo**
-(paura: "i prezzi scritti sono diversi da quelli reali su Booking?"). Lavoro fatto da solo
-mentre dormiva. Branch dedicato: **`audit/veridicita-followup`** (1 commit, NON mergiato).
+(paura: "i prezzi scritti sono diversi da quelli reali su Booking?"). Lavoro fatto su branch
+`audit/veridicita-followup` → **MERGIATO su main (`dd1b514`) e pushato il 22/06**, branch eliminato.
+Aggiunti anche: rimozione avviso "esclusi-media" dall'app + `docs/decisioni-numeri.md` (fonte di
+verità delle decisioni statistiche/logiche sui numeri). 92 test verdi. **Resta aperto il blocco di
+decisioni di prodotto qui sotto ("DA FARE — Treno 2").**
 
 ### Premessa git (sua domanda esplicita)
 Niente di sospeso: prima di stanotte **un solo branch (`main`), allineato a origin, working tree
