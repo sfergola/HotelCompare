@@ -1,3 +1,64 @@
+# AGGIORNAMENTO 21/06/2026 — follow-up audit veridicità (Treno 1, notturno)
+
+Salvatore ha richiesto un audit della **logica completa che porta a scrivere un prezzo**
+(paura: "i prezzi scritti sono diversi da quelli reali su Booking?"). Lavoro fatto da solo
+mentre dormiva. Branch dedicato: **`audit/veridicita-followup`** (1 commit, NON mergiato).
+
+### Premessa git (sua domanda esplicita)
+Niente di sospeso: prima di stanotte **un solo branch (`main`), allineato a origin, working tree
+pulito, zero commit non mergiati/non pushati**. Il vecchio `fix/veridicita-prezzi` è già mergiato
+e rimosso. Tutto il lavoro di stanotte è su `audit/veridicita-followup`, commit locale **non
+pushato** — review tua, poi merge.
+
+### Cosa ho FATTO (verità verificate, non sospetti)
+1. **Mappa completa della catena prezzo** rivista riga per riga: `build_url → inner_text("body")
+   → estrai_prezzo → normalizza_prezzo → scrapa_giorno(1n→7n) → propagazione multi-notte →
+   filler → lookup_entry`. Punto di forza inatteso: esiste già una **regression suite con dump
+   reali di Booking** (`tests/fixtures/`) — è il guard che catturò il bug del barrato.
+2. **Dubbio "filtro `occ != 1` inefficace" → SMENTITO sui dati reali.** Su Booking la tariffa
+   1-ospite di una doppia è marcata `N° max persone: 1` (righe 162/181 del dump Capri) → il
+   filtro funziona davvero. Falso allarme, chiuso.
+3. **BUG TROVATO E FIXATO** (commit `8f88f33`): una riga `Buona colazione per € 21` (>20€, <25
+   char) veniva catturata dal `min()` come prezzo candidato **e** mangiava il segnale di board.
+   Senza riga "Prezzo attuale" a mascherarla, una doppia solo-camera veniva scritta come
+   **`~€ 21` invece di `€ 130≈`** — un prezzo-spazzatura bassissimo. Guard su `KEYWORDS_COLAZIONE`
+   + `RE_COLAZIONE_PAGAMENTO` in entrambi i parser. **+2 test di regressione**, le 3 fixture reali
+   ancora ok (fix non tocca il percorso sconti).
+4. **REFACTOR a comportamento invariato** (commit `ecc5ae9`): `app.media_giorno` e `report._media`
+   erano **identiche riga per riga** → rischio che web app e CSV mostrino medie diverse toccandone
+   una sola. Estratta `media_competitor()` in `scraper.py` (ritorna `float|None`), usata da
+   entrambi. **+5 test. Totale suite: 92 verdi.**
+
+### Divergenze PER DESIGN (legittime, ma vanno sapute — rispondono alla tua paura)
+- **Scrivi la doppia più ECONOMICA**, non la prima che vede il cliente.
+- **Una cella può avere fino a 30gg ed apparire come attuale** (`SOGLIA_STALENESS_GIORNI=30`).
+  È la causa statistica #1 per cui un numero può differire da Booking-ora.
+- **Soggiorno multi-notte = €/notte medio imputato** su tutti i giorni coperti (cella marcata `×N`).
+- **Colazione STIMATA** (€8/pax) sulle celle `≈`, non letta.
+
+### DA FARE — decisioni che spettano a te (Treno 2)
+1. **[il rischio sistemico più grande] Alert anti-silenzio.** Oggi se Booking cambia layout,
+   `estrai_prezzo` torna `None` → `non_trovato` → il filler ripiega sullo storico, mostrato come
+   attuale fino a 30gg. **Una regressione del parser NON urla, degrada in silenzio.** Proposta
+   (NON implementata, le soglie sono scelta tua): sanity check post-run che allarma se un hotel
+   passa da "N prezzi" a "0 prezzi", o se `non_trovato` supera una soglia. È il TODO #1b.
+2. **Ripensare i 30 giorni di staleness**: troppo lunghi per prezzi? O rendere visibile l'età
+   anche sotto soglia (es. sbiadire celle >7gg). Decisione di prodotto.
+3. **Spot-check live = l'unica cosa che ti leva il dubbio dallo stomaco.** 3-4 hotel × 2-3 date,
+   aprire Booking ora e diffare con `calendar_merged.json`. Posso lanciare query live mirate (non
+   il run da 4h), ma **serve il tuo ok perché colpisce Booking**.
+4. **Incoerenza fonte-dati CSV/TXT vs web app** (osservata, NON un bug, da decidere): `run.py:147`
+   genera i report da `_merge_partials` (**solo il run fresco**), mentre `app.py` legge
+   `calendar_merged.json` (**con storico + staleness**). Quindi la MEDIA di un giorno nel CSV può
+   differire da quella mostrata nell'app. Va deciso quale fonte vuoi nei report (probabilmente la
+   merged, per coerenza con ciò che guardi).
+
+### Prossimo passo
+Review del commit `8f88f33` su `audit/veridicita-followup` → se ok, merge su main. Poi decidere
+su #1 (alert) e #3 (spot-check live).
+
+---
+
 # AGGIORNAMENTO 16/06/2026 — blocco decisioni implementato (Treno 1)
 
 Salvatore ha ratificato le decisioni aperte; implementate tutte sul branch

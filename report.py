@@ -18,8 +18,7 @@ Formato celle:
 
 from datetime import date
 
-from scraper import (fmt_storico, lookup_entry, filtra_prezzi_anomali,
-                     valore_per_media, hotel_in_media)
+from scraper import fmt_storico, lookup_entry, hotel_in_media, media_competitor
 
 
 # ── helper ───────────────────────────────────────────────────────────────────
@@ -41,22 +40,8 @@ def _nomi_in_media(calendario: dict, nomi: list[str], manuali: dict,
 
 def _media(calendario: dict, nomi: list[str], manuali: dict, giorno: str,
            riferimento: str = "", oggi=None, nomi_in_media: set | None = None) -> str:
-    valori = []
-    for nome in nomi:
-        if nome in manuali or nome == riferimento:
-            continue
-        if nomi_in_media is not None and nome not in nomi_in_media:
-            continue
-        entry = calendario.get(nome, {}).get(giorno)
-        if not entry:
-            continue
-        v = valore_per_media(entry, oggi)
-        if v is not None:
-            valori.append(v)
-    valori = filtra_prezzi_anomali(valori)
-    if not valori:
-        return ""
-    return f"€ {int(sum(valori) / len(valori))}"
+    m = media_competitor(calendario, nomi, manuali, giorno, riferimento, oggi, nomi_in_media)
+    return f"€ {int(m)}" if m is not None else ""
 
 
 # ── CSV ──────────────────────────────────────────────────────────────────────

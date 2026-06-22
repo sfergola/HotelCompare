@@ -120,7 +120,12 @@ confrontabile**: esclusi singole/triple/quadruple/appartamenti (`is_extra_letti`
 prezzi visti >30gg fa (`prezzo_stantio` → declassati a storico anche in tabella),
 outlier oltre 2,5× la mediana del giorno, e gli hotel sotto il 30% di celle pulite
 (`hotel_in_media` — es. Mariotti, quasi sempre sold-out). Logica condivisa tra
-`app.py` e `report.py` via `valore_per_media`.
+`app.py` e `report.py` via `valore_per_media` / `media_competitor`.
+
+> **Prima di toccare una qualsiasi soglia o regola che cambia i numeri mostrati, leggi
+> `docs/decisioni-numeri.md`** — raccoglie tutte le decisioni statistiche/logiche (cosa si
+> confronta, stima colazione, priorità camere, esclusioni dalla media) con il *perché* e il
+> *quando riconsiderarle*. È la fonte di verità per la logica dei numeri.
 
 ## Aggiungere un competitor
 In `competitors.json`, aggiungi nella lista `competitor`:
