@@ -20,7 +20,7 @@ import pandas as pd
 import streamlit as st
 
 from scraper import (parse_valore, is_extra_letti, lookup_entry,
-                     hotel_in_media, media_competitor, COPERTURA_MIN)
+                     hotel_in_media, media_competitor)
 
 CSS_GLOBALE = """
 <style>
@@ -383,12 +383,12 @@ manuali    = {c["nome"]: c["nota"] for c in cfg_raw["competitor"] if "nota" in c
 riferimento = next((c["nome"] for c in cfg_raw["competitor"] if c.get("riferimento")), "")
 nomi       = list(calendario.keys())
 
-# hotel ammessi alla media: calcolato una volta su tutti i giorni futuri
+# hotel ammessi alla media: calcolato una volta su tutti i giorni futuri.
+# Quali hotel restano fuori e perché è una decisione statistica interna
+# (vedi docs/decisioni-numeri.md), non informazione da mostrare all'utente.
 oggi_d = date.today()
 nomi_in_media = {n for n in nomi if n not in manuali and n != riferimento
                  and hotel_in_media(calendario, n, tutti_giorni, oggi_d)}
-esclusi_media = [n for n in nomi if n not in manuali and n != riferimento
-                 and n not in nomi_in_media]
 
 # Navigazione mese
 mesi_disponibili = sorted(set(g[:7] for g in tutti_giorni))
@@ -417,11 +417,6 @@ st.subheader(mese_label(mesi_disponibili[idx]))
 
 giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
 render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese, oggi_d, nomi_in_media)
-
-if esclusi_media:
-    soglia_pct = int(COPERTURA_MIN * 100)
-    st.caption(f"⚠️ Esclusi dalla media — meno del {soglia_pct}% di celle affidabili "
-               f"(quasi sempre sold-out / dati storici): {', '.join(esclusi_media)}")
 
 # Legenda prezzi
 with st.expander("Legenda prezzi"):
