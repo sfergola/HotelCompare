@@ -51,6 +51,11 @@ RE_OCCUPANZA           = re.compile(r"n° max persone[^\d]*(\d+)")
 RE_PREZZO_ATTUALE      = re.compile(r"prezzo attuale\s*€\s*([\d.,]+)")
 RE_SOTTOCAMERA         = re.compile(r"camera \d+\s*:")
 RE_COLAZIONE_PAGAMENTO = re.compile(r"colazione\s+(?:a pagamento|(?:a|per)\s*€)")
+# una riga è una tariffa solo se è ESSENZIALMENTE solo un prezzo ("€ 119",
+# "Prezzo € 119", "Prezzo: € 135"). Esclude per costruzione le righe-extra con
+# parole attorno alla cifra ("Pranzo € 35", "colazione per € 10", "1 (€ 1.167)"):
+# inseguire le keyword una a una sarebbe acchiappa-talpe.
+RE_RIGA_PREZZO         = re.compile(r"^(?:prezzo:?\s*)?€\s*[\d.,]+$", re.IGNORECASE)
 
 
 # ── soglie della MEDIA (parametri di dominio, modificabili) ───────────────────
@@ -297,13 +302,11 @@ def estrai_prezzo(page) -> str | None:
                     attuale = v
                 continue
 
-            # una riga "colazione per € NN" non è una tariffa camera: deve arrivare al
-            # board-check sotto, non essere catturata come prezzo (un NN>20 su riga corta
-            # falserebbe il minimo e mangerebbe il segnale di board)
+            # solo righe che sono SOLO un prezzo (vedi RE_RIGA_PREZZO): le righe-extra
+            # ("Pranzo € 35", "colazione per € 10") arrivano così al board-check sotto
+            # invece di falsare il minimo
             v = parse_valore(r)
-            if (v and v > 20 and len(r) < 25
-                    and not RE_COLAZIONE_PAGAMENTO.search(rl)
-                    and not any(k in rl for k in KEYWORDS_COLAZIONE)):
+            if v and v > 20 and RE_RIGA_PREZZO.match(r.strip()):
                 # con sconto attivo il barrato (più alto) precede l'attuale: si tiene il minimo
                 prezzo = v if prezzo is None else min(prezzo, v)
                 continue
@@ -347,9 +350,7 @@ def estrai_prezzo(page) -> str | None:
                 if rjl.startswith("prezzo"):
                     continue
                 v = parse_valore(rj)
-                if (v and v > 20 and len(rj) < 25
-                        and not RE_COLAZIONE_PAGAMENTO.search(rjl)
-                        and not any(kw in rjl for kw in KEYWORDS_COLAZIONE)):
+                if v and v > 20 and RE_RIGA_PREZZO.match(rj.strip()):
                     prezzo_blocco = v if prezzo_blocco is None else min(prezzo_blocco, v)
                     continue
                 if board is None:

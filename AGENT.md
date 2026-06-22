@@ -56,6 +56,7 @@ terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
 | `tests/` | unit test funzioni pure (pytest, no rete, no browser) |
 | `scripts/retry_stack_apply.sh` | retry VM Oracle: ruota AD-1/2/3, gira in locale |
 | `scripts/oracle_keepalive.sh` | keepalive da installare sulla VM Oracle |
+| `scripts/spotcheck.py` | verifica live ("contract test" manuale): confronta prezzo salvato vs live su Booking per celle-campione, verdetto MATCH/DRIFT/⚠LOST/esaurito |
 
 ## Come avviare
 
