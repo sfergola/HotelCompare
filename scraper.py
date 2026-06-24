@@ -64,7 +64,7 @@ RE_RIGA_PREZZO         = re.compile(r"^(?:prezzo:?\s*)?€\s*[\d.,]+$", re.IGNOR
 
 COLAZIONE_STIMA_PERSONA = 8     # €/persona: stima aggiunta alla solo-camera per
                                 # confrontarla con le doppie-colazione (marker ≈)
-SOGLIA_STALENESS_GIORNI = 30    # un prezzo visto oltre N giorni fa esce dalla media
+SOGLIA_STALENESS_GIORNI = 15    # un prezzo visto oltre N giorni fa esce dalla media
 SOGLIA_OUTLIER          = 2.5   # un prezzo oltre N× la mediana del giorno esce dalla media
 COPERTURA_MIN           = 0.30  # un hotel sotto questa quota di celle pulite esce dalla media
 

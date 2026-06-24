@@ -22,7 +22,7 @@ Tutte le manopole che spostano i numeri. Cambiarne una è una decisione esplicit
 | Costante | Valore | Dove | Effetto |
 |---|---|---|---|
 | `COLAZIONE_STIMA_PERSONA` | `8` €/persona | `scraper.py` | stima colazione aggiunta alle celle solo-camera (`≈`) |
-| `SOGLIA_STALENESS_GIORNI` | `30` giorni | `scraper.py` | oltre questa età un prezzo esce dalla media ed è declassato a storico |
+| `SOGLIA_STALENESS_GIORNI` | `15` giorni | `scraper.py` | oltre questa età un prezzo esce dalla media ed è declassato a storico |
 | `SOGLIA_OUTLIER` | `2.5` × mediana | `scraper.py` | prezzo oltre N× la mediana del giorno esce dalla media |
 | `COPERTURA_MIN` | `0.30` (30%) | `scraper.py` | hotel sotto questa quota di celle pulite esce dalla media |
 | `MAX_NOTTI` | `7` notti | `algorithm.py` | durata massima di soggiorno provata per trovare un prezzo |
@@ -133,7 +133,7 @@ doppia confrontabile e affidabile**. Le esclusioni, e il perché di ognuna:
 | Escluso | Regola | Perché |
 |---|---|---|
 | Singole, triple, quadruple, appartamenti | `is_extra_letti` (S/T/Q/A) | non sono la doppia che confrontiamo (§1) |
-| Prezzi vecchi (> 30 giorni) | `SOGLIA_STALENESS_GIORNI`, `prezzo_stantio` | un prezzo di 3 settimane fa non è più "il prezzo di oggi"; declassato a storico |
+| Prezzi vecchi (> 15 giorni) | `SOGLIA_STALENESS_GIORNI`, `prezzo_stantio` | un prezzo di oltre 2 settimane fa non è più "il prezzo di oggi"; declassato a storico |
 | Outlier (> 2,5× la mediana del giorno) | `SOGLIA_OUTLIER`, `filtra_prezzi_anomali` | l'"ultima camera a €888" non rappresenta il mercato; serve con ≥4 valori |
 | Hotel quasi-cieco (< 30% celle pulite) | `COPERTURA_MIN`, `hotel_in_media` | pochi dati rari e sballati distorcerebbero la media (es. Mariotti, ~15%, quasi sempre sold-out) |
 | Hotel di riferimento (HNT) | `riferimento` | è il soggetto del confronto, non un competitor |
@@ -146,9 +146,34 @@ doppia confrontabile e affidabile**. Le esclusioni, e il perché di ognuna:
 *chi ha davvero disponibilità a prezzi sensati*, robusta a: prezzi non confrontabili, dati stantii,
 picchi anomali, hotel non rappresentativi.
 
-**Quando riconsiderarle (candidati noti a review):**
-- `SOGLIA_STALENESS_GIORNI = 30` è probabilmente **troppo lunga**: un prezzo di 30 giorni appare
-  ancora come "attuale". Candidato a scendere (~10-14gg) o a rendere visibile l'età.
+### 5b. Perché la media non si basa su prezzi vecchi — la soglia di staleness
+
+**Decisione (24/06).** Un prezzo entra nella media solo se è stato visto **negli ultimi 15 giorni**
+(`SOGLIA_STALENESS_GIORNI = 15`, prima era 30). La media è il numero su cui l'albergatore prezza:
+non deve poggiare su dati stantii spacciati per attuali.
+
+**Perché 15 e non 10 o 30.** Lo scraper gira **ogni 3 giorni** (`GIORNI_TRA_RUN`). Quindi:
+- un prezzo più vecchio di 15 giorni = quel giorno ha **fallito ~5 run consecutivi** → è un dato
+  genuinamente malato, giusto escluderlo dalla media;
+- a 10 giorni (~3 run falliti) si rischia di potare celle solo per un paio di intoppi di rete
+  normali → la media si regge su meno hotel ed è più ballerina;
+- 30 giorni era troppo: un prezzo di 3 settimane appariva ancora come "attuale".
+
+15 taglia il marcio senza impoverire la media. **Quando riconsiderarlo:** se cambia la cadenza dei
+run (`GIORNI_TRA_RUN`), va riproporzionato — la soglia è ~5 cadenze.
+
+**Doppio lavoro della soglia (da sapere).** `SOGLIA_STALENESS_GIORNI` fa due cose con un solo
+numero: (1) esclude il prezzo dalla *media*; (2) declassa la cella in *tabella* da `€120*` a
+`— (€120 · data)`. È voluto e coerente: oltre soglia il prezzo non è "attuale" né nel calcolo né a
+schermo, e la data resa visibile dice all'utente quanto è vecchio. Lo *storage* del prezzo non si
+perde mai (vedi §7): resta in `calendar_merged.json`, solo non conta come corrente.
+
+**Nota sullo storage vs la media.** La paura "perdiamo i prezzi vecchi" è infondata: il merged
+**conserva sempre l'ultimo prezzo disponibile per ogni giorno scrapato, con la sua data** (§7). La
+staleness non butta via niente — decide solo *cosa conta come prezzo di oggi* nella media. Sono due
+piani distinti: lo storico è memoria, la media è fotografia del presente.
+
+**Quando riconsiderare le altre soglie della media:**
 - `SOGLIA_OUTLIER = 2,5×` e `COPERTURA_MIN = 30%` sono tarati sull'audit del 16/06 (unico hotel
   escluso: Mariotti). Da rivedere se cambiano gli hotel monitorati.
 
@@ -167,6 +192,34 @@ due livelli diversi: la cella racconta *cosa c'è*, la media racconta *com'è il
 
 > **Nota di design (21/06):** l'avviso "Esclusi dalla media: …" è stato **rimosso dall'app**. È una
 > decisione statistica interna (questo documento), non informazione per l'utente finale.
+>
+> **Sfumatura (24/06):** una cosa è la *meccanica interna* (quali hotel sono esclusi e perché →
+> resta nascosta); altra è una *garanzia di freschezza* utile all'albergatore. Per questo l'app
+> mostra una caption sotto la tabella — "la MEDIA considera solo doppie viste negli ultimi 15
+> giorni" — e la legenda chiarisce i 15 giorni sul marker storico. È un segnale di fiducia sulla
+> qualità del dato, non l'esposizione del *come*: coerente con la regola d'oro.
+
+---
+
+## 7. Lo storage: l'ultimo prezzo disponibile per ogni giorno (il "merged")
+
+**Come funziona.** `calendar_merged.json` è il database dei prezzi. Per ogni `(hotel, giorno
+scrapato)` tiene **sempre l'ultimo prezzo disponibile con la sua data**, costruito così
+(`filler.py` → `_merge`, run uniti dal più recente al più vecchio):
+- se il run più recente **ha** il prezzo → finisce in `prezzo` + `data_vista` (quando l'ha visto);
+- se il run più recente **non** ce l'ha (non trovato / esaurito) → si scorre indietro e si mette il
+  primo prezzo disponibile in `storico_prezzo` + `storico_data`.
+
+**Conseguenza.** Un giorno non resta mai "vuoto" se almeno un run passato l'aveva visto: si mostra
+l'ultimo prezzo noto, marcato come storico con la data (`— (€120 · data)`). È la dinamica che fa sì
+che **non serva preoccuparsi di "perdere" i prezzi vecchi**: sono conservati.
+
+**Relazione con la staleness (§5b).** Storage e media sono due piani diversi: il merged *conserva*
+ogni ultimo prezzo (memoria), la staleness decide *quali di questi contano come prezzo di oggi*
+nella media (fotografia del presente). Un prezzo oltre 15 giorni resta nel file e visibile in
+tabella, ma esce dalla media.
+
+**Dove.** `filler.py` → `esegui_filler`, `_merge`; lettura via `scraper.py` → `lookup_entry`.
 
 ---
 

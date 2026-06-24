@@ -418,6 +418,9 @@ st.subheader(mese_label(mesi_disponibili[idx]))
 giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
 render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese, oggi_d, nomi_in_media)
 
+st.caption("La riga **MEDIA** considera solo doppie confrontabili viste negli ultimi 15 giorni "
+           "(i prezzi più vecchi restano in tabella ma non entrano nella media).")
+
 # Legenda prezzi
 with st.expander("Legenda prezzi"):
     st.markdown("""
@@ -433,5 +436,5 @@ with st.expander("Legenda prezzi"):
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
 | `€ 120A` | appartamento (fallback — escluso dalle medie) |
 | `✕` | esaurito (indicativo) |
-| `— (€120 · 30/04)` | non disponibile oggi (o prezzo troppo vecchio) — ultimo noto |
+| `— (€120 · 30/04)` | non disponibile oggi (o prezzo più vecchio di 15 giorni) — ultimo noto |
 """)
