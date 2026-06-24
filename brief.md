@@ -1,3 +1,43 @@
+# AGGIORNAMENTO 24/06/2026 — affidabilità della media (Treno 2, con Salvatore)
+
+Sessione di revisione consapevole sui numeri della media. **Tutto mergiato su main (`3caf5e5`) e
+pushato**, branch `fix/staleness-15gg` eliminato, 96 test verdi.
+
+### Cosa è stato deciso e fatto
+1. **Staleness 30 → 15 giorni** (`SOGLIA_STALENESS_GIORNI`). La media usa solo prezzi visti negli
+   ultimi 15gg (~5 cadenze di run da 3gg); i più vecchi restano in tabella come storico con la data.
+   Chiarito che *storage* (il merged conserva sempre l'ultimo prezzo per giorno) e *media* (cosa
+   conta come prezzo di oggi) sono due piani distinti → doc §5b e §7.
+2. **Caption freschezza** sotto la tabella nell'app — segnala che la media è su prezzi ≤15gg
+   (segnale di fiducia, non meccanica interna; sfumatura alla regola d'oro del 21/06).
+3. **Media sbiadita `°` quando <50% degli hotel ha una doppia** quel giorno
+   (`DISPONIBILITA_MIN_MEDIA = 0.50`, soglia RELATIVA). Motivo: nei picchi metà mercato va sold-out
+   e la media diventa il "residuo caro" (bias di selezione verso l'alto). Verificato su dati reali:
+   sbiadisce solo 26/06 (45%) e 27/06 (27%), lascia pieni i giorni normali (64-100%).
+   **Insight di Salvatore:** la distribuzione stagionale NON è usabile per tarare la soglia perché
+   confondata dal lead-time (lug/ago oggi al 91% solo perché distanti) → soglia scelta da primo
+   principio, non dai dati. Doc §5c.
+4. `docs/decisioni-numeri.md` è ora la fonte di verità completa della logica numeri (§0,5b,5c,7).
+
+### DA FARE — prossimi problemi aperti (in ordine)
+1. **[radice paura veridicità] Scenario C** — il parser aggancia il numero *sbagliato*, non
+   *assente*. Cella piena, plausibile, falsa (è il bug-barrato dell'audit). Non coperto da: occhio
+   (non apri l'app ogni giorno), smoke test (becca solo "zero numeri"), spotcheck `--live` (parser
+   che controlla sé stesso → cieco sugli errori sistematici). Serve un oracolo *esterno*. Idea
+   parziale: alert swap-camera (salto >40% tra run, TODO #1b).
+2. **#4 fonte-dati**: CSV/TXT (`run.py:147`, solo-fresco) ≠ app (`calendar_merged.json`, merged) →
+   stessa "media" può dare numeri diversi. Unificare su merged.
+3. Feature mai fatte: alert prezzi, picker mesi a griglia, multi-tenant.
+
+### Nota sullo spotcheck (emersa stanotte)
+La parte `--live` è debole (parser vs sé stesso = MATCH falsamente rassicurante; becca solo LOST).
+La parte utile è il default senza rete: genera i link Booking da confrontare a occhio. Valutare di
+declassare/togliere `--live`.
+
+Prossimo: attaccare lo **Scenario C** (numeri sbagliati) — radice della paura veridicità.
+
+---
+
 # AGGIORNAMENTO 21/06/2026 — follow-up audit veridicità (Treno 1, notturno)
 
 Salvatore ha richiesto un audit della **logica completa che porta a scrivere un prezzo**
