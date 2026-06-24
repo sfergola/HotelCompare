@@ -109,7 +109,7 @@ quel giorno vende solo la camera nuda, si stima la colazione (marker `≈`).
 | `€ 120T` | tripla (fallback — esclusa dalle medie) |
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
 | `€ 120A` | appartamento (fallback — escluso dalle medie) |
-| `— (€120* · 30/04)` | non trovato oggi (o prezzo >30gg), ultimo prezzo noto dal 30/04 |
+| `— (€120* · 30/04)` | non trovato oggi (o prezzo >15gg), ultimo prezzo noto dal 30/04 |
 | `✕ (€120* · 30/04)` | esaurito oggi, ultimo prezzo noto dal 30/04 |
 | `✕` | esaurito (nessun prezzo storico disponibile) |
 | `—` | non trovato (nessun prezzo storico disponibile) |
@@ -118,7 +118,7 @@ quel giorno vende solo la camera nuda, si stima la colazione (marker `≈`).
 Tutte le soglie vivono in `scraper.py` (`COLAZIONE_STIMA_PERSONA`, `SOGLIA_OUTLIER`,
 `SOGLIA_STALENESS_GIORNI`, `COPERTURA_MIN`). Entra nella media solo una **doppia
 confrontabile**: esclusi singole/triple/quadruple/appartamenti (`is_extra_letti`),
-prezzi visti >30gg fa (`prezzo_stantio` → declassati a storico anche in tabella),
+prezzi visti >15gg fa (`prezzo_stantio` → declassati a storico anche in tabella),
 outlier oltre 2,5× la mediana del giorno, e gli hotel sotto il 30% di celle pulite
 (`hotel_in_media` — es. Mariotti, quasi sempre sold-out). Logica condivisa tra
 `app.py` e `report.py` via `valore_per_media` / `media_competitor`.

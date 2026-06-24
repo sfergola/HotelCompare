@@ -20,7 +20,7 @@ import pandas as pd
 import streamlit as st
 
 from scraper import (parse_valore, is_extra_letti, lookup_entry,
-                     hotel_in_media, media_competitor)
+                     hotel_in_media, valori_media, DISPONIBILITA_MIN_MEDIA)
 
 CSS_GLOBALE = """
 <style>
@@ -51,6 +51,7 @@ OUTPUT_DIR = Path(__file__).parent / "output"
 COLORE_ESAURITO    = "#f8d7da"
 COLORE_NON_TROVATO = "#f0f0f0"
 COLORE_MEDIA       = "#e8e8ff"
+COLORE_MEDIA_DEBOLE = "#ededf2"  # media su campione esiguo (poche doppie): sbiadita
 COLORE_RIFERIMENTO = "#fef9e7"
 
 
@@ -125,9 +126,17 @@ def _fmt_data_agg(d: date) -> str:
 
 
 def media_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
-                 giorno: str, oggi=None, nomi_in_media: set | None = None) -> str:
-    m = media_competitor(calendario, nomi, manuali, giorno, riferimento, oggi, nomi_in_media)
-    return f"€ {int(m)}" if m is not None else "—"
+                 giorno: str, oggi=None, nomi_in_media: set | None = None) -> tuple[str, bool]:
+    """(testo, debole): debole=True se meno di metà dei mediabili ha una doppia quel
+    giorno → la media è il residuo caro, poco affidabile (vedi DISPONIBILITA_MIN_MEDIA)."""
+    valori = valori_media(calendario, nomi, manuali, giorno, riferimento, oggi, nomi_in_media)
+    if not valori:
+        return "—", False
+    media = sum(valori) / len(valori)
+    base = len(nomi_in_media) if nomi_in_media is not None else \
+        sum(1 for n in nomi if n not in manuali and n != riferimento)
+    debole = base > 0 and len(valori) / base < DISPONIBILITA_MIN_MEDIA
+    return f"€ {int(media)}" + ("°" if debole else ""), debole
 
 
 def prezzi_giorno(calendario: dict, nomi: list, manuali: dict, riferimento: str,
@@ -195,8 +204,9 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
     row_media = ["MEDIA"]
     row_media_colori = [COLORE_MEDIA]
     for g in giorni_mese:
-        row_media.append(media_giorno(calendario, nomi, manuali, riferimento, g, oggi, nomi_in_media))
-        row_media_colori.append(COLORE_MEDIA)
+        testo, debole = media_giorno(calendario, nomi, manuali, riferimento, g, oggi, nomi_in_media)
+        row_media.append(testo)
+        row_media_colori.append(COLORE_MEDIA_DEBOLE if debole else COLORE_MEDIA)
     rows_data.append(row_media)
     rows_colori.append(row_media_colori)
 
@@ -365,6 +375,12 @@ st.sidebar.markdown(
     f"<span style='background:{COLORE_RIFERIMENTO};padding:2px 8px;border-radius:3px'>▶ Hotel Nuovo Tirreno</span>",
     unsafe_allow_html=True
 )
+st.sidebar.markdown(
+    f"<span style='background:{COLORE_MEDIA_DEBOLE};padding:2px 8px;border-radius:3px'>€ 250° MEDIA sbiadita</span>"
+    f"<br><span style='font-size:0.8rem;color:#666'>meno di metà degli hotel ha una doppia quel "
+    "giorno: prezzo trainato dalle camere care rimaste — leggi con cautela</span>",
+    unsafe_allow_html=True
+)
 
 # Tutti i giorni
 oggi = date.today().isoformat()
@@ -418,6 +434,9 @@ st.subheader(mese_label(mesi_disponibili[idx]))
 giorni_mese = [g for g in tutti_giorni if g.startswith(mesi_disponibili[idx])]
 render_tabella_mese(calendario, nomi, manuali, riferimento, giorni_mese, oggi_d, nomi_in_media)
 
+st.caption("La riga **MEDIA** considera solo doppie confrontabili viste negli ultimi 15 giorni "
+           "(i prezzi più vecchi restano in tabella ma non entrano nella media).")
+
 # Legenda prezzi
 with st.expander("Legenda prezzi"):
     st.markdown("""
@@ -433,5 +452,5 @@ with st.expander("Legenda prezzi"):
 | `€ 120Q` | quadrupla (fallback estremo — esclusa dalle medie) |
 | `€ 120A` | appartamento (fallback — escluso dalle medie) |
 | `✕` | esaurito (indicativo) |
-| `— (€120 · 30/04)` | non disponibile oggi (o prezzo troppo vecchio) — ultimo noto |
+| `— (€120 · 30/04)` | non disponibile oggi (o prezzo più vecchio di 15 giorni) — ultimo noto |
 """)

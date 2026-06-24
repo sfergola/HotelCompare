@@ -64,9 +64,12 @@ RE_RIGA_PREZZO         = re.compile(r"^(?:prezzo:?\s*)?€\s*[\d.,]+$", re.IGNOR
 
 COLAZIONE_STIMA_PERSONA = 8     # €/persona: stima aggiunta alla solo-camera per
                                 # confrontarla con le doppie-colazione (marker ≈)
-SOGLIA_STALENESS_GIORNI = 30    # un prezzo visto oltre N giorni fa esce dalla media
+SOGLIA_STALENESS_GIORNI = 15    # un prezzo visto oltre N giorni fa esce dalla media
 SOGLIA_OUTLIER          = 2.5   # un prezzo oltre N× la mediana del giorno esce dalla media
 COPERTURA_MIN           = 0.30  # un hotel sotto questa quota di celle pulite esce dalla media
+DISPONIBILITA_MIN_MEDIA = 0.50  # se meno di questa quota dei mediabili ha una doppia quel giorno,
+                                # la media è poco affidabile (residuo caro): segnalata sbiadita.
+                                # Relativa, non assoluta: robusta al n° di hotel monitorati.
 
 
 # ── helper pubblici (usati anche da report.py) ───────────────────────────────
@@ -165,6 +168,18 @@ def media_competitor(calendario: dict, nomi: list[str], manuali: dict, giorno: s
     riferimento e gli hotel a verifica manuale, tiene solo le doppie confrontabili e
     fresche (valore_per_media), poi scarta gli outlier del giorno (filtra_prezzi_anomali).
     Ritorna il numero; sono i chiamanti a formattarlo e a scegliere il placeholder di vuoto."""
+    valori = valori_media(calendario, nomi, manuali, giorno, riferimento, oggi, nomi_in_media)
+    if not valori:
+        return None
+    return sum(valori) / len(valori)
+
+
+def valori_media(calendario: dict, nomi: list[str], manuali: dict, giorno: str,
+                 riferimento: str = "", oggi: "date | None" = None,
+                 nomi_in_media: "set | None" = None) -> list[float]:
+    """I valori che entrano nella media di un giorno, già ripuliti dagli outlier.
+    Esposto a parte da media_competitor perché la *dimensione* di questa lista è il
+    campione del giorno: pochi valori = media poco affidabile (vedi CAMPIONE_MIN_MEDIA)."""
     valori = []
     for nome in nomi:
         if nome in manuali or nome == riferimento:
@@ -177,10 +192,7 @@ def media_competitor(calendario: dict, nomi: list[str], manuali: dict, giorno: s
         v = valore_per_media(entry, oggi)
         if v is not None:
             valori.append(v)
-    valori = filtra_prezzi_anomali(valori)
-    if not valori:
-        return None
-    return sum(valori) / len(valori)
+    return filtra_prezzi_anomali(valori)
 
 
 # ── helper privati ───────────────────────────────────────────────────────────
