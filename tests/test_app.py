@@ -36,32 +36,44 @@ def test_colore_meta():
 # ── media_giorno ──────────────────────────────────────────────────────────────
 
 def test_media_giorno_base():
+    # tutti gli hotel mediabili disponibili (100%) → media piena, niente °
     calendario = {
         "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
         "Hotel B": {"2026-07-01": {"prezzo": "€ 200", "notti": 1, "stato": "ok"}},
     }
-    m = media_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01")
-    assert m == "€ 150"
+    assert media_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01") == ("€ 150", False)
 
 def test_media_giorno_esclude_riferimento():
     calendario = {
         "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
         "Hotel Ref": {"2026-07-01": {"prezzo": "€ 50", "notti": 1, "stato": "ok"}},
     }
-    m = media_giorno(calendario, ["Hotel A", "Hotel Ref"], {}, "Hotel Ref", "2026-07-01")
-    assert m == "€ 100"
+    testo, _ = media_giorno(calendario, ["Hotel A", "Hotel Ref"], {}, "Hotel Ref", "2026-07-01")
+    assert testo == "€ 100"  # il riferimento non entra né a numeratore né a base
 
 def test_media_giorno_esclude_extra_letti():
     calendario = {
         "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
         "Hotel B": {"2026-07-01": {"prezzo": "€ 200T", "notti": 1, "stato": "ok"}},
     }
-    m = media_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01")
-    assert m == "€ 100"
+    # base=2 (entrambi mediabili), disponibili=1 (tripla esclusa) → 50%, non sotto soglia
+    testo, debole = media_giorno(calendario, ["Hotel A", "Hotel B"], {}, "", "2026-07-01")
+    assert testo == "€ 100" and debole is False
 
 def test_media_giorno_nessun_dato():
-    m = media_giorno({}, [], {}, "", "2026-07-01")
-    assert m == "—"
+    assert media_giorno({}, [], {}, "", "2026-07-01") == ("—", False)
+
+def test_media_giorno_sbiadita_sotto_meta_disponibili():
+    # base=5 mediabili, solo 2 con doppia confrontabile (40% < 50%) → sbiadita °
+    calendario = {
+        "Hotel A": {"2026-07-01": {"prezzo": "€ 100", "notti": 1, "stato": "ok"}},
+        "Hotel B": {"2026-07-01": {"prezzo": "€ 200", "notti": 1, "stato": "ok"}},
+        "Hotel C": {"2026-07-01": {"prezzo": "€ 300T", "notti": 1, "stato": "ok"}},
+        "Hotel D": {"2026-07-01": {"prezzo": None, "notti": 1, "stato": "esaurito"}},
+        "Hotel E": {"2026-07-01": {"prezzo": "€ 400Q", "notti": 1, "stato": "ok"}},
+    }
+    nomi = list(calendario)
+    assert media_giorno(calendario, nomi, {}, "", "2026-07-01") == ("€ 150°", True)
 
 
 # ── prezzi_giorno ─────────────────────────────────────────────────────────────

@@ -25,6 +25,7 @@ Tutte le manopole che spostano i numeri. Cambiarne una è una decisione esplicit
 | `SOGLIA_STALENESS_GIORNI` | `15` giorni | `scraper.py` | oltre questa età un prezzo esce dalla media ed è declassato a storico |
 | `SOGLIA_OUTLIER` | `2.5` × mediana | `scraper.py` | prezzo oltre N× la mediana del giorno esce dalla media |
 | `COPERTURA_MIN` | `0.30` (30%) | `scraper.py` | hotel sotto questa quota di celle pulite esce dalla media |
+| `DISPONIBILITA_MIN_MEDIA` | `0.50` (50%) | `scraper.py` | se meno di metà dei mediabili ha una doppia quel giorno, la media è segnalata poco affidabile (sbiadita, marker `°`) |
 | `MAX_NOTTI` | `7` notti | `algorithm.py` | durata massima di soggiorno provata per trovare un prezzo |
 | soglia prezzo minimo | `25` €/notte | `scraper.py` `normalizza_prezzo` | sotto questa cifra/notte la cella è scartata (implausibile per una doppia) |
 | `adulti` | `2` | `competitors.json` | occupazione fissa del confronto |
@@ -176,6 +177,43 @@ piani distinti: lo storico è memoria, la media è fotografia del presente.
 **Quando riconsiderare le altre soglie della media:**
 - `SOGLIA_OUTLIER = 2,5×` e `COPERTURA_MIN = 30%` sono tarati sull'audit del 16/06 (unico hotel
   escluso: Mariotti). Da rivedere se cambiano gli hotel monitorati.
+
+---
+
+### 5c. Giorni con poche doppie: bias di selezione e campione minimo
+
+**Il problema (osservato il 24/06 sul 26-27/06).** Nei giorni di picco di domanda metà degli hotel
+va sold-out. La media si calcola allora **solo sui sopravvissuti** — e i sopravvissuti sono le
+**camere care**: le economiche si vendono per prime. Risultato: in un giorno di picco la media non
+dice "il prezzo tipico", dice "quel che resta prenotabile, che è il caro". È un **bias di selezione
+verso l'alto**, non un errore di calcolo (verificato: il 26/06 media 306 € su 5 hotel, il 27/06 257 €
+su soli 3, contro ~130-140 € dei giorni normali). Sotto i 4 valori il filtro outlier non scatta
+nemmeno → il giorno è doppiamente fragile.
+
+**Decisione (24/06).** Non si nasconde né si sopprime la media (proprio nei picchi serve di più):
+si **segnala la bassa affidabilità**. Se **meno del 50% dei mediabili** ha una doppia confrontabile
+quel giorno (`DISPONIBILITA_MIN_MEDIA = 0.50`), la cella MEDIA è mostrata **sbiadita** con marker
+`°`, e la legenda spiega come leggerla.
+
+**Perché relativa e non un conteggio assoluto.** Un numero secco (es. "<4 doppie") non scala col
+numero di hotel monitorati e va ritarato a ogni aggiunta. La quota *disponibili/mediabili* è
+robusta: "metà del mercato non ha camera" significa lo stesso con 11 o con 30 hotel.
+
+**Perché 50% e non un valore tarato sui dati di oggi.** La distribuzione di disponibilità della
+stagione **non è usabile per tarare la soglia**: è confondata dal *lead-time* (i giorni lontani
+appaiono pieni solo perché nessuno ha ancora prenotato; lug/ago oggi stanno al ~91% perché distanti,
+non perché meno richiesti). Quindi 50% è scelto **da primo principio**: sotto metà mercato
+disponibile la media è il "residuo caro", non il prezzo tipico. Verifica sul dato attuale: giorni
+vicini ma non di picco restano pieni (29/06 all'82%, 04/07 al 91%), mentre 26-27/06 — evento reale —
+crollano a 45% e 27%. La disponibilità qui segue la *domanda*, non solo la vicinanza.
+
+**Conseguenza accettata.** Giorni vicini ad alta domanda *verranno* sbiaditi (è corretto: quelle
+medie sono davvero meno affidabili). Se col tempo si osservasse che il near-term viene sbiadito a
+tappeto (rumore da pura prossimità), si passerà a una misura **robusta al lead-time** (confronto a
+parità di giorni-al-check-in) — richiede storico che oggi non abbiamo, quindi rimandata.
+
+**Dove.** `scraper.py` → `valori_media` (numeratore = doppie disponibili) e `DISPONIBILITA_MIN_MEDIA`;
+base (denominatore) = hotel mediabili del giorno; resa in `app.py` (riga MEDIA, colore + marker `°`).
 
 ---
 
