@@ -4,7 +4,8 @@ run_scheduled.py — avvio automatico notturno dello scraping.
 Gira ogni 30 minuti via cron. Parte solo se:
 - l'ultimo aggiornamento di calendar_merged.json è più vecchio di GIORNI_TRA_RUN giorni
 - siamo nella fascia oraria 19:30–09:00 (PC libero)
-- non c'è già un run in corso (lock file assente)
+- non c'è già un run DAVVERO in corso (vedi run_in_corso: un lock stantio da
+  spegnimento brutale/crash viene riconosciuto e rimosso → ripresa automatica)
 
 Per avviare fuori orario o con log visivi: usa il pannello (Super → "HotelCompare").
 Per avviare un periodo specifico manualmente: usa run.py direttamente.
@@ -45,12 +46,34 @@ def in_fascia_automatica() -> bool:
     return ora >= 19.5 or ora < 9.0
 
 
+def run_in_corso() -> bool:
+    """True solo se un nostro run.py è DAVVERO in esecuzione.
+
+    Il lock contiene il PID di run.py. Se il processo è morto (spegnimento brutale,
+    crash, stacco corrente) il lock resta "stantio": senza questo controllo bloccava
+    per sempre i run successivi, costringendo a rimuoverlo a mano. Qui verifichiamo
+    via /proc che il PID esista E sia ancora un run.py (il check sul cmdline evita i
+    falsi positivi da PID riciclato dopo un reboot). Se è stantio lo rimuoviamo e
+    ritorniamo False: il prossimo giro di cron riparte da solo dai checkpoint."""
+    if not LOCK_FILE.exists():
+        return False
+    try:
+        pid = int(LOCK_FILE.read_text().strip())
+        cmdline = Path(f"/proc/{pid}/cmdline").read_bytes()
+        if b"run.py" in cmdline:
+            return True
+    except (ValueError, OSError):
+        pass
+    LOCK_FILE.unlink(missing_ok=True)  # lock stantio o illeggibile
+    return False
+
+
 def notifica(messaggio: str):
     subprocess.run(["notify-send", "-t", "10000", "HotelCompare", messaggio], check=False)
 
 
 def main():
-    if LOCK_FILE.exists():
+    if run_in_corso():
         sys.exit(0)
 
     if not aggiornamento_necessario():
