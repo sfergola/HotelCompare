@@ -1,3 +1,46 @@
+# AGGIORNAMENTO 30/06/2026 — scraping nel cloud, addio dipendenza dal PC acceso (Treno 2, con Salvatore)
+
+Obiettivo della sessione (richiesta di Salvatore): *"vorrei che facesse tutto da solo, anche a PC
+spento/schermo chiuso"*. La verità dura emersa: finché lo scrape gira sul laptop sarà sempre
+ostaggio del PC acceso e sveglio — nessun trucco di lock lo aggira. La risposta è il **cloud**.
+
+### Cosa è stato capito
+1. **Lock/PID demistificati**: il lock file è un cartello "OCCUPATO"; il PID è la matricola del
+   programma; "lock stantio" = cartello su stanza vuota dopo crash. Il fix del 25/06 lo pulisce da solo.
+2. **Il PC locale ha solo 3,7 GB RAM** (misurato durante un run): 3 Chromium = ~2,4 GB → satura e
+   **swappa** (= "PC compromesso mentre lavoro"). → `max_workers` 3 → **2** (~1,6 GB, niente swap).
+3. **GitHub Actions era già configurato ma NON ha MAI scrapato davvero**: i run duravano 46-54s =
+   `run_scheduled.py` colpiva una guardia da laptop ed usciva. Il run del 30/06 (dati vecchi >3gg,
+   in fascia) è andato oltre le guardie e **è crashato su `FileNotFoundError: notify-send`** — un
+   tool desktop assente sul runner, chiamato *prima* di iniziare lo scrape. Quindi la domanda
+   "Booking blocca l'IP del datacenter?" non ha MAI avuto risposta.
+
+### Cosa è stato fatto (branch `fix/ci-scraping-reale`, pushato — NON ancora su main)
+- commit `080c715`: `max_workers` 2 in competitors.json.
+- commit `8a77722`: il workflow CI chiama **`run.py`** invece di `run_scheduled.py`. Motivo: in cloud
+  lo scheduler è già la cron di GitHub; le guardie di run_scheduled (notify-send, fascia oraria, lock)
+  sono cruft da laptop che lì fa solo danno. run.py fa scraping + push da solo.
+- Lanciato il workflow a mano (`workflow_dispatch`) sul branch → **run ID 28445053459, in_progress**.
+  Ha superato i ~50s del vecchio crash → run.py sta davvero girando in cloud.
+
+### DOMANDA APERTA (il test in corso)
+**Booking blocca l'IP di GitHub Actions?** Verdetto dall'esito del run 28445053459:
+- fallisce nei primi ~10 min → bloccato (leggere `gh run view <id> --log-failed` o via API jobs/logs)
+- continua a girare a lungo → scrapa davvero, Booking non blocca. Il run pusha `calendar_merged.json`
+  sul branch `fix/ci-scraping-reale` a fine corsa (Fase 6).
+
+### PROSSIMI PASSI (decisione Treno 2)
+1. **Se il cloud funziona** → merge `fix/ci-scraping-reale` su main; poi valutare di **smantellare il
+   path laptop** (cron `*/30`, lock, staleness, `run_scheduled.py`) → enorme semplificazione, sparisce
+   tutta la fragilità "PC acceso". Tenere `run.py`/`panel.py` per run manuali locali.
+2. **Se Booking blocca** → ripiego locale indurito: `logind.conf HandleLidSwitch=ignore` (schermo
+   chiuso non sospende) + finestra notte fonda, accettando il vincolo "PC acceso di notte".
+3. Pendente da sessioni precedenti: ancora aperto lo **Scenario C** (parser aggancia numero sbagliato).
+
+Nota: tutto il test gira in cloud sul branch → PC locale libero, `main` intatto.
+
+---
+
 # AGGIORNAMENTO 24/06/2026 — affidabilità della media (Treno 2, con Salvatore)
 
 Sessione di revisione consapevole sui numeri della media. **Tutto mergiato su main (`3caf5e5`) e
