@@ -245,7 +245,7 @@ def render_tabella_mese(calendario: dict, nomi: list, manuali: dict,
         result = []
         for c in cols:
             if c:
-                s = f"background-color: {c}; font-size: 0.85rem"
+                s = f"background-color: {c}; color: #1a1a1a; font-size: 0.85rem"
                 if border_bold:
                     s += f"; {border_bold}"
                 result.append(s)

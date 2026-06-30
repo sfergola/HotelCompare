@@ -1,0 +1,4 @@
+[theme]
+# tabella con sfondi pastello chiari + testo scuro: il tema deve restare chiaro,
+# altrimenti col dark mode del browser il testo diventa chiaro e sparisce
+base = "light"
