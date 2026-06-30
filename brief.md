@@ -20,24 +20,34 @@ ostaggio del PC acceso e sveglio — nessun trucco di lock lo aggira. La rispost
 - commit `8a77722`: il workflow CI chiama **`run.py`** invece di `run_scheduled.py`. Motivo: in cloud
   lo scheduler è già la cron di GitHub; le guardie di run_scheduled (notify-send, fascia oraria, lock)
   sono cruft da laptop che lì fa solo danno. run.py fa scraping + push da solo.
-- Lanciato il workflow a mano (`workflow_dispatch`) sul branch → **run ID 28445053459, in_progress**.
-  Ha superato i ~50s del vecchio crash → run.py sta davvero girando in cloud.
+- Lanciato il workflow a mano (`workflow_dispatch`) sul branch → **run ID 28445053459**.
+- commit `c31cc8a`: cron **ogni 2 giorni** (`0 1 * * 1,3,5,0`) + **jitter** `sleep 0-60min` sui run
+  schedulati (non parte mai allo stesso minuto) + timeout 300→360.
 
-### DOMANDA APERTA (il test in corso)
-**Booking blocca l'IP di GitHub Actions?** Verdetto dall'esito del run 28445053459:
-- fallisce nei primi ~10 min → bloccato (leggere `gh run view <id> --log-failed` o via API jobs/logs)
-- continua a girare a lungo → scrapa davvero, Booking non blocca. Il run pusha `calendar_merged.json`
-  sul branch `fix/ci-scraping-reale` a fine corsa (Fase 6).
+### Decisioni di assetto (Treno 2, finali)
+- **Un solo branch.** Mai due (locale/cloud): divergono in silenzio. Le differenze stanno nella
+  config/ambiente, non nel branch.
+- **`max_workers: 2` ovunque.** Il laptop (3,7GB) vuole ≤2; in cloud la velocità di un job notturno
+  non presidiato non conta → niente override env (sarebbe complessità inutile). Cloud = 4 vCPU/16GB.
+- **Cron locale RIMOSSO** dal crontab del PC (resta solo la riga mattpocock-skills). Niente più
+  scheduler automatico sul portatile.
+- **Locale = fallback manuale**: `panel.py` / `python run.py` quando Salvatore decide (es. se GitHub
+  Actions si rompe). `run_scheduled.py` + lock restano nel repo come rete dormiente, NON smantellati.
+- **Cloud = primario**, repo pubblico → minuti Actions illimitati e gratis.
 
-### PROSSIMI PASSI (decisione Treno 2)
-1. **Se il cloud funziona** → merge `fix/ci-scraping-reale` su main; poi valutare di **smantellare il
-   path laptop** (cron `*/30`, lock, staleness, `run_scheduled.py`) → enorme semplificazione, sparisce
-   tutta la fragilità "PC acceso". Tenere `run.py`/`panel.py` per run manuali locali.
-2. **Se Booking blocca** → ripiego locale indurito: `logind.conf HandleLidSwitch=ignore` (schermo
-   chiuso non sospende) + finestra notte fonda, accettando il vincolo "PC acceso di notte".
+### VERDETTO BOOKING (di fatto risolto)
+Il run 28445053459 ha girato **75+ min senza fallire** → Booking **NON blocca** l'IP di GitHub.
+(I vecchi crash erano a ~50s: notify-send, non un blocco.) Conferma al 100% = run completato con
+prezzi veri in `calendar_merged.json`. Anti-detection pesante (UA/proxy/fingerprint): NON farla ora,
+è un problema che non abbiamo; il timing è un segnale debole. Si aggiunge solo SE Booking bloccherà.
+
+### PROSSIMI PASSI
+1. **Aspettare la fine del run 28445053459** e verificare prezzi veri nel calendario del branch.
+2. **Merge `fix/ci-scraping-reale` su main** → accende lo scheduling automatico cloud (fino al merge
+   su main gira ancora il vecchio workflow rotto).
 3. Pendente da sessioni precedenti: ancora aperto lo **Scenario C** (parser aggancia numero sbagliato).
 
-Nota: tutto il test gira in cloud sul branch → PC locale libero, `main` intatto.
+Nota: tutto gira in cloud sul branch → PC locale libero, `main` intatto fino al merge.
 
 ---
 
