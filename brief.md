@@ -45,7 +45,14 @@ prezzi veri in `calendar_merged.json`. Anti-detection pesante (UA/proxy/fingerpr
 1. **Aspettare la fine del run 28445053459** e verificare prezzi veri nel calendario del branch.
 2. **Merge `fix/ci-scraping-reale` su main** → accende lo scheduling automatico cloud (fino al merge
    su main gira ancora il vecchio workflow rotto).
-3. Pendente da sessioni precedenti: ancora aperto lo **Scenario C** (parser aggancia numero sbagliato).
+3. **AL MERGE, riscrivere i doc architetturali** (rimandati apposta: non si riscrive l'architettura
+   per un cambiamento non confermato/non mergiato). Sono STALE in modo grave:
+   - `docs/OVERVIEW.md` apre con "completamente automatico su Oracle Cloud" → **Oracle abbandonato**.
+   - README riga 21 (cron @reboot Lun-Mer), riga 24 (Oracle "in corso" = falso), riga 51 (max_workers 3).
+   - AGENT.md: sezioni cron locale / scheduling / "GitHub Actions piano B" → ora cloud primario.
+   Riscrivere tutto e tre alla nuova realtà: cloud primario (run.py, ogni 2gg+jitter), Oracle rimosso,
+   locale = solo fallback manuale. Va fatto in un colpo, atomico col merge.
+4. Pendente da sessioni precedenti: ancora aperto lo **Scenario C** (parser aggancia numero sbagliato).
 
 Nota: tutto gira in cloud sul branch → PC locale libero, `main` intatto fino al merge.
 
