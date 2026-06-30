@@ -49,6 +49,10 @@ jobs:
         run: sleep $((RANDOM % 3600))
 
       # in cloud lo scheduler è la cron di GitHub: run.py salta le guardie
-      # da laptop di run_scheduled.py (notify-send, fascia oraria, lock)
+      # da laptop di run_scheduled.py (notify-send, fascia oraria, lock).
+      # MAX_WORKERS=4 (runner = 4 vCPU): a 2 worker il run sfora le 6h e viene
+      # killato (run 28445053459 cancellato a 5h); a 4 sta sotto il tetto.
       - name: Scraping e push calendario
+        env:
+          MAX_WORKERS: 4
         run: python run.py

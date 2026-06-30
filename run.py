@@ -15,6 +15,7 @@ Fasi:
 """
 
 import json
+import os
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date, timedelta
 from pathlib import Path
@@ -66,7 +67,9 @@ def _merge_partials(urls: dict, from_str: str, to_str: str,
 def main():
     cfg         = carica_config()
     adulti      = cfg.get("adulti", 2)
-    max_workers = cfg.get("max_workers", 3)
+    # in cloud (GitHub Actions, 4 vCPU) si alza via env per stare sotto le 6h;
+    # in locale resta il valore di competitors.json, sicuro per i 3,7GB del PC
+    max_workers = int(os.environ.get("MAX_WORKERS", cfg.get("max_workers", 3)))
     oggi        = date.today()
 
     # scheduler_state.json ha priorità su competitors.json per le date.
