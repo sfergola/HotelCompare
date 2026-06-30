@@ -41,5 +41,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # in cloud lo scheduler è la cron di GitHub: run.py salta le guardie
+      # da laptop di run_scheduled.py (notify-send, fascia oraria, lock)
       - name: Scraping e push calendario
-        run: python run_scheduled.py
+        run: python run.py
