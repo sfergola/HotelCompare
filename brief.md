@@ -27,22 +27,48 @@ ostaggio del PC acceso e sveglio — nessun trucco di lock lo aggira. La rispost
 ### Decisioni di assetto (Treno 2, finali)
 - **Un solo branch.** Mai due (locale/cloud): divergono in silenzio. Le differenze stanno nella
   config/ambiente, non nel branch.
-- **`max_workers: 2` ovunque.** Il laptop (3,7GB) vuole ≤2; in cloud la velocità di un job notturno
-  non presidiato non conta → niente override env (sarebbe complessità inutile). Cloud = 4 vCPU/16GB.
+- **`max_workers`: 2 in locale, 4 in cloud via override env `MAX_WORKERS`.** ⚠️ REVISIONE: prima si
+  era deciso "2 ovunque, niente override (speed non conta)" → **sbagliato**, vedi FINDING timeout sotto.
+  Il laptop (3,7GB) vuole ≤2; il cloud DEVE stare sotto il tetto rigido di 6h → servono 4 worker (4 vCPU).
 - **Cron locale RIMOSSO** dal crontab del PC (resta solo la riga mattpocock-skills). Niente più
   scheduler automatico sul portatile.
 - **Locale = fallback manuale**: `panel.py` / `python run.py` quando Salvatore decide (es. se GitHub
   Actions si rompe). `run_scheduled.py` + lock restano nel repo come rete dormiente, NON smantellati.
 - **Cloud = primario**, repo pubblico → minuti Actions illimitati e gratis.
 
-### VERDETTO BOOKING (di fatto risolto)
-Il run 28445053459 ha girato **75+ min senza fallire** → Booking **NON blocca** l'IP di GitHub.
-(I vecchi crash erano a ~50s: notify-send, non un blocco.) Conferma al 100% = run completato con
-prezzi veri in `calendar_merged.json`. Anti-detection pesante (UA/proxy/fingerprint): NON farla ora,
-è un problema che non abbiamo; il timing è un segnale debole. Si aggiunge solo SE Booking bloccherà.
+### VERDETTO BOOKING (confermato)
+Il run 28445053459 ha girato **5h0m senza un solo errore** → Booking **NON blocca** l'IP di GitHub.
+(I vecchi crash a ~50s erano notify-send, non blocchi.) È stato chiuso dal **timeout 300min**
+(`conclusion: cancelled`), NON da Booking. Anti-detection pesante (UA/proxy/fingerprint): NON serve
+ora — il timing è un segnale debole; si aggiunge solo SE un giorno Booking bloccherà davvero.
+
+### FINDING 30/06 sera — tetto 6h dei runner + override worker (commit `83cdee1`)
+- A **2 worker il run NON finisce in tempo**: `28445053459` killato a **5h0m15s** (timeout 300).
+- **I runner GitHub hanno un tetto RIGIDO di 6h per job** (360min, non aggirabile) e sono **usa e
+  getta**: i checkpoint `*_inprogress.json` (gitignored) NON passano tra run → il cloud deve
+  completare TUTTO in un solo job. Quindi i worker DEVONO bastare a stare sotto le 6h.
+- Fix `83cdee1`: `run.py` legge `MAX_WORKERS` da env (fallback competitors.json); il workflow imposta
+  `MAX_WORKERS: 4`. Locale resta 2. Timeout già a 360.
+- **Run di verifica a 4 worker: ID 28480007969** (workflow_dispatch, 30/06 ~22:29 UTC). Da confermare:
+  chiude `success` < 6h E pusha `calendar_merged.json` sul branch.
+
+### Nota separata: fix tabella illeggibile — GIÀ su main (commit `43adfaf`)
+Parentesi durante la sessione: la tabella Streamlit era illeggibile (dark mode → testo chiaro su
+sfondi pastello chiari). NON era una regressione: mancava `.streamlit/config.toml`. Fix: `base=light`
++ `color:#1a1a1a` sulle celle. Verificato a schermo da Salvatore, mergiato su main e pushato.
 
 ### PROSSIMI PASSI
-1. **Aspettare la fine del run 28445053459** e verificare prezzi veri nel calendario del branch.
+1. **Verificare il run 28480007969** (4 worker): deve chiudere `success` < 6h E pushare il calendario.
+   Se sfora ancora → vedi ALTERNATIVA matrix qui sotto.
+
+   **ALTERNATIVA matrix (idea di Salvatore, 30/06) — solo SE 4 worker non basta.** Invece di scrapare
+   tutti gli hotel in UN job, usare la `strategy.matrix` di GitHub: **un job per hotel**, ognuno sul
+   PROPRIO runner (= 6h di budget ciascuno, 4 vCPU ciascuno, fino a ~20 in parallelo). Dissolve il
+   tetto 6h e parallelizza meglio del max_workers. Il "casino" da gestire: i push git paralleli sullo
+   stesso `calendar_merged.json` confliggono → ogni job-hotel carica un **artifact partial**, poi un
+   job finale (`needs: [tutti]`) scarica i partial, fa UN merge e UN push. I pezzi nel codice ci sono
+   già (`scrapa_hotel_worker` per-hotel, `filler`/`_merge_partials`). Refactor MEDIO, non triviale →
+   farlo solo se serve davvero (no complessità prematura).
 2. **Merge `fix/ci-scraping-reale` su main** → accende lo scheduling automatico cloud (fino al merge
    su main gira ancora il vecchio workflow rotto).
 3. **AL MERGE, riscrivere i doc architetturali** (rimandati apposta: non si riscrive l'architettura
