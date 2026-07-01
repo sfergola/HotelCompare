@@ -2,8 +2,9 @@ name: Scraping prezzi competitor
 
 on:
   schedule:
-    # Lun/Mar/Mer alle 02:00 UTC (= 03:00 CET / 04:00 CEST)
-    - cron: '0 2 * * 1,2,3'
+    # ~ogni 2 giorni: Lun/Mer/Ven/Dom alle 01:00 UTC (= 03:00 CEST)
+    # l'ora effettiva varia per il jitter sotto + ritardo naturale di GitHub
+    - cron: '0 1 * * 1,3,5,0'
   workflow_dispatch:
 
 # evita run paralleli se una settimana parte in ritardo
@@ -18,7 +19,7 @@ permissions:
 jobs:
   scraping:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 360
 
     steps:
       - uses: actions/checkout@v4
@@ -41,5 +42,29 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
+      # jitter: ritarda 0-60 min così non parte mai allo stesso minuto
+      # (riduce la periodicità; salta sui run manuali workflow_dispatch)
+      - name: Ritardo casuale anti-pattern
+        if: github.event_name == 'schedule'
+        run: sleep $((RANDOM % 3600))
+
+      # in cloud lo scheduler è la cron di GitHub: run.py salta le guardie
+      # da laptop di run_scheduled.py (notify-send, fascia oraria, lock).
+      # MAX_WORKERS=4 (runner = 4 vCPU): a 2 worker il run sfora le 6h e viene
+      # killato (run 28445053459 cancellato a 5h); a 4 sta sotto il tetto.
       - name: Scraping e push calendario
-        run: python run_scheduled.py
+        env:
+          MAX_WORKERS: 4
+        run: python run.py
+
+      # rete di sicurezza: carica il calendario SEMPRE, anche se run.py esce
+      # rosso per push fallita. Il runner è usa e getta → senza questo i dati
+      # scrapati sparirebbero col runner (è successo col run 28480007969).
+      - name: Salva calendario come artifact (backup)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: calendario
+          path: output/calendar_merged.json
+          retention-days: 14
+          if-no-files-found: warn

@@ -1,3 +1,101 @@
+# AGGIORNAMENTO 30/06/2026 — scraping nel cloud, addio dipendenza dal PC acceso (Treno 2, con Salvatore)
+
+Obiettivo della sessione (richiesta di Salvatore): *"vorrei che facesse tutto da solo, anche a PC
+spento/schermo chiuso"*. La verità dura emersa: finché lo scrape gira sul laptop sarà sempre
+ostaggio del PC acceso e sveglio — nessun trucco di lock lo aggira. La risposta è il **cloud**.
+
+### Cosa è stato capito
+1. **Lock/PID demistificati**: il lock file è un cartello "OCCUPATO"; il PID è la matricola del
+   programma; "lock stantio" = cartello su stanza vuota dopo crash. Il fix del 25/06 lo pulisce da solo.
+2. **Il PC locale ha solo 3,7 GB RAM** (misurato durante un run): 3 Chromium = ~2,4 GB → satura e
+   **swappa** (= "PC compromesso mentre lavoro"). → `max_workers` 3 → **2** (~1,6 GB, niente swap).
+3. **GitHub Actions era già configurato ma NON ha MAI scrapato davvero**: i run duravano 46-54s =
+   `run_scheduled.py` colpiva una guardia da laptop ed usciva. Il run del 30/06 (dati vecchi >3gg,
+   in fascia) è andato oltre le guardie e **è crashato su `FileNotFoundError: notify-send`** — un
+   tool desktop assente sul runner, chiamato *prima* di iniziare lo scrape. Quindi la domanda
+   "Booking blocca l'IP del datacenter?" non ha MAI avuto risposta.
+
+### Cosa è stato fatto (branch `fix/ci-scraping-reale`, pushato — NON ancora su main)
+- commit `080c715`: `max_workers` 2 in competitors.json.
+- commit `8a77722`: il workflow CI chiama **`run.py`** invece di `run_scheduled.py`. Motivo: in cloud
+  lo scheduler è già la cron di GitHub; le guardie di run_scheduled (notify-send, fascia oraria, lock)
+  sono cruft da laptop che lì fa solo danno. run.py fa scraping + push da solo.
+- Lanciato il workflow a mano (`workflow_dispatch`) sul branch → **run ID 28445053459**.
+- commit `c31cc8a`: cron **ogni 2 giorni** (`0 1 * * 1,3,5,0`) + **jitter** `sleep 0-60min` sui run
+  schedulati (non parte mai allo stesso minuto) + timeout 300→360.
+
+### Decisioni di assetto (Treno 2, finali)
+- **Un solo branch.** Mai due (locale/cloud): divergono in silenzio. Le differenze stanno nella
+  config/ambiente, non nel branch.
+- **`max_workers`: 2 in locale, 4 in cloud via override env `MAX_WORKERS`.** ⚠️ REVISIONE: prima si
+  era deciso "2 ovunque, niente override (speed non conta)" → **sbagliato**, vedi FINDING timeout sotto.
+  Il laptop (3,7GB) vuole ≤2; il cloud DEVE stare sotto il tetto rigido di 6h → servono 4 worker (4 vCPU).
+- **Cron locale RIMOSSO** dal crontab del PC (resta solo la riga mattpocock-skills). Niente più
+  scheduler automatico sul portatile.
+- **Locale = fallback manuale**: `panel.py` / `python run.py` quando Salvatore decide (es. se GitHub
+  Actions si rompe). `run_scheduled.py` + lock restano nel repo come rete dormiente, NON smantellati.
+- **Cloud = primario**, repo pubblico → minuti Actions illimitati e gratis.
+
+### VERDETTO BOOKING (confermato)
+Il run 28445053459 ha girato **5h0m senza un solo errore** → Booking **NON blocca** l'IP di GitHub.
+(I vecchi crash a ~50s erano notify-send, non blocchi.) È stato chiuso dal **timeout 300min**
+(`conclusion: cancelled`), NON da Booking. Anti-detection pesante (UA/proxy/fingerprint): NON serve
+ora — il timing è un segnale debole; si aggiunge solo SE un giorno Booking bloccherà davvero.
+
+### FINDING 30/06 sera — tetto 6h dei runner + override worker (commit `83cdee1`)
+- A **2 worker il run NON finisce in tempo**: `28445053459` killato a **5h0m15s** (timeout 300).
+- **I runner GitHub hanno un tetto RIGIDO di 6h per job** (360min, non aggirabile) e sono **usa e
+  getta**: i checkpoint `*_inprogress.json` (gitignored) NON passano tra run → il cloud deve
+  completare TUTTO in un solo job. Quindi i worker DEVONO bastare a stare sotto le 6h.
+- Fix `83cdee1`: `run.py` legge `MAX_WORKERS` da env (fallback competitors.json); il workflow imposta
+  `MAX_WORKERS: 4`. Locale resta 2. Timeout già a 360.
+- **Run a 4 worker `28480007969`: SCRAPE OK** (`success`, **2h44m**, 13 hotel, 1066 entry) → timeout
+  RISOLTO, largamente sotto le 6h. **MA la push è FALLITA** `non-fast-forward`: durante le ~3h di run
+  ho pushato io un commit brief sul branch → il remoto è avanzato → i dati NON sono atterrati.
+
+### FINDING 01/07 — push non resiliente + fallimento silenzioso (commit `e862953`)
+La push-race sopra ha smascherato due difetti veri (il tipo di "pezzo mancante silenzioso" da evitare):
+1. `git_push_calendar` faceva `git push` secco, **senza `pull --rebase`** → su un run da ~3h, qualsiasi
+   commit arrivato nel frattempo fa fallire la push e **i dati si perdono**.
+2. run.py tornava comunque `0` → **run VERDE anche con push fallita** = dati persi in silenzio.
+Fix `e862953`: `git_push_calendar` fa `pull --rebase` (il commit tocca solo calendar_merged.json →
+rebase pulito) con 3 retry e ritorna `bool`; `run.py` esce `1` se la push fallisce (run rosso).
+- **Run di ri-verifica: ID 28499089047** (01/07 ~06:48 UTC). Da confermare: `success` E commit del
+  bot su `calendar_merged.json` nel branch. NB: NON pushare nulla sul branch mentre gira.
+
+### Nota separata: fix tabella illeggibile — GIÀ su main (commit `43adfaf`)
+Parentesi durante la sessione: la tabella Streamlit era illeggibile (dark mode → testo chiaro su
+sfondi pastello chiari). NON era una regressione: mancava `.streamlit/config.toml`. Fix: `base=light`
++ `color:#1a1a1a` sulle celle. Verificato a schermo da Salvatore, mergiato su main e pushato.
+
+### PROSSIMI PASSI
+1. **Verificare il run 28499089047** (4 worker + push fix): deve chiudere `success` E lasciare un
+   commit del bot su `calendar_merged.json` nel branch. Il timeout è già risolto (28480007969 = 2h44m);
+   questa verifica è per la PUSH resiliente. Se il push fallisse ancora → vedi ALTERNATIVA matrix.
+
+   **ALTERNATIVA matrix (idea di Salvatore, 30/06) — solo SE 4 worker non basta.** Invece di scrapare
+   tutti gli hotel in UN job, usare la `strategy.matrix` di GitHub: **un job per hotel**, ognuno sul
+   PROPRIO runner (= 6h di budget ciascuno, 4 vCPU ciascuno, fino a ~20 in parallelo). Dissolve il
+   tetto 6h e parallelizza meglio del max_workers. Il "casino" da gestire: i push git paralleli sullo
+   stesso `calendar_merged.json` confliggono → ogni job-hotel carica un **artifact partial**, poi un
+   job finale (`needs: [tutti]`) scarica i partial, fa UN merge e UN push. I pezzi nel codice ci sono
+   già (`scrapa_hotel_worker` per-hotel, `filler`/`_merge_partials`). Refactor MEDIO, non triviale →
+   farlo solo se serve davvero (no complessità prematura).
+2. **Merge `fix/ci-scraping-reale` su main** → accende lo scheduling automatico cloud (fino al merge
+   su main gira ancora il vecchio workflow rotto).
+3. **AL MERGE, riscrivere i doc architetturali** (rimandati apposta: non si riscrive l'architettura
+   per un cambiamento non confermato/non mergiato). Sono STALE in modo grave:
+   - `docs/OVERVIEW.md` apre con "completamente automatico su Oracle Cloud" → **Oracle abbandonato**.
+   - README riga 21 (cron @reboot Lun-Mer), riga 24 (Oracle "in corso" = falso), riga 51 (max_workers 3).
+   - AGENT.md: sezioni cron locale / scheduling / "GitHub Actions piano B" → ora cloud primario.
+   Riscrivere tutto e tre alla nuova realtà: cloud primario (run.py, ogni 2gg+jitter), Oracle rimosso,
+   locale = solo fallback manuale. Va fatto in un colpo, atomico col merge.
+4. Pendente da sessioni precedenti: ancora aperto lo **Scenario C** (parser aggancia numero sbagliato).
+
+Nota: tutto gira in cloud sul branch → PC locale libero, `main` intatto fino al merge.
+
+---
+
 # AGGIORNAMENTO 24/06/2026 — affidabilità della media (Treno 2, con Salvatore)
 
 Sessione di revisione consapevole sui numeri della media. **Tutto mergiato su main (`3caf5e5`) e
