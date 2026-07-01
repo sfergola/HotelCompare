@@ -56,3 +56,15 @@ jobs:
         env:
           MAX_WORKERS: 4
         run: python run.py
+
+      # rete di sicurezza: carica il calendario SEMPRE, anche se run.py esce
+      # rosso per push fallita. Il runner è usa e getta → senza questo i dati
+      # scrapati sparirebbero col runner (è successo col run 28480007969).
+      - name: Salva calendario come artifact (backup)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: calendario
+          path: output/calendar_merged.json
+          retention-days: 14
+          if-no-files-found: warn
