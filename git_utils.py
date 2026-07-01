@@ -46,7 +46,12 @@ def git_push_calendar(notifica_fn=None) -> bool:
     # commit sul branch). Rebase del nostro commit — che tocca solo
     # calendar_merged.json — sopra le novità, poi push. Retry per i push concorrenti.
     for _ in range(3):
-        subprocess.run(["git", "pull", "--rebase", "origin", branch], cwd=ROOT, check=False)
+        pull = subprocess.run(["git", "pull", "--rebase", "origin", branch], cwd=ROOT, check=False)
+        if pull.returncode != 0:
+            # rebase in conflitto o rete giù: ripulisci lo stato (--abort è
+            # innocuo se non c'è rebase in corso), non lasciare il repo a metà
+            subprocess.run(["git", "rebase", "--abort"], cwd=ROOT, check=False)
+            continue
         push = subprocess.run(["git", "push", "origin", branch], cwd=ROOT, check=False)
         if push.returncode == 0:
             print(f"Git: push completato su '{branch}' → Streamlit aggiornato.")
