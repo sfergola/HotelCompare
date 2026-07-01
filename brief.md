@@ -49,8 +49,19 @@ ora — il timing è un segnale debole; si aggiunge solo SE un giorno Booking bl
   completare TUTTO in un solo job. Quindi i worker DEVONO bastare a stare sotto le 6h.
 - Fix `83cdee1`: `run.py` legge `MAX_WORKERS` da env (fallback competitors.json); il workflow imposta
   `MAX_WORKERS: 4`. Locale resta 2. Timeout già a 360.
-- **Run di verifica a 4 worker: ID 28480007969** (workflow_dispatch, 30/06 ~22:29 UTC). Da confermare:
-  chiude `success` < 6h E pusha `calendar_merged.json` sul branch.
+- **Run a 4 worker `28480007969`: SCRAPE OK** (`success`, **2h44m**, 13 hotel, 1066 entry) → timeout
+  RISOLTO, largamente sotto le 6h. **MA la push è FALLITA** `non-fast-forward`: durante le ~3h di run
+  ho pushato io un commit brief sul branch → il remoto è avanzato → i dati NON sono atterrati.
+
+### FINDING 01/07 — push non resiliente + fallimento silenzioso (commit `e862953`)
+La push-race sopra ha smascherato due difetti veri (il tipo di "pezzo mancante silenzioso" da evitare):
+1. `git_push_calendar` faceva `git push` secco, **senza `pull --rebase`** → su un run da ~3h, qualsiasi
+   commit arrivato nel frattempo fa fallire la push e **i dati si perdono**.
+2. run.py tornava comunque `0` → **run VERDE anche con push fallita** = dati persi in silenzio.
+Fix `e862953`: `git_push_calendar` fa `pull --rebase` (il commit tocca solo calendar_merged.json →
+rebase pulito) con 3 retry e ritorna `bool`; `run.py` esce `1` se la push fallisce (run rosso).
+- **Run di ri-verifica: ID 28499089047** (01/07 ~06:48 UTC). Da confermare: `success` E commit del
+  bot su `calendar_merged.json` nel branch. NB: NON pushare nulla sul branch mentre gira.
 
 ### Nota separata: fix tabella illeggibile — GIÀ su main (commit `43adfaf`)
 Parentesi durante la sessione: la tabella Streamlit era illeggibile (dark mode → testo chiaro su
@@ -58,8 +69,9 @@ sfondi pastello chiari). NON era una regressione: mancava `.streamlit/config.tom
 + `color:#1a1a1a` sulle celle. Verificato a schermo da Salvatore, mergiato su main e pushato.
 
 ### PROSSIMI PASSI
-1. **Verificare il run 28480007969** (4 worker): deve chiudere `success` < 6h E pushare il calendario.
-   Se sfora ancora → vedi ALTERNATIVA matrix qui sotto.
+1. **Verificare il run 28499089047** (4 worker + push fix): deve chiudere `success` E lasciare un
+   commit del bot su `calendar_merged.json` nel branch. Il timeout è già risolto (28480007969 = 2h44m);
+   questa verifica è per la PUSH resiliente. Se il push fallisse ancora → vedi ALTERNATIVA matrix.
 
    **ALTERNATIVA matrix (idea di Salvatore, 30/06) — solo SE 4 worker non basta.** Invece di scrapare
    tutti gli hotel in UN job, usare la `strategy.matrix` di GitHub: **un job per hotel**, ognuno sul
