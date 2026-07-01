@@ -16,6 +16,7 @@ Fasi:
 
 import json
 import os
+import sys
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date, timedelta
 from pathlib import Path
@@ -190,7 +191,8 @@ def main():
     print(f"\nDone.\n  JSON  : {json_done}\n  CSV   : {csv_path}\n  Testo : {txt_path}\n")
     print(genera_report_testo(calendario, tutti_nomi, manuali, giorni_str[:31], riferimento))
 
-    git_push_calendar()
+    if not git_push_calendar():
+        sys.exit(1)  # push fallita = dati non pubblicati: il run deve risultare rosso
 
 
 if __name__ == "__main__":
