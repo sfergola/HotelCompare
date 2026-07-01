@@ -6,10 +6,13 @@ Genera un calendario prezzi giornaliero per ogni hotel competitor, visualizzabil
 
 ## Architettura
 
+**Primario = cloud.** Lo scraping gira in automatico su **GitHub Actions** (`.github/workflows/scraping.yml`),
+~ogni 2 giorni, indipendente dal PC. Il locale (`run.py`/`panel.py`) è solo fallback manuale.
+
 ```
-competitors.json (max_workers=3)
+competitors.json (max_workers=2 locale; in cloud sovrascritto a 4 via env MAX_WORKERS)
     ↓
-run.py               — entry point, orchestrazione
+run.py               — entry point, orchestrazione (usato sia in locale sia dal workflow cloud)
     ├── Fase 1: scraper.risolvi_urls()  (1 browser)
     ├── Fase 2: algorithm.scrapa_hotel_worker() × N  (ProcessPoolExecutor)
     │           ogni worker ha il proprio browser Playwright
@@ -18,23 +21,23 @@ run.py               — entry point, orchestrazione
     ├── Fase 4: filler.esegui_filler()
     ├── Fase 5: report.genera_csv() + report.genera_report_testo()
     └── Fase 6: git_utils.git_push_calendar() → commit calendar_merged.json + push
+                (esce 1 se la push fallisce → run rosso, niente dati persi in silenzio)
 filler.py            — merge di tutti i run storici → calendar_merged.json
                        ogni entry ottiene data_vista (quando è stato visto il prezzo)
 report.py            — genera CSV e TXT dal calendario
 app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
-git_utils.py         — git commit + push condiviso (branch rilevato automaticamente)
-run_scheduled.py     — avvio automatico notturno (cron ogni 30 min)
-                       condizione: git log calendar_merged.json > 3 giorni fa (GIORNI_TRA_RUN)
-                       fascia: 19:30–09:00 (fuori fascia: esce silenziosamente)
-                       lock file output/run_in_progress.lock contiene PID di run.py
-panel.py             — pannello Tkinter: stato, log live, Avvia/Stop
+git_utils.py         — push resiliente: pull --rebase + 3 retry, torna bool (branch auto)
+.github/workflows/scraping.yml — SCRAPING CLOUD (primario): cron Lun/Mer/Ven/Dom 01:00 UTC
+                       + jitter 0-60min, MAX_WORKERS=4, timeout 360, backup artifact
+panel.py             — pannello Tkinter: stato, log live, Avvia/Stop (fallback manuale locale)
                        lancia da GNOME launcher (Super → "HotelCompare")
-                       avvio manuale ignora la condizione 3 giorni
-carica_manuale_durante_run.py — push parziale durante run: legge i partial già pronti,
-                       aggiorna calendar_merged.json e fa commit+push senza aspettare il run completo
-terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
-.github/workflows/scraping.yml — GitHub Actions piano B (Lun/Mar/Mer 02:00 UTC)
+run_scheduled.py     — scheduler DA LAPTOP, ora dormiente (cron locale rimosso): guard 3gg,
+                       fascia 19:30–09:00, lock file con PID. Tenuto come rete di riserva
+carica_manuale_durante_run.py — push parziale durante run (fallback locale)
 ```
+
+> Oracle Cloud: **abbandonato** (VM mai creata, "Out of host capacity"). `terraform/main.tf` e gli
+> `scripts/oracle_*` restano solo come storico — non usati.
 
 ## File principali
 
@@ -44,42 +47,40 @@ terraform/main.tf    — config Terraform VM Oracle ARM (tracciato nel repo)
 | `algorithm.py` | algoritmo greedy per-giorno + checkpoint |
 | `report.py` | genera CSV e TXT dal calendario |
 | `filler.py` | riempie date mancanti con prezzi storici dai run precedenti |
-| `run.py` | entry point: risolve URL → scrapa → filler → report → auto-push |
-| `run_scheduled.py` | avvio automatico notturno: 3gg (GIORNI_TRA_RUN), fascia 19:30–09:00, lock file con PID |
-| `panel.py` | pannello Tkinter: stato, log live, Avvia/Stop (launcher GNOME) |
-| `carica_manuale_durante_run.py` | push parziale mentre run.py è ancora in corso |
+| `run.py` | entry point: risolve URL → scrapa → filler → report → push. Legge `MAX_WORKERS` da env (cloud) |
+| `.github/workflows/scraping.yml` | **scraping cloud PRIMARIO**: cron ~ogni 2gg + jitter, MAX_WORKERS=4, backup artifact |
+| `git_utils.py` | push resiliente (pull --rebase + 3 retry, torna bool) — condiviso |
+| `panel.py` | pannello Tkinter: fallback manuale locale (launcher GNOME) |
+| `run_scheduled.py` | scheduler da laptop, **dormiente** (cron locale rimosso): guard 3gg, fascia 19:30–09:00, lock PID |
+| `carica_manuale_durante_run.py` | push parziale mentre run.py è ancora in corso (fallback locale) |
 | `app.py` | visualizzazione Streamlit con tabella colorata |
-| `git_utils.py` | git push condiviso tra run.py, run_scheduled.py, panel.py |
 | `competitors.json` | config statica: hotel, URL, max_workers — non modificata a runtime |
-| `terraform/main.tf` | Terraform VM Oracle ARM — tracciato nel repo |
-| `.github/workflows/scraping.yml` | GitHub Actions piano B |
 | `tests/` | unit test funzioni pure (pytest, no rete, no browser) |
-| `scripts/retry_stack_apply.sh` | retry VM Oracle: ruota AD-1/2/3, gira in locale |
-| `scripts/oracle_keepalive.sh` | keepalive da installare sulla VM Oracle |
 | `scripts/spotcheck.py` | verifica live ("contract test" manuale): confronta prezzo salvato vs live su Booking per celle-campione, verdetto MATCH/DRIFT/⚠LOST/esaurito |
+| `terraform/main.tf`, `scripts/oracle_*` | storico Oracle Cloud — **abbandonato**, non usati |
 
 ## Come avviare
 
+Lo scraping in produzione gira **da solo in cloud** (GitHub Actions). In locale serve solo per
+run manuali di riserva:
+
 ```bash
 source venv/bin/activate
-python run.py                  # scraping + report
+python run.py                  # scraping + report (manuale)
 streamlit run app.py           # web app locale
-python run_scheduled.py        # run automatico (con guard 3 giorni)
 ```
 
-**Setup cron (una tantum per macchina):**
-```bash
-(crontab -l 2>/dev/null; echo "@reboot /home/salvatore/Projects/HotelCompare/venv/bin/python run_scheduled.py >> /home/salvatore/Projects/HotelCompare/output/run_scheduled.log 2>&1") | crontab -
-```
+Per lanciare lo scraping cloud a mano: `gh workflow run scraping.yml` (o dal tab Actions).
 
 ## Configurazione date
 In `competitors.json`:
 - `data_inizio` — primo giorno da scrapare (controllo manuale)
-- `data_fine` — ultimo giorno (controllo manuale — cambialo per run parziali)
-- `stagione_fine` — fine stagione fissa, usata dallo scheduler automatico (non toccare)
-- `run_scheduled.py` imposta `data_inizio=domani` e `data_fine=stagione_fine` ad ogni run automatico
-  → dopo un run automatico, `data_fine` torna a `stagione_fine`
-  → per run parziali manuali: cambia `data_inizio`/`data_fine`, poi ripristina se necessario
+- `data_fine` — ultimo giorno; in cloud è la data effettiva di fine scraping (di norma = `stagione_fine`)
+- `stagione_fine` — fine stagione fissa (non toccare)
+- In cloud `run.py` non trova `scheduler_state.json` → usa il fallback: `data_inizio=domani`,
+  `data_fine=competitors.json["data_fine"]`. Per run parziali manuali: cambia le date, poi ripristina.
+- `run_scheduled.py` (dormiente) impostava `data_inizio=domani`, `data_fine=stagione_fine` via
+  `scheduler_state.json` — vale solo se lo riattivi come fallback locale.
 
 ## Logica algoritmo per-giorno
 Per ogni hotel × giorno:
@@ -160,17 +161,21 @@ refactor/*    → pulizia codice senza cambiare comportamento
 3. testa end-to-end (almeno: `streamlit run app.py` e verifica visiva)
 4. solo se tutto ok → `git checkout main && git merge feature/nome-feature && git push`
 
-**Eccezione:** aggiornamenti dati automatici (`run.py`, `run_scheduled.py`) scrivono direttamente su main — è il loro scopo e non toccano il codice.
+**Eccezione:** l'aggiornamento dati automatico (il workflow cloud che lancia `run.py`) scrive
+direttamente su main — è il suo scopo e non tocca il codice.
 
 ## Deploy
-- Web app: Streamlit Community Cloud → branch `main`, file `app.py`
-- Aggiornamento dati: `python run.py` → auto-commit + push (nessun passaggio manuale)
-- Scraping automatico: cron locale `@reboot → run_scheduled.py`, parte quando i dati hanno ≥3 giorni (fascia 19:30–09:00)
-- Repo pubblico su GitHub → GitHub Actions gratuito illimitato (da configurare)
+- Web app: Streamlit Community Cloud → branch `main`, file `app.py` (+ `.streamlit/config.toml`, tema chiaro)
+- Scraping automatico: **GitHub Actions in cloud** (`.github/workflows/scraping.yml`), ~ogni 2 giorni
+  (Lun/Mer/Ven/Dom 01:00 UTC + jitter), MAX_WORKERS=4, push resiliente + backup artifact. Repo
+  pubblico → minuti Actions gratis e illimitati. Nessun PC acceso richiesto.
+- Aggiornamento manuale: `python run.py` (o `panel.py`) in locale → commit + push. Rete di riserva
+  se le Actions si fermano.
 - `output/*.json` gitignored tranne `calendar_merged.json` (unico file dati committato)
 
 ## Parallelismo
-`competitors.json` → campo `max_workers` (default: 3).
+`competitors.json` → campo `max_workers` (default locale: **2**, sicuro sui 3,7GB del PC).
+In cloud è sovrascritto a **4** via env `MAX_WORKERS` nel workflow (runner = 4 vCPU): serve per stare
+sotto il **tetto rigido di 6h** dei runner GitHub (a 2 worker sforava e veniva killato).
 Ogni hotel ha il proprio processo Playwright. Partial files salvati in `output/partial_<hotel>_...json`.
-Durata reale osservata: ~6h con 3 worker e 13 hotel (stagione maggio–settembre).
-Per ridurre RAM/CPU usa `max_workers: 1` (sequenziale, un browser condiviso).
+Durata reale: ~2h35m a 4 worker (cloud, 13 hotel); ~6h a 3 worker (laptop).

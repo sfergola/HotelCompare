@@ -18,10 +18,10 @@ Output: calendario JSON, CSV, report testo, web app Streamlit.
 | Prezzi storici per celle `—/✕` (`data_vista`) | ✅ |
 | Web app Streamlit con tabella colorata per mese | ✅ |
 | Report CSV e TXT | ✅ |
-| Esecuzione automatica (cron @reboot, Lun-Mer) | ✅ |
+| Scraping automatico in cloud (GitHub Actions, ~ogni 2 giorni) | ✅ |
+| Push resiliente (pull --rebase + retry) + backup artifact | ✅ |
 | Unit test funzioni pure (pytest, no rete) | ✅ |
 | Linting ruff | ✅ |
-| Migrazione Oracle Cloud (VM ARM Always Free) | 🔄 in corso |
 
 ## Quick start
 
@@ -48,7 +48,7 @@ streamlit run app.py
   "data_fine":     "2026-09-21",
   "stagione_fine": "2026-09-21",
   "adulti":        2,
-  "max_workers":   3,
+  "max_workers":   2,
   "competitor": [
     { "nome": "Hotel Sirio", "citta": "Lido di Camaiore" },
     { "nome": "Hotel Nuovo Tirreno", "citta": "Lido di Camaiore", "riferimento": true },
@@ -62,7 +62,7 @@ streamlit run app.py
 | `data_inizio` | Primo giorno da scrapare (default: oggi) |
 | `data_fine` | Ultimo giorno — modificabile per run parziali |
 | `stagione_fine` | Fine stagione fissa usata dallo scheduler automatico |
-| `max_workers` | Browser paralleli (ridurre a 1 su PC con poca RAM) |
+| `max_workers` | Browser paralleli in locale (2 = sicuro sui 3,7GB del PC). In cloud è sovrascritto a 4 via env `MAX_WORKERS` |
 | `riferimento: true` | Hotel escluso dalle medie, mostrato separatamente |
 | `nota` | Hotel non su Booking, mostrato come "verifica manuale" |
 
@@ -92,7 +92,16 @@ scraper.py           Playwright + parsing prezzi
 filler.py            Merge run storici → calendar_merged.json
 report.py            Genera CSV e TXT
 app.py               Web app Streamlit
-run_scheduled.py     Wrapper cron: guard settimanale + notifica desktop
-competitors.json     Config: hotel, URL, periodo, adulti
+git_utils.py         Push resiliente del calendario (pull --rebase + retry)
+run_scheduled.py     Fallback locale dormiente (scheduler da laptop, non più usato)
+competitors.json     Config: hotel, URL, periodo, adulti, max_workers
+.github/workflows/scraping.yml   Scraping automatico in cloud (primario)
 output/              JSON, CSV, TXT generati (partial + finali)
 ```
+
+## Automazione
+
+Lo scraping gira **in cloud su GitHub Actions** (`.github/workflows/scraping.yml`), ~ogni 2 giorni,
+indipendente dal PC. Il workflow chiama `run.py` (4 worker), pusha `calendar_merged.json` e Streamlit
+Cloud si aggiorna. In locale lo scraping è solo **manuale** (`python run.py` o il pannello `panel.py`),
+come rete di riserva se le Actions si fermano.
