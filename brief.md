@@ -1,10 +1,14 @@
 # AGGIORNAMENTO 30/06–01/07/2026 — scraping nel cloud, addio dipendenza dal PC acceso (Treno 2, con Salvatore)
 
-> ✅ **CHIUSO il 01/07:** tutto mergiato su `main` (merge `64d4173`), branch `fix/ci-scraping-reale`
-> eliminato. **Scraping automatico in cloud ATTIVO** (GitHub Actions, ~ogni 2gg, 4 worker, push
-> resiliente + artifact). Run di verifica `28499089047` = `success` 2h35m + dati pushati. Doc
-> (README/AGENT/OVERVIEW) riscritti alla realtà cloud, Oracle rimosso. Il PC può stare spento.
-> Prossimo tema aperto (indipendente): Scenario C (parser che aggancia numeri sbagliati).
+> ✅ **CHIUSO il 01/07:** tutto su `main`, un solo branch, pulito. **Scraping automatico in cloud
+> ATTIVO** (GitHub Actions): **Lun/Mer/Ven/Sab** + jitter, **same-day incluso** (data_inizio=oggi),
+> 4 worker (~2h35m), push resiliente (pull --rebase + retry + `git rebase --abort` sul fallimento) +
+> backup artifact, run rosso se la push fallisce. Verificato end-to-end: run `28512590030` = `success`,
+> dati del 01/07 pushati con same-day confermato. Doc (README/AGENT/OVERVIEW) riscritti alla realtà
+> cloud, Oracle rimosso. Fix tabella illeggibile (tema chiaro) su main. Code-review del diff di
+> sessione fatta: un solo spigolo (rebase a metà) → sistemato (`83f86c0`). Ponytail installato in
+> Claude Code. Il PC può stare spento. Prossimo tema aperto (indipendente): Scenario C (parser che
+> aggancia numeri sbagliati, non assenti).
 
 Obiettivo della sessione (richiesta di Salvatore): *"vorrei che facesse tutto da solo, anche a PC
 spento/schermo chiuso"*. La verità dura emersa: finché lo scrape gira sul laptop sarà sempre
