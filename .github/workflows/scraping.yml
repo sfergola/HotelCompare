@@ -2,9 +2,10 @@ name: Scraping prezzi competitor
 
 on:
   schedule:
-    # ~ogni 2 giorni: Lun/Mer/Ven/Dom alle 01:00 UTC (= 03:00 CEST)
-    # l'ora effettiva varia per il jitter sotto + ritardo naturale di GitHub
-    - cron: '0 1 * * 1,3,5,0'
+    # Lun/Mer/Ven/Sab alle 01:00 UTC (= 03:00 CEST). Ven+Sab ravvicinati per
+    # cogliere le notti del weekend fresche (col same-day, sabato è a lead 0).
+    # L'ora effettiva varia per il jitter sotto + ritardo naturale di GitHub.
+    - cron: '0 1 * * 1,3,5,6'
   workflow_dispatch:
 
 # evita run paralleli se una settimana parte in ritardo

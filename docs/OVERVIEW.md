@@ -14,7 +14,7 @@ HotelCompare permette a Hotel Nuovo Tirreno (Lido di Camaiore) di monitorare i p
 ## OBIETTIVO FINALE — RAGGIUNTO (01/07/2026)
 
 Sistema completamente automatico **in cloud su GitHub Actions**, indipendente dal PC:
-1. Il workflow `.github/workflows/scraping.yml` parte ~ogni 2 giorni (cron Lun/Mer/Ven/Dom 01:00 UTC + jitter)
+1. Il workflow `.github/workflows/scraping.yml` parte 4×/settimana (cron Lun/Mer/Ven/Sab 01:00 UTC + jitter)
 2. Lancia `run.py` con `MAX_WORKERS=4` (runner 4 vCPU) → scrape completo in ~2h35m (sotto il tetto 6h)
 3. Push resiliente di `calendar_merged.json` (pull --rebase + retry) + backup artifact
 4. Streamlit Cloud si ricarica → la direzione apre il link e vede i prezzi aggiornati

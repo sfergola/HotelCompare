@@ -27,7 +27,7 @@ filler.py            — merge di tutti i run storici → calendar_merged.json
 report.py            — genera CSV e TXT dal calendario
 app.py               — visualizzazione Streamlit (legge calendar_merged.json di default)
 git_utils.py         — push resiliente: pull --rebase + 3 retry, torna bool (branch auto)
-.github/workflows/scraping.yml — SCRAPING CLOUD (primario): cron Lun/Mer/Ven/Dom 01:00 UTC
+.github/workflows/scraping.yml — SCRAPING CLOUD (primario): cron Lun/Mer/Ven/Sab 01:00 UTC
                        + jitter 0-60min, MAX_WORKERS=4, timeout 360, backup artifact
 panel.py             — pannello Tkinter: stato, log live, Avvia/Stop (fallback manuale locale)
                        lancia da GNOME launcher (Super → "HotelCompare")
@@ -77,8 +77,9 @@ In `competitors.json`:
 - `data_inizio` — primo giorno da scrapare (controllo manuale)
 - `data_fine` — ultimo giorno; in cloud è la data effettiva di fine scraping (di norma = `stagione_fine`)
 - `stagione_fine` — fine stagione fissa (non toccare)
-- In cloud `run.py` non trova `scheduler_state.json` → usa il fallback: `data_inizio=domani`,
-  `data_fine=competitors.json["data_fine"]`. Per run parziali manuali: cambia le date, poi ripristina.
+- In cloud `run.py` non trova `scheduler_state.json` → usa il fallback: `data_inizio=oggi` (include
+  il same-day, dato in più), `data_fine=competitors.json["data_fine"]`. Per run parziali manuali:
+  cambia le date, poi ripristina.
 - `run_scheduled.py` (dormiente) impostava `data_inizio=domani`, `data_fine=stagione_fine` via
   `scheduler_state.json` — vale solo se lo riattivi come fallback locale.
 
@@ -167,7 +168,7 @@ direttamente su main — è il suo scopo e non tocca il codice.
 ## Deploy
 - Web app: Streamlit Community Cloud → branch `main`, file `app.py` (+ `.streamlit/config.toml`, tema chiaro)
 - Scraping automatico: **GitHub Actions in cloud** (`.github/workflows/scraping.yml`), ~ogni 2 giorni
-  (Lun/Mer/Ven/Dom 01:00 UTC + jitter), MAX_WORKERS=4, push resiliente + backup artifact. Repo
+  (Lun/Mer/Ven/Sab 01:00 UTC + jitter), MAX_WORKERS=4, push resiliente + backup artifact. Repo
   pubblico → minuti Actions gratis e illimitati. Nessun PC acceso richiesto.
 - Aggiornamento manuale: `python run.py` (o `panel.py`) in locale → commit + push. Rete di riserva
   se le Actions si fermano.
