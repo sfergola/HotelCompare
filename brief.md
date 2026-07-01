@@ -1,4 +1,10 @@
-# AGGIORNAMENTO 30/06/2026 — scraping nel cloud, addio dipendenza dal PC acceso (Treno 2, con Salvatore)
+# AGGIORNAMENTO 30/06–01/07/2026 — scraping nel cloud, addio dipendenza dal PC acceso (Treno 2, con Salvatore)
+
+> ✅ **CHIUSO il 01/07:** tutto mergiato su `main` (merge `64d4173`), branch `fix/ci-scraping-reale`
+> eliminato. **Scraping automatico in cloud ATTIVO** (GitHub Actions, ~ogni 2gg, 4 worker, push
+> resiliente + artifact). Run di verifica `28499089047` = `success` 2h35m + dati pushati. Doc
+> (README/AGENT/OVERVIEW) riscritti alla realtà cloud, Oracle rimosso. Il PC può stare spento.
+> Prossimo tema aperto (indipendente): Scenario C (parser che aggancia numeri sbagliati).
 
 Obiettivo della sessione (richiesta di Salvatore): *"vorrei che facesse tutto da solo, anche a PC
 spento/schermo chiuso"*. La verità dura emersa: finché lo scrape gira sul laptop sarà sempre
