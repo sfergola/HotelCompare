@@ -84,7 +84,7 @@ def main():
         print(f"  (date da scheduler_state.json: {data_inizio_cfg} → {data_fine})\n")
     else:
         data_fine       = date.fromisoformat(cfg["data_fine"])
-        data_inizio_cfg = oggi + timedelta(days=1)
+        data_inizio_cfg = oggi  # include il same-day: prezzo di oggi = dato in più
 
     data_inizio = max(data_inizio_cfg, oggi)
 
