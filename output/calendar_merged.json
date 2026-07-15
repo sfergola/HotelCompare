@@ -1,5489 +1,5333 @@
 {
   "calendario": {
     "Hotel Lido Inn": {
-      "2026-07-13": {
-        "prezzo": "€ 129*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 129*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
-        "prezzo": "€ 179*",
+        "prezzo": "€ 159*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
+        "prezzo": "€ 149*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-07-17": {
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
+      },
+      "2026-07-18": {
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
+      },
+      "2026-07-19": {
+        "prezzo": "€ 149*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-07-20": {
         "prezzo": "€ 179*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-17": {
-        "prezzo": "€ 201*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-18": {
-        "prezzo": "€ 201*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-19": {
-        "prezzo": "€ 201*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-20": {
-        "prezzo": "€ 201*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 179*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "€ 179*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": "€ 179*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "€ 199*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": "€ 209*",
-        "notti": 3,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": "€ 209*",
-        "notti": 3,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 209*",
-        "notti": 3,
+        "prezzo": "€ 189*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "€ 199*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 192*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 192*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 192*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 199*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "€ 262*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 262*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 262*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 269*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 269*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 269*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 253*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 253*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 253*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 253*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 253*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 229*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 229*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 229*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "€ 209*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 209*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 209*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 189*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 175*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 175*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 175*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 159*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 159*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 159*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 159*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 149*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 149*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": "€ 134*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": "€ 134*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": "€ 99*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": "€ 99*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Sirio": {
-      "2026-07-13": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 150Q*",
+        "prezzo": "€ 123Q*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
-        "prezzo": "€ 217Q*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
-        "prezzo": "€ 217Q*",
+        "prezzo": "€ 168*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
-        "prezzo": "€ 217Q*",
+        "prezzo": "€ 168*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
-        "prezzo": "€ 217Q*",
+        "prezzo": "€ 168*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
-        "prezzo": "€ 158*",
+        "prezzo": "€ 168*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
-        "prezzo": "€ 158*",
-        "notti": 4,
+        "prezzo": "€ 161*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
-        "prezzo": "€ 158*",
-        "notti": 4,
+        "prezzo": "€ 161*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
-        "prezzo": "€ 158*",
+        "prezzo": "€ 173*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
-        "prezzo": "€ 165*",
+        "prezzo": "€ 173*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
-        "prezzo": "€ 165*",
+        "prezzo": "€ 173*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 165*",
+        "prezzo": "€ 173*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
-        "prezzo": "€ 165*",
+        "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
-        "prezzo": "€ 179*",
+        "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 179*",
+        "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
-        "prezzo": "€ 179*",
+        "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
-        "prezzo": "€ 179*",
+        "prezzo": "€ 176*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 176*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 176*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 176*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
-        "prezzo": "€ 176*",
-        "notti": 4,
+        "prezzo": "€ 204*",
+        "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
-        "prezzo": "€ 173*",
-        "notti": 3,
+        "prezzo": "€ 204*",
+        "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
-        "prezzo": "€ 173*",
-        "notti": 3,
+        "prezzo": "€ 204*",
+        "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
-        "prezzo": "€ 173*",
-        "notti": 3,
+        "prezzo": "€ 204*",
+        "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
-        "prezzo": "€ 246*",
+        "prezzo": "€ 204*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
-        "prezzo": "€ 246*",
+        "prezzo": "€ 204*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
-        "prezzo": "€ 246*",
+        "prezzo": "€ 204*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
-        "prezzo": "€ 246*",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
-        "prezzo": "€ 246*",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
-        "prezzo": "€ 246*",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
-        "prezzo": "€ 246*",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "€ 252*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 222*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 222*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 222*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 222*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 222*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 159*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 159*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 159*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 159*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 159*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 150*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 150*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 150*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 150*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 152*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": "€ 152*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": "€ 152*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": "€ 152*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": "€ 137*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": "€ 137*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": "€ 137*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": "€ 146*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": "€ 146*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": "€ 146*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Capri": {
-      "2026-07-13": {
-        "prezzo": "€ 206*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 173*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
-        "prezzo": "€ 229*",
+        "prezzo": "€ 190*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
         "prezzo": "€ 206*",
-        "notti": 2,
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
         "prezzo": "€ 206*",
-        "notti": 2,
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 206*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 206*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 199*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 199*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 232*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 232*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
-        "prezzo": "€ 252A",
-        "notti": 7,
+        "prezzo": "€ 247*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
-        "prezzo": "€ 195*",
-        "notti": 5,
+        "prezzo": "€ 247*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
-        "prezzo": "€ 195*",
-        "notti": 5,
+        "prezzo": "€ 247*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 201*",
+        "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
-        "prezzo": "€ 201*",
+        "prezzo": "€ 195*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 201*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 201*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 201*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
-        "prezzo": "€ 300A",
+        "prezzo": "€ 201*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
-        "prezzo": "€ 300A",
+        "prezzo": "€ 201*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
-        "prezzo": "€ 300A",
-        "notti": 5,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
-        "prezzo": "€ 300A",
-        "notti": 5,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
-        "prezzo": "€ 300A",
-        "notti": 5,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 300A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 300A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 300A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 300A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 300A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 184*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 184*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 184*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 184*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 184*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 216*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 216*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 216*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 216*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 216*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 191A*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 191A*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 191A*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 191A*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 191A*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
-        "prezzo": "€ 184A*",
+        "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
-        "prezzo": "€ 184A*",
+        "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
-        "prezzo": "€ 184A*",
+        "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
-        "prezzo": "€ 184A*",
+        "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
-        "prezzo": "€ 184A*",
+        "prezzo": "€ 179A",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": "€ 140*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": "€ 140*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": "€ 140*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": "€ 128*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Dei Tigli": {
-      "2026-07-13": {
-        "prezzo": "~€ 126",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "~€ 126",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": "~€ 126",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
         "prezzo": "~€ 126",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
-        "prezzo": "~€ 173",
-        "notti": 1,
+        "prezzo": "€ 218T",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "prezzo": "€ 218T",
+        "notti": 2,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
         "prezzo": "~€ 151",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": "~€ 108",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "~€ 108",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "~€ 99",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": "~€ 99",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "~€ 177",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": "~€ 170",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": "~€ 170",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
         "prezzo": "~€ 108",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": "~€ 117",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": "~€ 117",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
         "prezzo": "~€ 108",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "~€ 117#",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "~€ 158",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "~€ 158",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "~€ 135",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "~€ 135",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "~€ 135",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "~€ 135",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "~€ 154",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "~€ 168",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "~€ 168",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "~€ 168",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "~€ 190",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "~€ 190",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "~€ 190",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "~€ 173",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "~€ 173",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "~€ 173",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "~€ 173",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "~€ 173",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "prezzo": "~€ 164",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "~€ 164",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "~€ 179",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "~€ 179",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "~€ 179",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "~€ 164",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "~€ 164",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "~€ 164",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "~€ 164",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "~€ 114",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "~€ 168",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "~€ 144",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "~€ 98",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Mariotti": {
-      "2026-07-13": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
+        "prezzo": "~€ 188",
+        "notti": 4,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-07-31": {
+        "prezzo": "~€ 188",
+        "notti": 4,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-08-01": {
+        "prezzo": "~€ 188",
+        "notti": 4,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-08-02": {
+        "prezzo": "~€ 188",
+        "notti": 4,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-08-03": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-31": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-08-01": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-08-02": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-08-03": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
-        "prezzo": "€ 250Q",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
-        "prezzo": "~€ 209",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
-        "prezzo": "~€ 209",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
-        "prezzo": "~€ 209",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
-        "prezzo": "~€ 209",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
-        "prezzo": "~€ 209",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
-        "prezzo": "~€ 209",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
-        "prezzo": "~€ 209",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 209T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
-        "prezzo": "€ 198T",
+        "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 193T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
-        "prezzo": "€ 193T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
-        "prezzo": "€ 193T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
-        "prezzo": "€ 172T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
-        "prezzo": "€ 172T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
-        "prezzo": "€ 172T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
-        "prezzo": "€ 172T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
-        "prezzo": "€ 172T",
+        "prezzo": "~€ 152",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
-        "prezzo": "€ 172T",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
-        "prezzo": "€ 172T",
-        "notti": 7,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel La Vela": {
-      "2026-07-13": {
-        "prezzo": "€ 118*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 118*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
-        "prezzo": "€ 160T*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 118*",
+        "prezzo": "€ 108*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
-        "prezzo": "€ 198*",
-        "notti": 1,
+        "prezzo": "€ 263T*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
-        "prezzo": "€ 216*",
+        "prezzo": "€ 263T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
-        "prezzo": "€ 216*",
+        "prezzo": "€ 164*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
-        "prezzo": "€ 132*",
-        "notti": 1,
+        "prezzo": "€ 164*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 132*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "€ 132*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": "€ 132*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "€ 198*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": "€ 198*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 122*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 122*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 122*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 122*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "€ 197*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 197*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
-        "prezzo": "€ 195*",
+        "prezzo": "€ 169*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
-        "prezzo": "€ 195*",
+        "prezzo": "€ 169*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
-        "prezzo": "€ 195*",
+        "prezzo": "€ 169*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
-        "prezzo": "€ 195*",
+        "prezzo": "€ 169*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
-        "prezzo": "€ 197*",
+        "prezzo": "€ 190*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
-        "prezzo": "€ 197*",
+        "prezzo": "€ 190*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
-        "prezzo": "€ 197*",
+        "prezzo": "€ 190*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
-        "prezzo": "€ 197*",
+        "prezzo": "€ 190*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 178#*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 178#*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 178#*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 178#*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 282T*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 282T*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 282T*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 282T*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 282T*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 282T*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 185*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 185*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "€ 185*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 185*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 185*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 185*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 179*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 179*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 179*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 179*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 104*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 104*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 104*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 104*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 104*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 104*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Florentia": {
-      "2026-07-13": {
-        "prezzo": "€ 92*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 92*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 93*",
+        "prezzo": "€ 84*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
-        "prezzo": "€ 138*",
+        "prezzo": "€ 220Q*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
         "prezzo": "€ 98*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": "€ 120*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 120*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
-        "prezzo": "€ 102*",
+        "prezzo": "€ 120*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
-        "prezzo": "€ 102*",
+        "prezzo": "€ 120*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "€ 138*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": "€ 238*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "€ 115*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 220*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 120*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 169*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 238*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 206*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 206*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 165*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 165*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 157*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 138*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 142*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 142*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 147*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 93*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 102*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": "€ 129*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Luca": {
-      "2026-07-13": {
-        "prezzo": "€ 118*",
-        "notti": 3,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 118*",
-        "notti": 3,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
-        "prezzo": "€ 118*",
-        "notti": 3,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
         "prezzo": "€ 200Q*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
         "prezzo": "€ 200Q*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
         "prezzo": "€ 200Q*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
         "prezzo": "€ 163T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": "€ 163T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
         "prezzo": "€ 118*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "€ 133*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 149*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 170*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 145*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 145*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 145*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 145*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 145*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 116*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 116*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 116*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 116*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 116*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 98*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 98*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 98*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 98*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 98*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 97*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 97*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": "€ 97*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": "€ 88*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": "€ 88*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": "€ 88*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": "€ 86*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": "€ 86*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": "€ 86*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": "€ 86*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Lungomare": {
-      "2026-07-13": {
-        "prezzo": "€ 170*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": "€ 141*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 141*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
         "prezzo": "€ 160*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
         "prezzo": "€ 252*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
         "prezzo": "€ 252*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": "€ 160*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 236T*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "€ 236T*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": "€ 160*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "€ 236T*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": "€ 217*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
         "prezzo": "€ 217*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
         "prezzo": "€ 169*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
         "prezzo": "€ 169*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
         "prezzo": "€ 169*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
         "prezzo": "€ 174*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "€ 222*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 283*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 283*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 236*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 236*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "€ 184*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "€ 193*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 231*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "€ 231*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 231*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 231*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 254*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 254*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 254*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 254*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 254*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 254*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 268*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 268*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 268*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 268*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 268*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
         "prezzo": "€ 268*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
         "prezzo": "€ 210*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
         "prezzo": "€ 210*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
         "prezzo": "€ 210*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 216*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 216*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 216*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 205*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 205*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
         "prezzo": "€ 205*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
         "prezzo": "€ 160*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 160*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 184*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 184*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 130*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 130*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 130*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
-        "prezzo": "€ 111*",
-        "notti": 2,
+        "prezzo": "€ 105*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
-        "prezzo": "€ 111*",
-        "notti": 2,
+        "prezzo": "€ 105*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
-        "prezzo": "€ 108*",
-        "notti": 1,
+        "prezzo": "€ 105*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": "€ 108*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": "€ 108*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": "€ 108*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": "€ 108*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": "€ 137*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": "€ 90*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Perla del Mare": {
-      "2026-07-13": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 118*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "prezzo": "€ 118*",
+        "notti": 2,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "€ 118*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
-        "prezzo": "€ 151*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
-        "prezzo": "€ 151*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
-        "prezzo": "€ 153*",
+        "prezzo": "€ 217T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
-        "prezzo": "€ 153*",
+        "prezzo": "€ 217T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 128*",
+        "prezzo": "€ 184T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
-        "prezzo": "€ 128*",
+        "prezzo": "€ 184T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
-        "prezzo": "€ 128*",
+        "prezzo": "€ 184T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 128*",
+        "prezzo": "€ 184T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 151*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
-        "prezzo": "€ 231T*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
-        "prezzo": "€ 231T*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
-        "prezzo": "€ 231T*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
-        "prezzo": "€ 231T*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
-        "prezzo": "€ 245T*",
-        "notti": 4,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 245T*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 245T*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 245T*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
-        "prezzo": "€ 146*",
+        "prezzo": "€ 245T*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 146*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 146*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 146*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
-        "prezzo": "€ 176*",
+        "prezzo": "€ 146*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
-        "prezzo": "€ 176*",
+        "prezzo": "€ 178*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
-        "prezzo": "€ 176*",
+        "prezzo": "€ 178*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
-        "prezzo": "€ 176*",
+        "prezzo": "€ 178*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
-        "prezzo": "€ 153*",
+        "prezzo": "€ 178*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
-        "prezzo": "€ 153*",
+        "prezzo": "€ 180*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
-        "prezzo": "€ 153*",
+        "prezzo": "€ 180*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
-        "prezzo": "€ 153*",
+        "prezzo": "€ 180*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 180*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
-        "prezzo": "€ 180*",
+        "prezzo": "€ 167*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
-        "prezzo": "€ 180*",
+        "prezzo": "€ 167*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
-        "prezzo": "€ 180*",
+        "prezzo": "€ 167*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
-        "prezzo": "€ 131*",
-        "notti": 2,
+        "prezzo": "€ 167*",
+        "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 131*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
-        "prezzo": "€ 131*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Milani": {
-      "2026-07-13": {
-        "prezzo": "€ 136*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 136*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
-        "prezzo": "€ 136*",
-        "notti": 1,
+        "prezzo": "€ 100*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 136*",
-        "notti": 1,
+        "prezzo": "€ 100*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
         "prezzo": "€ 150*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
         "prezzo": "€ 150*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 118*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
         "prezzo": "€ 150*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
         "prezzo": "€ 150*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 118*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
-        "prezzo": "€ 150*",
-        "notti": 2,
+        "prezzo": "€ 173*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 204T*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
-        "prezzo": "€ 150*",
-        "notti": 1,
+        "prezzo": "€ 204T*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 100*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 100*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 100*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 100*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 150*",
-        "notti": 5,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "€ 150*",
-        "notti": 5,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 150*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 159*",
-        "notti": 5,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 159*",
-        "notti": 5,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 159*",
-        "notti": 5,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
-        "prezzo": "€ 172*",
+        "prezzo": "€ 159*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
-        "prezzo": "€ 172*",
-        "notti": 2,
+        "prezzo": "€ 109*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
-        "prezzo": "€ 159*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 159*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 159*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
+        "prezzo": "€ 109*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-08-31": {
+        "prezzo": "€ 109*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-09-01": {
+        "prezzo": "€ 109*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-09-02": {
+        "prezzo": "€ 109*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-09-03": {
+        "prezzo": "€ 109*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-07-15"
+      },
+      "2026-09-04": {
         "prezzo": "€ 159*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-08-31": {
-        "prezzo": "€ 155*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-09-01": {
-        "prezzo": "€ 155*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-09-02": {
-        "prezzo": "€ 155*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-09-03": {
-        "prezzo": "€ 155*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-09-04": {
-        "prezzo": "€ 154*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
-        "prezzo": "€ 154*",
-        "notti": 2,
+        "prezzo": "€ 159*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 109*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 172*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 172*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 172*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 172*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
-        "prezzo": "€ 155*",
+        "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Sylvia": {
-      "2026-07-13": {
+      "2026-07-15": {
         "prezzo": "€ 117*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 126*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-15": {
-        "prezzo": "€ 126*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 249*",
+        "prezzo": "€ 212*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
-        "prezzo": "€ 183Q*",
+        "prezzo": "€ 199Q*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
-        "prezzo": "€ 183Q*",
+        "prezzo": "€ 199Q*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
-        "prezzo": "€ 183Q*",
+        "prezzo": "€ 199Q*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
-        "prezzo": "€ 183Q*",
+        "prezzo": "€ 199Q*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
-        "prezzo": "€ 183Q*",
+        "prezzo": "€ 199Q*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
-        "prezzo": "€ 183Q*",
+        "prezzo": "€ 199Q*",
         "notti": 6,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
-        "prezzo": "€ 195Q*",
-        "notti": 2,
+        "prezzo": "€ 144*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
-        "prezzo": "€ 195Q*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
-        "prezzo": "€ 165*",
+        "prezzo": "€ 180*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
-        "prezzo": "€ 165*",
+        "prezzo": "€ 180*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 147*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
-        "prezzo": "€ 150*",
+        "prezzo": "€ 163*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
-        "prezzo": "€ 198*",
+        "prezzo": "€ 216*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
-        "prezzo": "€ 198*",
+        "prezzo": "€ 216*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
-        "prezzo": "€ 198*",
+        "prezzo": "€ 216*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
-        "prezzo": "€ 117S*",
+        "prezzo": "€ 128S*",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
-        "prezzo": "€ 190*",
+        "prezzo": "€ 207*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
-        "prezzo": "€ 190*",
+        "prezzo": "€ 207*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
-        "prezzo": "€ 190*",
+        "prezzo": "€ 207*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
-        "prezzo": "€ 190*",
+        "prezzo": "€ 207*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
-        "prezzo": "€ 190*",
+        "prezzo": "€ 207*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 168*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 168*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
-        "prezzo": "€ 154*",
+        "prezzo": "€ 168*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
-        "prezzo": "€ 149*",
+        "prezzo": "€ 162*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
-        "prezzo": "€ 149*",
+        "prezzo": "€ 162*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
-        "prezzo": "€ 149*",
+        "prezzo": "€ 162*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
-        "prezzo": "€ 138*",
+        "prezzo": "€ 150*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
-        "prezzo": "€ 138*",
+        "prezzo": "€ 150*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
-        "prezzo": "€ 138*",
+        "prezzo": "€ 150*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 144*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 144*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
-        "prezzo": "€ 132*",
+        "prezzo": "€ 144*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
-        "prezzo": "€ 129*",
+        "prezzo": "€ 141*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
-        "prezzo": "€ 129*",
+        "prezzo": "€ 141*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
-        "prezzo": "€ 129*",
+        "prezzo": "€ 141*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": "€ 126*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": "€ 117*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 117*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 117*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 117*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 117*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 117*",
         "notti": 5,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     },
     "Hotel Nuovo Tirreno": {
-      "2026-07-13": {
-        "prezzo": "€ 153*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
-      "2026-07-14": {
-        "prezzo": "€ 155*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
-      },
       "2026-07-15": {
         "prezzo": "€ 155*",
-        "notti": 1,
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-16": {
-        "prezzo": "€ 145*",
-        "notti": 1,
+        "prezzo": "€ 155*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-17": {
-        "prezzo": "€ 197*",
+        "prezzo": "€ 235Q*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-18": {
-        "prezzo": "€ 223*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-07-13"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-07-15"
       },
       "2026-07-19": {
-        "prezzo": "€ 223*",
-        "notti": 2,
+        "prezzo": "€ 155*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-20": {
         "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-21": {
         "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-22": {
         "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-23": {
         "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-24": {
-        "prezzo": "€ 220*",
-        "notti": 2,
+        "prezzo": "€ 176*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-25": {
-        "prezzo": "€ 220*",
+        "prezzo": "€ 215*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-26": {
-        "prezzo": "€ 166*",
-        "notti": 1,
+        "prezzo": "€ 215*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-27": {
-        "prezzo": "€ 166*",
+        "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-28": {
-        "prezzo": "€ 166*",
+        "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-29": {
-        "prezzo": "€ 166*",
+        "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-30": {
-        "prezzo": "€ 166*",
+        "prezzo": "€ 155*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-07-31": {
-        "prezzo": "€ 181*",
+        "prezzo": "€ 176*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-01": {
         "prezzo": "€ 195*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-02": {
         "prezzo": "€ 195*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-03": {
         "prezzo": "€ 195*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-04": {
         "prezzo": "€ 171*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-05": {
         "prezzo": "€ 171*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-06": {
         "prezzo": "€ 243*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-07": {
         "prezzo": "€ 243*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-08": {
         "prezzo": "€ 243*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-09": {
         "prezzo": "€ 243*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-10": {
         "prezzo": "€ 264*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-11": {
         "prezzo": "€ 264*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-12": {
         "prezzo": "€ 264*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-13": {
         "prezzo": "€ 264*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-14": {
         "prezzo": "€ 244*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-15": {
         "prezzo": "€ 244*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-16": {
         "prezzo": "€ 244*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-17": {
         "prezzo": "€ 244*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-18": {
         "prezzo": "€ 209*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-19": {
         "prezzo": "€ 209*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-20": {
         "prezzo": "€ 209*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-21": {
         "prezzo": "€ 209*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-22": {
-        "prezzo": "€ 184*",
+        "prezzo": "€ 189*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-23": {
-        "prezzo": "€ 184*",
+        "prezzo": "€ 189*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-24": {
-        "prezzo": "€ 184*",
+        "prezzo": "€ 189*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-25": {
-        "prezzo": "€ 184*",
+        "prezzo": "€ 189*",
         "notti": 4,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-26": {
         "prezzo": "€ 166*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-27": {
         "prezzo": "€ 166*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-28": {
         "prezzo": "€ 172*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-29": {
         "prezzo": "€ 172*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-30": {
         "prezzo": "€ 172*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-08-31": {
-        "prezzo": "€ 143*",
+        "prezzo": "€ 159*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-01": {
-        "prezzo": "€ 143*",
+        "prezzo": "€ 159*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-02": {
-        "prezzo": "€ 143*",
+        "prezzo": "€ 159*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-03": {
         "prezzo": "€ 129*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-04": {
         "prezzo": "€ 129*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-05": {
         "prezzo": "€ 129*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-06": {
-        "prezzo": "€ 129*",
+        "prezzo": "€ 134*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-07": {
-        "prezzo": "€ 129*",
+        "prezzo": "€ 134*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-08": {
-        "prezzo": "€ 129*",
+        "prezzo": "€ 134*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-09": {
-        "prezzo": "€ 130*",
+        "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-10": {
-        "prezzo": "€ 130*",
+        "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-11": {
         "prezzo": "€ 130*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-12": {
         "prezzo": "€ 130*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-13": {
         "prezzo": "€ 119*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-14": {
         "prezzo": "€ 124*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-15": {
         "prezzo": "€ 124*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-16": {
         "prezzo": "€ 122*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-17": {
         "prezzo": "€ 122*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-18": {
         "prezzo": "€ 127*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-19": {
         "prezzo": "€ 119*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       },
       "2026-09-20": {
         "prezzo": "€ 119*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-07-13"
+        "data_vista": "2026-07-15"
       }
     }
   }
