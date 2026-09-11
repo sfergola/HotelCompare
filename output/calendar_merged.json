@@ -1,965 +1,809 @@
 {
   "calendario": {
     "Hotel Lido Inn": {
-      "2026-09-09": {
-        "prezzo": "€ 109*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 109*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 109*",
+        "prezzo": "€ 149Q",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
-        "prezzo": "€ 119*",
-        "notti": 2,
+        "prezzo": "€ 149*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
-        "prezzo": "€ 119*",
-        "notti": 2,
+        "prezzo": "€ 89*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
-        "prezzo": "€ 89*",
+        "prezzo": "€ 96*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": "€ 89*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Sirio": {
-      "2026-09-09": {
-        "prezzo": "€ 116*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 116*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 139*",
-        "notti": 2,
+        "prezzo": "€ 126*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
-        "prezzo": "€ 139*",
-        "notti": 2,
+        "prezzo": "€ 126*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
-        "prezzo": "€ 110*",
-        "notti": 1,
+        "prezzo": "€ 126*",
+        "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": "€ 110*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": "€ 110*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": "€ 110*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": "€ 110*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
-        "prezzo": "€ 124*",
-        "notti": 2,
+        "prezzo": "€ 116*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": "€ 124*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "prezzo": "€ 124*",
+        "notti": 2,
+        "stato": "ok",
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Capri": {
-      "2026-09-09": {
-        "prezzo": "€ 115*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 115*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
         "prezzo": "€ 146*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
-        "prezzo": "€ 163*",
+        "prezzo": "€ 149*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": "€ 149*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": "€ 149*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": "€ 140*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": "€ 140*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": "€ 145*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": "€ 135*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Dei Tigli": {
-      "2026-09-09": {
-        "prezzo": "~€ 90",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "~€ 99",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "~€ 99",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
         "prezzo": "~€ 102",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
-        "prezzo": "~€ 81",
+        "prezzo": "~€ 75",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Mariotti": {
-      "2026-09-09": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": "€ 172T",
         "notti": 7,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel La Vela": {
-      "2026-09-09": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "non_trovato",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "non_trovato",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "non_trovato",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Florentia": {
-      "2026-09-09": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 56*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 84*",
+        "prezzo": "€ 75*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
-        "prezzo": "€ 102*",
+        "prezzo": "€ 120T*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": "€ 84*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Luca": {
-      "2026-09-09": {
-        "prezzo": "€ 91*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 91*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 154Q*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
         "prezzo": "€ 154Q*",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
-        "prezzo": "€ 81*",
-        "notti": 3,
+        "prezzo": "€ 154Q*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
-        "prezzo": "€ 81*",
-        "notti": 3,
+        "prezzo": "€ 86*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
-        "prezzo": "€ 81*",
-        "notti": 3,
+        "prezzo": "€ 86*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": "€ 86*",
-        "notti": 2,
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": "€ 86*",
-        "notti": 2,
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": "€ 86*",
-        "notti": 2,
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": "€ 86*",
-        "notti": 2,
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "prezzo": "€ 86*",
+        "notti": 1,
+        "stato": "ok",
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Lungomare": {
-      "2026-09-09": {
-        "prezzo": "€ 238≈",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 238≈",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 279A",
+        "prezzo": "€ 256A",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
-        "prezzo": "€ 279A",
+        "prezzo": "€ 256A",
         "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 156Q*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 156Q*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 156Q*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 85*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 94*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 139T*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
-        "prezzo": "€ 122*",
-        "notti": 7,
+        "prezzo": "€ 139T*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Perla del Mare": {
-      "2026-09-09": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "stato": "non_trovato",
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Milani": {
-      "2026-09-09": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": null,
-        "notti": null,
-        "stato": "esaurito",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 104*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
+        "prezzo": null,
+        "notti": null,
+        "stato": "esaurito",
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
-        "prezzo": "€ 104*",
-        "notti": 2,
+        "prezzo": "€ 118*",
+        "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
         "prezzo": "€ 136*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
         "prezzo": null,
         "notti": null,
         "stato": "esaurito",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Sylvia": {
-      "2026-09-09": {
-        "prezzo": "€ 143*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 143*",
-        "notti": 2,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 91*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-12": {
-        "prezzo": "€ 124*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-13": {
         "prezzo": "€ 83*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
+      },
+      "2026-09-12": {
+        "prezzo": "€ 107*",
+        "notti": 2,
+        "stato": "ok",
+        "data_vista": "2026-09-11"
+      },
+      "2026-09-13": {
+        "prezzo": "€ 107*",
+        "notti": 2,
+        "stato": "ok",
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": "€ 83*",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
-        "prezzo": "€ 116*",
+        "prezzo": "€ 160*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
-        "prezzo": "€ 116*",
+        "prezzo": "€ 160*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
-        "prezzo": "€ 116*",
+        "prezzo": "€ 160*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 105*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 105*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
-        "prezzo": "€ 107*",
+        "prezzo": "€ 105*",
         "notti": 3,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     },
     "Hotel Nuovo Tirreno": {
-      "2026-09-09": {
-        "prezzo": "€ 114*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
-      "2026-09-10": {
-        "prezzo": "€ 119*",
-        "notti": 1,
-        "stato": "ok",
-        "data_vista": "2026-09-09"
-      },
       "2026-09-11": {
-        "prezzo": "€ 155*",
-        "notti": 1,
+        "prezzo": "€ 159*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-12": {
-        "prezzo": "€ 150*",
-        "notti": 1,
+        "prezzo": "€ 159*",
+        "notti": 2,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-13": {
-        "prezzo": "~€ 104",
+        "prezzo": "~€ 103",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-14": {
         "prezzo": "~€ 93",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-15": {
         "prezzo": "~€ 93",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-16": {
         "prezzo": "~€ 93",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-17": {
         "prezzo": "~€ 93",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-18": {
-        "prezzo": "~€ 118",
+        "prezzo": "~€ 103",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-19": {
-        "prezzo": "~€ 104",
+        "prezzo": "~€ 82",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       },
       "2026-09-20": {
-        "prezzo": "~€ 104",
+        "prezzo": "~€ 75",
         "notti": 1,
         "stato": "ok",
-        "data_vista": "2026-09-09"
+        "data_vista": "2026-09-11"
       }
     }
   }
